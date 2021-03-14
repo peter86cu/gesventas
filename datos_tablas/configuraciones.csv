@@ -1,0 +1,16 @@
+2,email_admin,acner999@hotmail.com
+3,firma_mail_nombre,Acner Pinazo
+4,firma_mail_aclaracion,acner999@hotmail.com
+5,mail_presentacion,"Nos Dirigimos a usted con el fin de solicitarle el presupuesto de sus productos,<br>
+					Para ver la lista de productos que necesitamos que nos presupuesten y nos den la cotizacion podes hacer click en el siguiente link."
+6,mail_atte,Nos despedimos con un cordial saludo y esperamos que complete el formulario de presupuesto para asi seguir haciendo negocios. Saludos
+7,dolar,4500
+9,metodo_evaluacion,CP
+10,nombre_empresa,Empresa de Prueba S.A
+11,interes_venta_anual,18
+8,inventario_negativo,FALSE
+1,template_dinamico,TRUE
+12,formato_plan_de_cuentas,9.99.99.99.999
+15,direccion_sistema_prueba,http://localhost/ryadminica/
+14,modo_restaurant,TRUE
+13,direccion_sistema,http://localhost:8080/sistema/
