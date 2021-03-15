@@ -11,7 +11,6 @@
           <img src="vistas/recursos/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <?php
-
           $db = new BaseDatos();
           $rol="";
           if($resultado=$db->buscar("rol","id_rol=".$_SESSION['rol']."")){
@@ -897,9 +896,7 @@ function guardar(evt){
              if(resultado){
                for(let i=0; i< e.data.zonas.lenght;i++){
                  $.post(`https://167.62.136.170/printapp/print/venta`,{venta:resultado,zonas:null})
-                .done(function(res)){
-                console.log(JSON.parse(res));
-                }
+
                 }
              }
 
