@@ -23,7 +23,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="abrirCaja(<?php echo $_SESSION['id'] ?>); return false" ><i class="fas fa-plus"></i> Apertura y Cierre</button> 
+       <button class="btn btn-primary" href="javascript:;" onclick="abrirCaja(<?php echo $_SESSION['id'] ?>); return false" ><i class="fas fa-plus"></i> Apertura y Cierre</button>
 
      </div>
    </div>
@@ -35,18 +35,18 @@
           <th style="text-align: center;"># Arqueo</th>
           <th style="text-align: center;">Fecha</th>
           <th style="text-align: center;"># Apertura</th>
-          <th style="text-align: center;">Turno</th> 
-          <th style="text-align: center;">Caja</th>         
+          <th style="text-align: center;">Turno</th>
+          <th style="text-align: center;">Caja</th>
           <th style="text-align: center;">Tipo Arqueo</th>
-          <th style="text-align: center;">Cajero</th>             
-          <th style="text-align: center;">Estado</th>        
+          <th style="text-align: center;">Cajero</th>
+          <th style="text-align: center;">Estado</th>
           <th style="width: 4%; text-align: center;">Acciones</th>
         </tr>
       </thead>
       <tbody>
 
 
-        <?php 
+        <?php
 
         if( $_SESSION['rol']==2 || $_SESSION['rol']==3  ) {
           $sql= "and a.id_usuario=".$_SESSION['id'];
@@ -56,7 +56,7 @@
         $parametro= null;
         $datos= "SELECT ar.id_arqueo,
         a.id_apertura_cajero,
-        a.hora_inicio as inicio, 
+        a.hora_inicio as inicio,
         a.fecha_hora_cierre as fin,
         a.fecha_hora_cierre,
         u.nombres,
@@ -73,14 +73,14 @@
             $color = "azul";
           }elseif($value['id_tipo_arqueo']==3){
             $color = "verde";
-          }          
-          
-           $parametro1=null;          
+          }
+
+           $parametro1=null;
           $cuadre="select descripcion as cuadre from tipo_cuadre_caja where id_cuadre =".$value['id_cuadre']."";
           $tipo_cuadre = ControlApertura::mostrarAperturas($parametro1,$cuadre);
-         
+
           foreach ($tipo_cuadre as $key => $values) {
-            $des_cuadre=$values['cuadre'];           
+            $des_cuadre=$values['cuadre'];
 
           }
 
@@ -90,51 +90,51 @@
             $color_cuadre = "verde";
           }elseif($value['id_cuadre']==3){
             $color_cuadre = "rojo";
-          }  
+          }
 
-          $parametro2=null;          
-          $sql_turno="select concat(tipo_turno  , '  ',descripcion) as turno from turnos where id_turno =".$value['id_turno']."";          
+          $parametro2=null;
+          $sql_turno="select concat(tipo_turno  , '  ',descripcion) as turno from turnos where id_turno =".$value['id_turno']."";
           $tipo_cuadre = ControlApertura::mostrarAperturas($parametro2,$sql_turno);
-          
+
           foreach ($tipo_cuadre as $key => $row) {
-            $turno=$row['turno'];           
+            $turno=$row['turno'];
 
           }
 
-          $parametro3=null;          
+          $parametro3=null;
           $sql_caja="select  nombre from caja where id_caja=".$value['id_caja']."";
-         
+
           $caja = ControlApertura::mostrarAperturas($parametro3,$sql_caja);
-          
+
           foreach ($caja as $key => $rows) {
-            $caja=$rows['nombre'];           
+            $caja=$rows['nombre'];
 
           }
 
           ?>
 
           <tr>
-            <td style="width: 1%;text-align: center;"><?php echo $value['id_arqueo'] ?></td>                 
+            <td style="width: 1%;text-align: center;"><?php echo $value['id_arqueo'] ?></td>
             <td style="width: 10%;text-align: center;"><?php echo $value['fecha']?></td>
             <td style="width: 5% ; text-align: center;"><?php echo $value['id_apertura_cajero']?></td>
-            <td style="width: 6%; text-align: center;"><?php echo $turno ?></td> 
-            <td style="width: 5%; text-align: center;"><?php echo $caja ?></td> 
-            <td style="width: 8%; text-align: center;">                    
-              <span class="text_<?php echo $color ?>" ><?php echo $value['descripcion']?></span>                
-            </td>                
-            <td style="width: 10%; text-align: center;"><?php echo $value['nombres']?></td> 
-           <td style="width: 8%; text-align: center;">                    
-              <span class="text_<?php echo $color_cuadre ?>" ><?php echo $des_cuadre?></span>                
-            </td> 
-             
-                    
-            <td style="text-align: center;" >
-              <div class="btn-bt-group"></div>             
-               
-                <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimirArqueo(<?php echo $value['id_apertura_cajero'] ?>,<?php echo $value['id_arqueo'] ?>,<?php echo $value['id_tipo_arqueo'] ?>); return false" ><i class="fas fa-print" ></i></button>
-             
+            <td style="width: 8%; text-align: center;"><?php echo $turno ?></td> 
+            <td style="width: 5%; text-align: center;"><?php echo $caja ?></td>
+            <td style="width: 8%; text-align: center;">
+              <span class="text_<?php echo $color ?>" ><?php echo $value['descripcion']?></span>
             </td>
-          </tr>   
+            <td style="width: 10%; text-align: center;"><?php echo $value['nombres']?></td>
+           <td style="width: 8%; text-align: center;">
+              <span class="text_<?php echo $color_cuadre ?>" ><?php echo $des_cuadre?></span>
+            </td>
+
+
+            <td style="text-align: center;" >
+              <div class="btn-bt-group"></div>
+
+                <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimirArqueo(<?php echo $value['id_apertura_cajero'] ?>,<?php echo $value['id_arqueo'] ?>,<?php echo $value['id_tipo_arqueo'] ?>); return false" ><i class="fas fa-print" ></i></button>
+
+            </td>
+          </tr>
 
         <?php }  ?>
 
@@ -159,24 +159,24 @@
 
   .text_rojo{
     color:#C40000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_verde{
     color:#060;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_azul{
     color:#00F;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_naranja{
     color:#F60;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_negro{
     color:#000000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_normal{
@@ -184,7 +184,7 @@
 
   }
 
-  
+
 </style>
 
 
@@ -206,49 +206,49 @@
             <div class="col-md-6">
               <label for="txtTurno">Turno</label>
               <select id="txtTurno" name="txtTurno" class="form-control custom-select">
-                <option selected disabled>Seleccione</option>                
+                <option selected disabled>Seleccione</option>
                 <?php
-                $db = new BaseDatos();        
+                $db = new BaseDatos();
                 if($resultado=$db->buscar("turnos","estado=1")){
                   foreach($resultado as $row) { ?>
-                    <option value=<?=$row['id_turno'] ?> ><?=$row['descripcion']."    ".$row['tipo_turno'] ?></option> <?php } } ?>                                    
-                  </select> 
+                    <option value=<?=$row['id_turno'] ?> ><?=$row['descripcion']."    ".$row['tipo_turno'] ?></option> <?php } } ?>
+                  </select>
 
-                </div> 
+                </div>
                 <div class="col-md-6">
                   <label for="txtCaja">Caja</label>
                   <select id="txtCaja" name="txtCaja" class="form-control custom-select" disabled="true">
 
                     <?php
-                    $db = new BaseDatos();  
-                //error_log("ip='".$_SESSION['ip']."' and id_sucursal=".$_SESSION['sucursal']."",0);                   
+                    $db = new BaseDatos();
+                //error_log("ip='".$_SESSION['ip']."' and id_sucursal=".$_SESSION['sucursal']."",0);
                     if($resultado=$db->buscar("caja","ip='".$_SESSION['ip']."' and id_sucursal=".$_SESSION['sucursal']."")){
                       foreach($resultado as $row) { ?>
-                        <option value=<?=$row['id_caja'] ?> ><?=$row['nombre'] ?></option> <?php } } ?>                                    
-                      </select> 
+                        <option value=<?=$row['id_caja'] ?> ><?=$row['nombre'] ?></option> <?php } } ?>
+                      </select>
 
-                    </div> 
+                    </div>
 
-                  </div> 
+                  </div>
                   <input type="hidden"  id="idApertura" name="idApertura"  value="" >
 
                   <div class="row">
                     <div class="col-md-6">
                       <label>Consecutivo</label>
                       <input type="text" class="form-control" id="txtConsecutivo" name="txtConsecutivo" required disabled="true">
-                    </div>           
+                    </div>
 
                     <div class="col-md-6">
 
                       <label for="txtTipo">Tipo Arqueo</label>
                       <select id="txtTipo" name="txtTipo" class="form-control custom-select">
-                        <option selected disabled>Seleccione</option>                
+                        <option selected disabled>Seleccione</option>
                         <?php
-                        $db = new BaseDatos();        
+                        $db = new BaseDatos();
                         if($resultado=$db->buscar("tipo_arqueo","1")){
                           foreach($resultado as $row) { ?>
-                            <option value=<?=$row['id_tipo_arqueo'] ?> ><?=$row['descripcion'] ?></option> <?php } } ?>                                    
-                          </select> 
+                            <option value=<?=$row['id_tipo_arqueo'] ?> ><?=$row['descripcion'] ?></option> <?php } } ?>
+                          </select>
 
                         </div>
 
@@ -269,7 +269,7 @@
                 </div>
               </div>
 
-            </form> 
+            </form>
 
 
 
@@ -277,7 +277,7 @@
             <!-- The Modal -->
             <div class="modal" id="arqueoCaja" data-backdrop="static" data-keyboard="false" tabindex="-1">
               <div class="modal-dialog modal-lg">
-                <div class="modal-content">                 
+                <div class="modal-content">
 
                   <!-- Modal body -->
                   <div class="modal-body">
@@ -293,7 +293,7 @@
 
                          <p >  <table width="100%" border="2" cellspacing="2" cellpadding="0">
                           <br>Usuario: <?=$_SESSION['user']?>
-                          <br>Caja:<label id="nombreCaja"></label>       
+                          <br>Caja:<label id="nombreCaja"></label>
                         </p><br style=" font-weight: bold;">APERTURA DE CUENTA: <h2><label id="_saldo_inicial"></label> </h2>
                         <br class="centrado">-------------------------------------------------------------------</br></p>
                         <thead>
@@ -306,21 +306,21 @@
                           </tr>
                         </thead>
 
-                        <?php  
-                        $ids_billetes = array();                        
-                        $db = new BaseDatos();  
+                        <?php
+                        $ids_billetes = array();
+                        $db = new BaseDatos();
                         $moneda= $db->buscar("monedas","defecto=1");
                         $m_defecto=0;
                         foreach($moneda as $row){
                           $m_defecto= $row['id_moneda'];
-                        } 
+                        }
 
                         if($resultado=$db->buscar("billetes","fecha_baja is null and id_moneda=".$m_defecto."")){
 
 
                           foreach($resultado as $lista){
-                            $ids_billetes[]= $lista['id_billete']; 
-                            
+                            $ids_billetes[]= $lista['id_billete'];
+
                             ?>
 
                             <tbody>
@@ -328,15 +328,15 @@
                                 <td class="cantidad" ><?php echo $lista['descripcion'] ?></td>
                                 <td align="center" class="productoCaja" ><input name="moneda_<?=$lista['id_billete']?>" type="text"  value="" id="moneda_<?=$lista['id_billete']?>" title="<?=$lista['descripcion'] ?>" placeholder="<?=$lista['monto']?>" autofocus onBlur="sumar(<?=$lista['id_billete']?>,this)" /></td>
                                 <td align="right" style="width: 4%" class="precio"><label class="total">0</label></td>
-                              </tr>                 
-                            <?php }  }?> 
+                              </tr>
+                            <?php }  }?>
                             <tr>
                               <td class="cantidad"></td>
                               <td class="productoCaja"><h2>TOTAL</h2></td>
                               <td valign="top" ><h2 id="_total_arqueo">$ 0</h2></td>
 
                             </tr>
-                          </tbody>      
+                          </tbody>
                           <tr>
 
 
@@ -363,9 +363,3 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-

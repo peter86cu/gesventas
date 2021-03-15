@@ -1,5 +1,5 @@
 <?php
- 
+
  require_once  "controladores/CtrlProveedores.php";
  require_once  "controladores/CtrlVentas.php";
  require_once  "controladores/CtrlApertura.php";
@@ -11,7 +11,7 @@
  require_once  "controladores/CtrlRoles.php";
  require_once  "controladores/CtrlOrdenesCompras.php";
  require_once  "vistas/recursos/mcript.php";
- 
+
   require_once  "modelo/MdlProveedores.php";
   require_once  "modelo/MdlVentas.php";
   require_once  "modelo/MdlApertura.php";
@@ -23,6 +23,7 @@
   require_once  "modelo/MdlGeneral.php";
 
  require_once  "config/lib.php";
+
 
 
     $Obj_Principal = new Principal();

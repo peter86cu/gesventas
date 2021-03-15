@@ -18,7 +18,7 @@ class facturasComprasAjax{
   public $factura;
   public $receptor;
   public $deposito;
-  public $moneda; 
+  public $moneda;
 
 
   public function modificarFacturasComprasAjax(){
@@ -26,20 +26,20 @@ class facturasComprasAjax{
     error_log("orden accion ".$this->accion,0);
     if($this->accion=="buscar"){
 
-      $parametro = "idCompra";  
-      $idCompra = $this->idCompra;      
-      $respuesta = ModeloFacturasCompras::mostrarFacturas($parametro,$idCompra); 
+      $parametro = "idCompra";
+      $idCompra = $this->idCompra;
+      $respuesta = ModeloFacturasCompras::mostrarFacturas($parametro,$idCompra);
 
     }elseif($this->accion=="buscarProveedor"){
 
       $idProveedor = $this->idProveedor;
       error_log("llegue a modificar ajax con id ".$idProveedor,0);
-      $respuesta = ModeloFacturasCompras::mostrarDatosProveedor($idProveedor); 
+      $respuesta = ModeloFacturasCompras::mostrarDatosProveedor($idProveedor);
 
     }elseif($this->accion=="validar"){
 
-     $idOrden = $this->idOrden;      
-     $respuesta = ModeloFacturasCompras::buscarOrdenCompra($idOrden); 
+     $idOrden = $this->idOrden;
+     $respuesta = ModeloFacturasCompras::buscarOrdenCompra($idOrden);
 
    }
 
@@ -52,7 +52,7 @@ class facturasComprasAjax{
  public function eliminarCompraAjax(){
 
   $idCompra = $this->idCompra;
-  $respuesta = ModeloFacturasCompras::eliminarCompra($idCompra);      
+  $respuesta = ModeloFacturasCompras::eliminarCompra($idCompra);
   echo json_encode($respuesta);
 
 
@@ -63,11 +63,11 @@ public function tratarFacturasComprasAjax(){
 
   if($this->accion=="inicial"){
 
-    $respuesta = ModeloFacturasCompras::insertarFacturaInicial();      
+    $respuesta = ModeloFacturasCompras::insertarFacturaInicial();
 
   }else if($this->accion=="update"){
    $idOrden = $this->idOrden;
-   $idCompra = $this->idCompra;   
+   $idCompra = $this->idCompra;
    $plazo = $this->plazo;
    $fecha = $this->fecha;
    $formaPago = $this->formaPago;
@@ -76,7 +76,7 @@ public function tratarFacturasComprasAjax(){
    $receptor = $this->receptor;
    $moneda = $this->moneda;
    $deposito = $this->deposito;
-   $respuesta = ModeloFacturasCompras::updateCompras($idCompra,$idOrden,$plazo, $fecha ,$formaPago, $estado,$factura,$receptor,$moneda,$deposito);        
+   $respuesta = ModeloFacturasCompras::updateCompras($idCompra,$idOrden,$plazo, $fecha ,$formaPago, $estado,$factura,$receptor,$moneda,$deposito);
 
 
  }else if($this->accion=="insert"){
@@ -84,15 +84,15 @@ public function tratarFacturasComprasAjax(){
   $cantidad =$this->cantidad;
   $importe = $this->importe;
   $idCompra = $this->idCompra;
-  $respuesta = ModeloFacturasCompras::insertarDetalleCompra($idCompra,$idProducto,$cantidad,$importe);  
-}  
+  $respuesta = ModeloFacturasCompras::insertarDetalleCompra($idCompra,$idProducto,$cantidad,$importe);
+}
 if($this->accion=="uProveedor"){
 
   $idProveedor =$this->idProveedor;
   $idCompra = $this->idCompra;
-  $respuesta = ModeloFacturasCompras::updateProveedorCompras($idCompra,$idProveedor);     
+  $respuesta = ModeloFacturasCompras::updateProveedorCompras($idCompra,$idProveedor);
 
-} 
+}
 
 echo json_encode($respuesta);
 
@@ -101,7 +101,7 @@ echo json_encode($respuesta);
 
 }
 
-if($_POST["accion"]=="buscar" || $_POST["accion"]=="buscarProveedor" || $_POST["accion"]=="validar"){ 
+if($_POST["accion"]=="buscar" || $_POST["accion"]=="buscarProveedor" || $_POST["accion"]=="validar"){
 
   $obj_Modificar = new facturasComprasAjax();
 
@@ -124,11 +124,12 @@ if($_POST["accion"]=="buscar" || $_POST["accion"]=="buscarProveedor" || $_POST["
 }else if($_POST["accion"]=="update" || $_POST["accion"]=="insert" || $_POST["accion"]=="inicial" || $_POST["accion"]=="uProveedor"){
 
   $obj_Modificar = new facturasComprasAjax();
-  
+
 
   if($_POST["accion"]=="update"){
+  
     $obj_Modificar -> idOrden = $_POST["idOrden"];
-    $obj_Modificar -> idCompra = $_POST["idCompra"];   
+    $obj_Modificar -> idCompra = $_POST["idCompra"];
     $obj_Modificar -> fecha = $_POST["fecha"];
     $obj_Modificar -> plazo = $_POST["plazo"];
     $obj_Modificar -> formaPago = $_POST["forma_pago"];
@@ -149,17 +150,17 @@ if($_POST["accion"]=="buscar" || $_POST["accion"]=="buscarProveedor" || $_POST["
 
   if($_POST["accion"]=="uProveedor"){
    $obj_Modificar -> idCompra = $_POST["idCompra"];
-   $obj_Modificar -> idProveedor = $_POST["idProveedor"]; 
+   $obj_Modificar -> idProveedor = $_POST["idProveedor"];
  }
- 
 
- $obj_Modificar -> accion = $_POST["accion"];    
+
+ $obj_Modificar -> accion = $_POST["accion"];
  $obj_Modificar ->tratarFacturasComprasAjax();
 
 }if($_POST["accion"]=="delete"){
 
  $obj_Modificar = new facturasComprasAjax();
- $obj_Modificar -> idCompra = $_POST["idCompra"]; 
- $obj_Modificar -> accion = $_POST["accion"];    
+ $obj_Modificar -> idCompra = $_POST["idCompra"];
+ $obj_Modificar -> accion = $_POST["accion"];
  $obj_Modificar ->eliminarCompraAjax();
 }

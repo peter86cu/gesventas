@@ -6,25 +6,13 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="vistas/recursos/index3.html" class="nav-link">Home</a>
+        <a href="inicio" class="nav-link">Inicio</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
+
     </ul>
 
-    <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form>
-  
+
+
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
@@ -87,11 +75,11 @@
       </li>
       <!-- Notifications Dropdown Menu -->
 
-       <?php $parametro1=null;          
+       <?php $parametro1=null;
           $not="SELECT id, tipo_notificacion, notif_msg, count(*) as cantidad, case when TIMESTAMPDIFF(DAY,fecha_notif,NOW()) >=1 then concat(TIMESTAMPDIFF(DAY,fecha_notif,NOW()),' ','dia') else concat (TIMESTAMPDIFF(minute,fecha_notif,NOW()),' ','minutos') end as fecha, c.class,c.descripcion FROM notif n inner join class_notificacion c on (n.tipo_notificacion= c.id_class_notif ) where estado =1 and username =".$_SESSION['id']." group by tipo_notificacion";
           $total_noti="SELECT count(*) as total FROM notif n inner join class_notificacion c on (n.tipo_notificacion= c.id_class_notif ) where estado =1 and username =".$_SESSION['id']." group by estado ";
-          $notif = ControlGeneral::mostrarNotificaciones($parametro1,$not); 
-          $total = ControlGeneral::mostrarNotificaciones($parametro1,$total_noti); 
+          $notif = ControlGeneral::mostrarNotificaciones($parametro1,$not);
+          $total = ControlGeneral::mostrarNotificaciones($parametro1,$total_noti);
               $total_notificado=0;
               foreach ($total as $key => $values) {
 
@@ -107,14 +95,14 @@
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header"><?php echo $total_notificado; ?> Notificaciones</span>
-       <?php foreach ($notif as $key => $values) { ?>            
+       <?php foreach ($notif as $key => $values) { ?>
           <div class="dropdown-divider"></div>
-         
+
           <a href="<?php echo $values['descripcion'] ?>" class="dropdown-item" onclick="notificacion_update(<?php echo $values['tipo_notificacion'] ?>)">
-            <?php echo $values['class'] ?></i> <?php echo $values['cantidad'];  echo $values['notif_msg']; ?>  
-            <span class="float-right text-muted text-sm"><?php echo $values['fecha'] ?></span>           
-          </a>  <?php  } ?>              
-          
+            <?php echo $values['class'] ?></i> <?php echo $values['cantidad'];  echo $values['notif_msg']; ?>
+            <span class="float-right text-muted text-sm"><?php echo $values['fecha'] ?></span>
+          </a>  <?php  } ?>
+
         </div>
       </li>
       <li class="nav-item">

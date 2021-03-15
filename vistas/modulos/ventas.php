@@ -2,7 +2,7 @@
   <aside class="main-sidebar elevation-4 sidebar-dark-indigo">
     <!-- Brand Logo -->
     <span  class="brand-link navbar-info">   <h1 id="HoraActual"> </h1></span>
-    
+
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user (optional) -->
@@ -10,9 +10,10 @@
         <div class="image">
           <img src="vistas/recursos/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
-        <?php 
-          $db = new BaseDatos(); 
-          $rol="";       
+        <?php
+
+          $db = new BaseDatos();
+          $rol="";
           if($resultado=$db->buscar("rol","id_rol=".$_SESSION['rol']."")){
             foreach($resultado as $row) {
               $rol=$row['rol'];
@@ -30,24 +31,24 @@
           <span class="color"><?php echo $_SESSION['user'] ?></span >
           <p><span class="color"><?php echo  $rol ?></span ></p>
           <p><span class="color"><?php echo  $caja ?></span ></p>
-           
+
            <div> <a href="logout" class="d-block"> <strong>Cerrar Sessión</strong>  </a></div>
       </div>
       </div>
 
        <!-- SidebarSearch Form -->
       <div class="form-inline">
-       
-             <p style ="float: right;"> <p class="color"><strong>Código Venta:</strong>  
+
+             <p style ="float: right;"> <p class="color"><strong>Código Venta:</strong>
               <input type="text" name="txt" id="txtVenta" style=" border: 0; color: #000000;" disabled="true"></p>
-              <p class="color"><strong> Código Apertura Caja:</strong> 
+              <p class="color"><strong> Código Apertura Caja:</strong>
               <input type="text" name="txt" id="txtApertura" style=" border: 0;color: #000000;" disabled="true"></p>
-              <p class="color"><strong> # Ticket:</strong> 
+              <p class="color"><strong> # Ticket:</strong>
               <input type="text" name="txt" id="txtOrden" style=" border: 0;color: #000000;" disabled="true"></p>
-          
-      </div>  
-     </aside>      
-       
+
+      </div>
+     </aside>
+
 
 
 <body class="hold-transition sidebar-mini" >
@@ -61,10 +62,10 @@
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-           
+
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-           
+
 
             </ol>
           </div><!-- /.col -->
@@ -110,7 +111,7 @@
                   ponleFocusylimpiarProductos();
                   function ponleFocusylimpiarProductos(){
                     document.getElementById("txtProductoV").focus();
-                    $('#txtProductoV').val(""); 
+                    $('#txtProductoV').val("");
                   }
 
                   inicio();
@@ -118,7 +119,7 @@
                   function inicio(){
                   document.title = "POS | Caja ";
 
-                    var datos = new FormData(); 
+                    var datos = new FormData();
                     var accion = "buscarArqueoCaja";
                     datos.append("accion",accion);
 
@@ -131,15 +132,15 @@
                      processData:false,
                      dataType: "json",
                      success: function(resp){
-                     
-                       if(resp!=null && resp['id_apertura_cajero']!=null)  {                       
+
+                       if(resp!=null && resp['id_apertura_cajero']!=null)  {
                          $('#txtApertura').val(resp['id_apertura_cajero']) ;
                          $('#txtVenta').val(resp['id_venta']) ;
                          $('#txtOrden').val(resp['consecutivo']) ;
                          genera_tabla();
 
                        }else{
-                         var datos = new FormData(); 
+                         var datos = new FormData();
                          var accion = "buscarArqueo";
                          datos.append("accion",accion);
 
@@ -155,7 +156,7 @@
                             console.log(respuesta)
                             if(respuesta){
 
-                             var datos = new FormData(); 
+                             var datos = new FormData();
                              var accion = "insert";
                              datos.append("accion",accion);
                              datos.append("idApertura",respuesta['id_apertura_cajero']);
@@ -170,9 +171,9 @@
                                dataType: "json",
                                success: function(datos){
 
-                                if(datos){                                         
+                                if(datos){
 
-                                  var datos = new FormData(); 
+                                  var datos = new FormData();
                                   var accion = "buscarArqueoCaja";
                                   datos.append("accion",accion);
 
@@ -207,10 +208,10 @@
                             Swal.fire({
                              icon: "error",
                              title: "Oops...",
-                             text: "No existe una apertura de caja!"               
+                             text: "No existe una apertura de caja!"
                            })
 
-                          }  
+                          }
                         }
                       });
                        }
@@ -219,7 +220,7 @@
                   }
 
                     function enviarVentaId(idVenta){
-                      var datos = new FormData(); 
+                      var datos = new FormData();
                       var accion = "enviarDatos";
                       datos.append("accion",accion);
                       datos.append("idVenta",idVenta);
@@ -238,7 +239,7 @@
                      });}
 
 
-                      $(document).ready(function(){ 
+                      $(document).ready(function(){
                        $("#txtProductoV").keypress(function(e) {
         //no recuerdo la fuente pero lo recomiendan para
         //mayor compatibilidad entre navegadores.
@@ -262,13 +263,13 @@
            success: function(respuesta){
 
             console.log(respuesta)
-            if (respuesta) {          
+            if (respuesta) {
 
               var datos = new FormData();
               var accion = "buscarStock";
               var cant = $("#txtCantP").val();
               datos.append("accion",accion);
-              datos.append("codigo",respuesta["id_producto"]);                 
+              datos.append("codigo",respuesta["id_producto"]);
               $.ajax({
                url: "ajax/ajaxVentas.php",
                method : "POST",
@@ -282,8 +283,8 @@
                 if(cantidad>0 && cantidad > cant){
                  document.querySelector('#nombreProductoV').innerText = respuesta["nombre"];
                  document.querySelector('#codigoProdV').innerText = respuesta["codigo"];
-                 document.querySelector('#precioP').innerText = respuesta["precio_venta"];  
-                 document.querySelector('#paraCodigo').innerText = "Código:";                 
+                 document.querySelector('#precioP').innerText = respuesta["precio_venta"];
+                 document.querySelector('#paraCodigo').innerText = "Código:";
                  buscarSimboloMonedaJS(respuesta["id_moneda"]);
                  $("#idImagenP").attr("src","vistas/recursos/dist/img/productos/"+respuesta["foto"]);
                  ponleFocusylimpiarProductos();
@@ -291,16 +292,18 @@
                }else{
                 alert("No hay stock disponible")
                                   //error de que no hay suficiente es stock
+                                  ponleFocusylimpiarProductos();
                                 }
                               }
                             });
             }else{
              alert("El producto no se encuentra")
                   //aqui es error de que no existe el producto
-                }                          
+                  ponleFocusylimpiarProductos();
+                }
               }
 
-            })                         
+            })
 
        }
      });
@@ -308,10 +311,10 @@
 
                       function genera_tabla() {
 
-                        var datos = new FormData(); 
-                        var accion = "buscarVentas";                     
+                        var datos = new FormData();
+                        var accion = "buscarVentas";
                         var idVenta = $("#txtVenta").val();
-                        datos.append("accion",accion);                      
+                        datos.append("accion",accion);
                         datos.append("idVenta",idVenta);
 
                         $.ajax({
@@ -322,13 +325,13 @@
                          contentType: false,
                          processData:false,
                          dataType: "json",
-                         success: function(resul){ 
-                          $('#g-table > tbody').empty(); 
-                          $('#h-table > tfoot').empty();   
+                         success: function(resul){
+                          $('#g-table > tbody').empty();
+                          $('#h-table > tfoot').empty();
                           var cantotal1=0;
                           var cantotal2=0;
-                          var cantotal3=0; 
-                          var suma_total=0;                         
+                          var cantotal3=0;
+                          var suma_total=0;
                           var sumaexcento=0;
                           var sumaiva5=0;
                           var sumaiva10=0;
@@ -337,13 +340,13 @@
                           var ivainput5=0;
                           var ivainput10=10;
                           var id_moneda=0;
-                          var sumaexcento =0;  
-                          var simbolo_moneda =0;                        
-                          var classs='';                
+                          var sumaexcento =0;
+                          var simbolo_moneda =0;
+                          var classs='';
                           for(var i=0; i<resul.length; i++){
                             console.log(resul)
 
-                            
+
                             id_moneda=resul[i].id_moneda;
                             if(resul[i].cantidad!=0){
                               if ( i % 2 == 0 ) {
@@ -362,7 +365,7 @@
                               sumaiva10 +=cantotal;
                             }
 
-                            suma_total = resul[i].precio*resul[i].cantidad+suma_total;                             
+                            suma_total = resul[i].precio*resul[i].cantidad+suma_total;
 
                           }
 
@@ -393,7 +396,7 @@
                       <th width="12%" id="sumaiva5">`+simbolo_moneda+ ' '+sumaiva5+ `</th>
                       <th width="12%" id="sumaiva10">`+simbolo_moneda+ ' '+sumaiva10+ `</th></tr>`;
 
-                      var datos2= `<tr>                                          
+                      var datos2= `<tr>
                       <th align="right"><label  id="total" style="font-size:240%; width:100%; margin-bottom:0;">
                       `+simbolo_moneda+suma_total+ `
                       </label></th>
@@ -401,7 +404,7 @@
 
 
 
-                      var datos3= `<tr>                     
+                      var datos3= `<tr>
                       <th width="5%"></th>
                       <th align="right"  style="background:#7F8793;color:#fff">IVA 5%<input type="hidden" id="ivainput5" value="`+iva5+ `"></th>
                       <th align="left" id="iva5">`+number_format(iva5,2,',','.')+ `</th>
@@ -415,7 +418,7 @@
                      $("#total_venta").val(suma_total);
                      $('#total').html(simbolo_moneda+number_format(suma_total,2,',','.'));
                      document.querySelector('#total_venta_confirmar').innerText = simbolo_moneda+number_format(suma_total,2,',','.');
-                   } 
+                   }
 
                  });
 
@@ -425,8 +428,8 @@
 
 
 
-function insertDetalleVenta(idProducto) {                      
-  var datos = new FormData(); 
+function insertDetalleVenta(idProducto) {
+  var datos = new FormData();
   var accion = "insertVentaDetalle";
   var idVenta = $('#txtVenta').val();
   var cantidad = $('#txtCantP').val();
@@ -443,7 +446,7 @@ function insertDetalleVenta(idProducto) {
    contentType: false,
    processData:false,
    dataType: "json",
-   success: function(resul){ 
+   success: function(resul){
 
      if(resul){
       enviarVentaId(idVenta);
@@ -451,7 +454,7 @@ function insertDetalleVenta(idProducto) {
 
     }
 
-  }  
+  }
 });
 
 
@@ -462,20 +465,20 @@ function insertDetalleVenta(idProducto) {
 function eliminar_producto(idVenta, idVentaDetalle, idProducto){
 
   var accion ="eliminar";
-  var datos = new FormData();                         
+  var datos = new FormData();
   datos.append("accion",accion);
-  datos.append("idVenta",idVenta); 
+  datos.append("idVenta",idVenta);
   datos.append("idVentaDetalle",idVentaDetalle);
   datos.append("idProducto",idProducto);
 
-  $.ajax({                        
+  $.ajax({
    url: "ajax/ajaxVentas.php",
    method : "POST",
    data: datos,
    chache: false,
    contentType: false,
    processData:false,
-   dataType: "json",                        
+   dataType: "json",
    success: function(data){
     if(data){
       $('#g-table > tbody').empty();
@@ -514,7 +517,7 @@ function cargar(evt,t){
  if(charCode=='13'){
    if($(t).hasClass("cantidad")){
 
-    agregar_forma_cobro(t); 
+    agregar_forma_cobro(t);
   }else{
     agregar_forma_cobro(t);
   }
@@ -532,13 +535,13 @@ function cargar(evt,t){
     <div class="prevPhoto ">
 
 
-      <img id="idImagenP" src="" style="border: silver 1px solid background: #218838;"  width="400" height="300">
+      <img id="idImagenP" src="vistas/recursos/dist/img/productos/img_producto.png" style="border: silver 1px solid background: #218838;"  width="400" height="300">
     </div>
 
     <div>
-     <p ><h2 style="color:#218838";><label id="nombreProductoV"></label> </h2></p> 
-     <p ><h6><label id="paraCodigo"></label><label id= "codigoProdV"></label> </h6></p> 
-     <p ><h1><strong><label id="precioP"> </label> <label id="monedaV"> </label></strong> </h2></p> 
+     <p ><h2 style="color:#218838";><label id="nombreProductoV"></label> </h2></p>
+     <p ><h6><label id="paraCodigo"></label><label id= "codigoProdV"></label> </h6></p>
+     <p ><h1><strong><label id="precioP"> </label> <label id="monedaV"> </label></strong> </h2></p>
 
      </div>
 
@@ -569,11 +572,11 @@ function cargar(evt,t){
       </thead>
 
 
-      <tbody id= "cuerpo"> 
-        <tr style="background: #ccffcc">                   
+      <tbody id= "cuerpo">
+        <tr style="background: #ccffcc">
 
-        </tr> 
-      </tbody>                  
+        </tr>
+      </tbody>
     </table>
 
 
@@ -586,7 +589,7 @@ function cargar(evt,t){
 
     <button type="submit" id="btPagar" class="btn btn-info" style="float:right"  href="javascript:;" onclick="abrir(); return false" >Confirmar</button>
     <input  type="hidden" value="" id="total_venta" name="total_venta"/>
-  </div> 
+  </div>
 </div>
 
 
@@ -613,15 +616,15 @@ function cargar(evt,t){
         <div class="modal-body">
 
           <div class="row">
-           <div class="col-lg-6 col-md-6 col-sm-6">                  
+           <div class="col-lg-6 col-md-6 col-sm-6">
             <select class="producto form-control" name="producto" id="producto" required>
               <option value="">Selecciona el producto</option>
-            </select>                 
+            </select>
           </div>
 
           <div class="col-md-12">
             <label>Producto</label>
-            <input class="form-control" id="descripcion" name="descripcion"  required required disabled="false"></input>           
+            <input class="form-control" id="descripcion" name="descripcion"  required required disabled="false"></input>
             <input type="hidden"  id="idCompra1" name="idCompra1"  value="" >
             <input type="hidden" class="form-control" id="action" name="action"  value="ajax">
           </div>
@@ -632,7 +635,7 @@ function cargar(evt,t){
           <div class="col-md-4">
             <label>Cantidad</label>
             <input type="text" class="form-control" id="cantidadC" name="cantidadC" required>
-          </div>           
+          </div>
 
           <div class="col-md-4">
             <label>Ultimo Precio</label>
@@ -651,13 +654,13 @@ function cargar(evt,t){
     </div>
   </div>
 </div>
-</form> 
+</form>
 <?php
 
 include("config/db.php");
 include("config/conexion.php");
 
-error_log($_claves['dolar']);
+
 
 
 ?>
@@ -704,7 +707,7 @@ function chang(t){
 function agregar_forma_cobro(t){
 
  var suma = 0;
- $('.cantidad').each(function(i){      
+ $('.cantidad').each(function(i){
   if($(this).val()!= ''&& $(this).val()!= 'undefined'){
     if(parseInt($(this).val())){
       suma = suma+parseInt($(this).val());
@@ -814,14 +817,14 @@ if(parseInt($('#total_venta').val())>suma){
 });
  if(credito==1){
   $("#credito_html").show();
-  $("#meses").focus();  
+  $("#meses").focus();
   if($("#cliente").val()=='1'){
     alert("Debe seleccionar Un cliente Valido");
-    return false; 
+    return false;
   }else{
     $('#vuelto').html(suma-parseInt($('#total_venta').val()).toString());
-    $('#finalizar').show('fast'); 
-  } 
+    $('#finalizar').show('fast');
+  }
 }else{
   $('#vuelto').html(suma-parseInt($('#total_venta').val()).toString());
   $('#finalizar').show('fast');
@@ -833,14 +836,14 @@ if(parseInt($('#total_venta').val())>suma){
 $(".pago").each(function(){
   if($(this).val()=='credito'){
     $("#credito_html").show();
-    $("#meses").focus();  
+    $("#meses").focus();
   }
 })
 
 }
 function guardar(evt){
  var charCode = (evt.which) ? evt.which : evt
- var total=$('#total_venta').val();     
+ var total=$('#total_venta').val();
  var id_venta = $('#txtVenta').val();
  var nombre_cliente = $('#cliente').val();
  var forma_pago = '';
@@ -856,18 +859,18 @@ function guardar(evt){
   }
 });
 
- $('.pago').each(function(i){      
+ $('.pago').each(function(i){
   forma_pago += $(this).val()+'|';
 });
  var tipo ='';
- $('input[type="radio"]').each(function(i){      
+ $('input[type="radio"]').each(function(i){
   if($(this).parent().attr('class')=="checked"){
     tipo = $(this).val();
   }
 });
 
 
- if(parseInt($('#total_venta').val())<=suma){      
+ if(parseInt($('#total_venta').val())<=suma){
    $.ajax({
     url: "ajax/ajaxGuardarVenta.php",
     data: "total="+total+'&id_venta='+id_venta+'&forma_pago='+forma_pago+'&cantidad='+cantidad+'&tipo='+tipo+'&cliente='+nombre_cliente+'&vuelo='+vuelto+'&iva5='+$("#ivainput5").val()+'&iva10='+$("#ivainput10").val()+"&meses="+$("#meses").val()+"&interes_venta="+$("#interes_venta").val(),
@@ -883,18 +886,37 @@ function guardar(evt){
          showConfirmButton: false,
          timer: 1100
        })
+       var accion = "buscarVentas";
+         $.ajax({
+           url: "ajax/ajaxVentas.php",
+           data: "idVenta="+id_venta+'&accion='+accion,
+           type: "POST",
+           dataType: "json",
+           success: function(resultado){
+             console.log(resultado);
+             if(resultado){
+               for(let i=0; i< e.data.zonas.lenght;i++){
+                 $.post(`https://167.62.136.170/printapp/print/venta`,{venta:resultado,zonas:null})
+                .done(function(res)){
+                console.log(JSON.parse(res));
+                }
+                }
+             }
 
-        setTimeout(function() {location.reload();}, 1105)
-        inicio();
+             setTimeout(function() {location.reload();}, 1105)
+             inicio();
+           }
+         });
+
 
       }else{
-        alert('No se pudo Guardar Ocurrio un error interno:\n:'+data.error);  
+        alert('No se pudo Guardar Ocurrio un error interno:\n:'+data.error);
       }
     }
-  });  
+  });
  }
  else{
-  alert('los valores no superan a la venta'); 
+  alert('los valores no superan a la venta');
 }
 
 }
@@ -903,7 +925,7 @@ function quitar(id){
   var tr= td.parentNode;
   var table = tr.parentNode;
   table.removeChild(tr);
-  
+
 }
 $(function(){
   $('#total_venta_confirmar').html("Gs. "+number_format($('#total_venta').val(),0,',','.'));
@@ -933,7 +955,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
       s[1] += new Array(prec - s[1].length + 1).join('0');
     }
     return s.join(dec);
-  }  
+  }
 </script>
 
 <style>
@@ -953,7 +975,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 
 </style>
 
-<div id="confirm-form" title="<?=$titulo_form?>"  style="display: none"> 
+<div id="confirm-form" title="<?=$titulo_form?>"  style="display: none">
  <fieldset>
   <h2 id="total_venta_confirmar"></h2>
   <hr />
@@ -990,9 +1012,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
       </div>
       <br>
       <h2>El Vuelto es:<label id="vuelto"></label></h2>
-      <div style="position:absolute; bottom:1px;">Presione Enter Para confirmar</div> 
+      <div style="position:absolute; bottom:1px;">Presione Enter Para confirmar</div>
       <button id="finalizar"  class="skin_colour round_all" style="float:right; display:none" onclick="guardar(event)"> <img width="24" height="24" alt="Price Tag" src="images/icons/small/white/Price%20Tag.png"> <span>Finalizar</span></button>
     </fieldset>
   </div>
-
-  

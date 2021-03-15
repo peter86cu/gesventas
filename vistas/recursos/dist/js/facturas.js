@@ -19,7 +19,7 @@ function agregarFacturaInicial(event){
 
       $("#idCompra").val(respuesta);
       document.querySelector('#idFactura').innerText = respuesta;
-      $('#ModalADDFacturas').modal('show');     
+      $('#ModalADDFacturas').modal('show');
       mostrar_itemsFactura(respuesta,"nada");
     }else{
       Swal.fire({
@@ -30,7 +30,7 @@ function agregarFacturaInicial(event){
      })
     }
   }
-});	
+});
 
 
 }
@@ -48,12 +48,12 @@ $('#myModalCompra').on('hidden.bs.modal', function (e) {
 
 $(".ModalEditarCompras").click(function(){
 
-  var idCompra = $(this).attr("idCompra");  
-  var datos = new FormData();  
+  var idCompra = $(this).attr("idCompra");
+  var datos = new FormData();
   var accion = "buscar";
   datos.append("accion",accion);
-  datos.append("idCompra",idCompra); 
-  
+  datos.append("idCompra",idCompra);
+
 
 
   $.ajax({
@@ -64,14 +64,14 @@ $(".ModalEditarCompras").click(function(){
    contentType: false,
    processData:false,
    dataType: "json",
-   success: function(respuesta){     
+   success: function(respuesta){
 
 
     document.querySelector('#idCompraE').innerText = respuesta["id_entrada_compra"];
-    //document.querySelector('#datepicker').innerText = respuesta["fecha_hora"]; 
-    $("#txtFormaPagoFE > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);                 
+    //document.querySelector('#datepicker').innerText = respuesta["fecha_hora"];
+    $("#txtFormaPagoFE > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);
     $("#txtEnvioFE > option[value="+respuesta["id_plazo"]+"]").attr("selected",true);
-    $("#txtDepositoE > option[value="+respuesta["id_deposito"]+"]").attr("selected",true);                 
+    $("#txtDepositoE > option[value="+respuesta["id_deposito"]+"]").attr("selected",true);
     $("#txtMonedaFE > option[value="+respuesta["id_moneda"]+"]").attr("selected",true);
     $("#txtReceptorE > option[value="+respuesta["receptor"]+"]").attr("selected",true);
     buscar_proveedor_factura(respuesta["id_proveedor"],"1");
@@ -81,7 +81,7 @@ $(".ModalEditarCompras").click(function(){
     $("#idCompra1E").val(respuesta["id_entrada_compra"]);
     $("#proveedorCE").val(respuesta["id_proveedor"]);
     $("#datepickerCE").val(respuesta["fecha_hora"]);
-    
+
     if(respuesta["estado"]==3){
       $('#autorizar').attr("disabled", true);
       $('#cancelar').attr("disabled", true);
@@ -89,7 +89,7 @@ $(".ModalEditarCompras").click(function(){
       $('#autorizar').attr("disabled", false);
       $('#cancelar').attr("disabled", false);
     }
-    
+
 
     validarNumeroFactura(2);
     validarFecha(2);
@@ -100,7 +100,7 @@ $(".ModalEditarCompras").click(function(){
     validarReceptor(2);
     validarMoneda(2);
   }
-  
+
 
 });
 
@@ -109,14 +109,14 @@ $(".ModalEditarCompras").click(function(){
 
 $(".ModalADDFacturas").click(function(){
 
-  var idCompra = $(this).attr("idCompra");  
+  var idCompra = $(this).attr("idCompra");
 
   var datos = new FormData();
-  
+
   var accion = "buscar";
   datos.append("accion",accion);
-  datos.append("idCompra",idCompra); 
-  
+  datos.append("idCompra",idCompra);
+
 
   $.ajax({
    url: "ajax/ajaxFacturasCompras.php",
@@ -126,13 +126,13 @@ $(".ModalADDFacturas").click(function(){
    contentType: false,
    processData:false,
    dataType: "json",
-   success: function(respuesta){     
+   success: function(respuesta){
 
     document.querySelector('#idFactura').innerText = respuesta["id_entrada_compra"];
-    //document.querySelector('#datepicker').innerText = respuesta["fecha_hora"]; 
-    $("#txtFormaPagoF > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);                 
+    //document.querySelector('#datepicker').innerText = respuesta["fecha_hora"];
+    $("#txtFormaPagoF > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);
     $("#txtEnvioF > option[value="+respuesta["id_plazo"]+"]").attr("selected",true);
-    $("#txtDeposito > option[value="+respuesta["id_deposito"]+"]").attr("selected",true);                 
+    $("#txtDeposito > option[value="+respuesta["id_deposito"]+"]").attr("selected",true);
     $("#txtMonedaF > option[value="+respuesta["id_moneda"]+"]").attr("selected",true);
     $("#txtReceptor > option[value="+respuesta["id_usuario"]+"]").attr("selected",true);
     $("#idCompra").val(respuesta["id_entrada_compra"]);
@@ -151,10 +151,10 @@ $(".ModalADDFacturas").click(function(){
     validarDeposito(1);
     validarReceptor(1);
     validarMoneda(1);
-    
+
 
   }
-  
+
 
 });
 
@@ -171,10 +171,10 @@ function validarOrdenCompra(modo){
 }
 
 
-var datos = new FormData(); 
+var datos = new FormData();
 var accion = "validar";
 datos.append("accion",accion);
-datos.append("idOrden",idorden); 
+datos.append("idOrden",idorden);
 
 if(idorden==''){
   $('#txtOrdenCompra').addClass("form-control is-invalid");
@@ -189,21 +189,21 @@ if(idorden==''){
    contentType: false,
    processData:false,
    dataType: "json",
-   success: function(respuesta){     
-    
+   success: function(respuesta){
+
     if(respuesta==idorden){
       $('#txtOrdenCompra').removeClass("form-control is-invalid");
       $('#txtOrdenCompra').addClass("form-control is-valid");
       $('#txtOrdenCompraE').removeClass("form-control is-invalid");
       $('#txtOrdenCompraE').addClass("form-control is-valid");
       result=true;
-      
+
     }else{
       $('#txtOrdenCompra').addClass("form-control is-invalid");
       $('#txtOrdenCompraE').addClass("form-control is-invalid");
       result=false;
-    }    
-  }  
+    }
+  }
 });
 }
 return result;
@@ -230,7 +230,7 @@ function validarFormaPago(modo){
   $('#txtFormaPagoF').addClass("form-control is-invalid");
   $('#txtFormaPagoE').addClass("form-control is-invalid");
   result=false;
-}    
+}
 return result;
 
 }
@@ -257,7 +257,7 @@ function validarMetodoEnvio(modo){
   $('#txtEnvioF').addClass("form-control is-invalid");
   $('#txtEnvioFE').addClass("form-control is-invalid");
   result=false;
-}    
+}
 return result;
 }
 
@@ -283,7 +283,7 @@ function validarDeposito(modo){
   $('#txtDepositoE').addClass("form-control is-invalid");
   $('#txtDeposito').addClass("form-control is-invalid");
   result=false;
-}    
+}
 return result;
 }
 
@@ -309,7 +309,7 @@ function validarReceptor(modo){
   $('#txtReceptorE').addClass("form-control is-invalid");
   $('#txtReceptor').addClass("form-control is-invalid");
   result=false;
-}    
+}
 return result;
 }
 
@@ -335,8 +335,8 @@ function validarMoneda(modo){
   $('#txtMonedaFE').addClass("form-control is-invalid");
   $('#txtMonedaF').addClass("form-control is-invalid");
   result=false
-} 
-return result;   
+}
+return result;
 
 }
 
@@ -372,7 +372,7 @@ function validarFecha(modo){
   }else{
     var fecha = $("#datepickerF").val();
   }
-  
+
   if(fecha !=''){
     $('#datepickerF').removeClass("form-control is-invalid");
     $('#datepickerF').addClass("form-control is-valid");
@@ -387,13 +387,13 @@ function validarFecha(modo){
    }
    return result;
  }
- 
+
 /*$(document).ready(function()
   {
   $("#txtNumeroFactura").focus(function(){
         $(this).css("background-color", "#FFFFCC");
   });
- 
+
   $("#texto2").focus(function(){
     $(this).hide("slow");
   });
@@ -402,7 +402,7 @@ function validarFecha(modo){
 function guardarDetalleCompra(event){
 
 
-  var idProducto = $('#producto').val();   
+  var idProducto = $('#producto').val();
   var idCompra = $('#idCompra').val();
   var cantidad = $('#cantidadC').val();
   var importe = $('#precioC').val();
@@ -432,7 +432,7 @@ function guardarDetalleCompra(event){
          title: "Item agregado",
          showConfirmButton: false,
          timer: 1100
-       })  
+       })
 
         mostrar_itemsFactura(idCompra,"nada");
 
@@ -445,7 +445,7 @@ function guardarDetalleCompra(event){
        })
       }
     }
-  }); 
+  });
 }
 
 function mostrar_itemsFactura(id,accion){
@@ -472,7 +472,7 @@ function mostrar_itemsFactura(id,accion){
 function buscar_proveedor_factura(id,paso){
 
   var datos = new FormData();
-  
+
   var accion = "buscarProveedor";
   datos.append("accion",accion);
   datos.append("idProveedor",id,);
@@ -486,32 +486,32 @@ function buscar_proveedor_factura(id,paso){
    processData:false,
    dataType: "json",
    success: function(respuesta){
-    
+
 
      if(paso=="1"){
       document.querySelector('#proveedorNE').innerText = respuesta["razon_social"];
-      document.querySelector('#direccionE').innerText = respuesta["direccion"]; 
+      document.querySelector('#direccionE').innerText = respuesta["direccion"];
       document.querySelector('#emailE').innerText = respuesta["email"];
-      document.querySelector('#telefonoE').innerText = respuesta["telefono"]; 
+      document.querySelector('#telefonoE').innerText = respuesta["telefono"];
       document.querySelector('#autorizo').innerText = respuesta["razon_social"];
-      document.querySelector('#cancelo').innerText = respuesta["razon_social"]; 
+      document.querySelector('#cancelo').innerText = respuesta["razon_social"];
     }if(paso=="2"){
       document.querySelector('#proveedorNF').innerText = respuesta["razon_social"];
-      document.querySelector('#direccionF').innerText = respuesta["direccion"]; 
+      document.querySelector('#direccionF').innerText = respuesta["direccion"];
       document.querySelector('#emailF').innerText = respuesta["email"];
-      document.querySelector('#telefonoF').innerText = respuesta["telefono"]; 
+      document.querySelector('#telefonoF').innerText = respuesta["telefono"];
 
     }
 
   }
-  
+
 
 })
 }
 
 
 $(document).ready(function() {
-  $( ".proveedor2" ).select2({        
+  $( ".proveedor2" ).select2({
     ajax: {
       url: "ajax/buscarProveedor.php",
       dataType: 'json',
@@ -529,14 +529,14 @@ $(document).ready(function() {
             cache: true
           },
           minimumInputLength: 2
-        }).on('change', function (e){ 
+        }).on('change', function (e){
 
-          var idProveedor = $('.proveedor2').select2('data')[0].id;        
+          var idProveedor = $('.proveedor2').select2('data')[0].id;
           var nombre = $('.proveedor2').select2('data')[0].text;
-          var email = $('.proveedor2').select2('data')[0].email;    
+          var email = $('.proveedor2').select2('data')[0].email;
           var telefono = $('.proveedor2').select2('data')[0].telefono;
           var direccion = $('.proveedor2').select2('data')[0].direccion;
-          $('#idProveedorF').html(idProveedor);         
+          $('#idProveedorF').html(idProveedor);
           $('#proveedorNF').html(nombre);
           $('#emailF').html(email);
           $('#telefonoF').html(telefono);
@@ -550,7 +550,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-  $( ".producto" ).select2({        
+  $( ".producto" ).select2({
     ajax: {
       url: "ajax/buscarProductos.php",
       dataType: 'json',
@@ -570,12 +570,12 @@ $(document).ready(function() {
           minimumInputLength: 2
         }).on('change', function (e){
 
-          $("#descripcion").val($('.producto').select2('data')[0].nombre);    
+          $("#descripcion").val($('.producto').select2('data')[0].nombre);
           $("#precio").val($('.producto').select2('data')[0].precio);
 
 
         })
-      }); 
+      });
 
 
 function eliminar_item(id){
@@ -596,7 +596,7 @@ function eliminar_item(id){
 
 
 
-function guardar_compra(estado){  
+function guardar_compra(estado){
 
  if(estado==1){
   var var_estado  =2;
@@ -615,7 +615,7 @@ if(!validarReceptor(1) || !validarMoneda(1) || !validarNumeroFactura(1) || !vali
   icon: 'error',
   title: 'Oops...',
   text: 'Hay campos obligatorios sin completar!',
-  
+
 })
 }else{
 
@@ -631,7 +631,7 @@ var moneda = $('#txtMonedaF').val();
 var datos = new FormData();
 var accion = "update";
 
-datos.append("accion",accion);    
+datos.append("accion",accion);
 datos.append("idOrden",idOrden);
 datos.append("idCompra",idCompra);
 datos.append("plazo",plazo);
@@ -673,7 +673,7 @@ $.ajax({
    })
   }
 }
-}); 
+});
 }
 
 }
@@ -692,7 +692,8 @@ $(function(){
 
 
 
-function guardar_compraEditadas(estado){  
+function guardar_compraEditadas(estado){
+
  if(estado==1){
   var var_estado  =2;
 }
@@ -709,7 +710,7 @@ if(!validarReceptor(2) || !validarMoneda(2) || !validarNumeroFactura(2) || !vali
   icon: 'error',
   title: 'Oops...',
   text: 'Hay campos obligatorios sin completar!',
-  
+
 })
 }else{
 var idOrden = $('#txtOrdenCompraE').val();
@@ -769,7 +770,7 @@ if(var_estado>1){
      })
     }
   }
-}); 
+});
 }else if(var_estado==4){
  Swal.fire({
    icon: "error",
@@ -787,19 +788,16 @@ if(var_estado>1){
 }
 
 
-function guardar_proveedorFactura(idProveedor){ 
+function guardar_proveedorFactura(idProveedor){
 
-  
-  var idCompra = $('#idCompra').val();  
-  
-  alert(idCompra);
-  
+
+  var idCompra = $('#idCompra').val();
   var datos = new FormData();
-  var accion = "uProveedor";  
+  var accion = "uProveedor";
   datos.append("accion",accion);
-  datos.append("idProveedor",idProveedor); 
-  datos.append("idCompra",idCompra); 
-  
+  datos.append("idProveedor",idProveedor);
+  datos.append("idCompra",idCompra);
+
   $.ajax({
     url: "ajax/ajaxFacturasCompras.php",
     method : "POST",
@@ -812,12 +810,12 @@ function guardar_proveedorFactura(idProveedor){
 
 
     }
-  });  
-  
+  });
+
 }
 
 
-$(".btnEliminarFactura").click(function(){  
+$(".btnEliminarFactura").click(function(){
 
  var idCompra =  $(this).attr("idCompra");
  var datos = new FormData();
@@ -831,7 +829,7 @@ $(".btnEliminarFactura").click(function(){
     confirmButton: 'btn btn-success',
     cancelButton: 'btn btn-danger'
   },
-  buttonsStyling: false      
+  buttonsStyling: false
 })
 
  swalWithBootstrapButtons.fire({
@@ -858,7 +856,7 @@ $(".btnEliminarFactura").click(function(){
       swalWithBootstrapButtons.fire(
        'Eliminado!',
        'La orden a sido eliminada.',
-       'success'                   
+       'success'
        ).then((result)=> {
          if (result.isConfirmed)
            location.reload();
@@ -874,7 +872,7 @@ $(".btnEliminarFactura").click(function(){
     }
 
   }
-});  
+});
 
  } else if (
   /* Read more about handling dismissals below */
@@ -888,16 +886,13 @@ $(".btnEliminarFactura").click(function(){
 }
 })
 
-}) 
+})
 
 
 function datosImprimir(idOrden){
 
 
-  VentanaCentrada('./pdf/documentos/orden.php?idOrden='+idOrden,'Orden','','1024','768','true');  
+  VentanaCentrada('./pdf/documentos/orden.php?idOrden='+idOrden,'Orden','','1024','768','true');
 
 
 }
-
-
-

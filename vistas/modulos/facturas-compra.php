@@ -23,35 +23,35 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>       
-       
+       <button class="btn btn-primary" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
+
      </div>
    </div>
    <div class="card-body">
-       
+
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
         <tr>
           <th>Número</th>
-          <th>Fecha</th>         
-          <th>Items</th> 
-          <th>Total</th>         
+          <th>Fecha</th>
+          <th>Items</th>
+          <th>Total</th>
           <th>Entrado por</th>
           <th>Recibido por</th>
-          <th>Proveedor</th>   
-          <th>Estado</th>        
+          <th>Proveedor</th>
+          <th>Estado</th>
           <th style="width: 7%">Acciones</th>
         </tr>
       </thead>
       <tbody>
 
 
-        <?php 
+        <?php
         $parametro= null;
         $datos= "SELECT ec.id_entrada_compra,
         DATE_FORMAT(ec.fecha_hora, '%d-%m-%Y') as fecha,
-        (select count(*) from entradas_compras_detalle where id_entrada_compra=ec.id_entrada_compra) as items, 
+        (select count(*) from entradas_compras_detalle where id_entrada_compra=ec.id_entrada_compra) as items,
         e.descripcion as estado,
         e.id_entrada_compra_estado as id_estado,
         u.nombres,
@@ -62,7 +62,7 @@
         FROM   entradas_compras_estados e,usuarios u,entradas_compras ec
         left join proveedores  as pro on ec.id_proveedor=pro.id_proveedor
         LEFT JOIN depositos as d on ec.id_deposito=d.id_deposito
-        WHERE  e.id_entrada_compra_estado = ec.estado and u.id_usuario=ec.id_usuario and ec.fecha_baja is null order by id_entrada_compra ";
+        WHERE  e.id_entrada_compra_estado = ec.estado and u.id_usuario=ec.id_usuario and ec.fecha_baja is null order by id_entrada_compra desc";
         $ordenes = ControlFacturaCompras::mostrarFacturas($parametro,$datos);
         foreach ($ordenes as $key => $value) {
           if($value['id_estado']==2){
@@ -85,8 +85,8 @@
           if($value['total']>0){
             $total=$value['total'];
           }
-          
-          $parametro1=null;          
+
+          $parametro1=null;
           $usuario="SELECT nombres from usuarios where id_usuario=".$value['id_usuario_recibio']."";
           $recibido_por = ControlFacturaCompras::mostrarFacturas($parametro1,$usuario);
           $recibido="";
@@ -98,30 +98,30 @@
           ?>
 
           <tr>
-            <td style="width: 1%"><?php echo $value['id_entrada_compra'] ?></td>                 
-            <td style="width: 8%"><?php echo $value['fecha']?></td>            
+            <td style="width: 1%"><?php echo $value['id_entrada_compra'] ?></td>
+            <td style="width: 8%"><?php echo $value['fecha']?></td>
             <td style="width: 5%"><?php echo $value['items']?></td>
-            <td style="width: 8%"><?php echo $total ?></td>                 
-            <td style="width: 8%"><?php echo $value['nombres']?></td>             
-            <td style="width: 8%"><?php echo $recibido ?></td>  
-            <td style="width: 8%"><?php echo $provee ?></td>  
-            <td style="width: 8%">                    
-              <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>                
-            </td>        
+            <td style="width: 8%"><?php echo $total ?></td>
+            <td style="width: 8%"><?php echo $value['nombres']?></td>
+            <td style="width: 8%"><?php echo $recibido ?></td>
+            <td style="width: 8%"><?php echo $provee ?></td>
+            <td style="width: 8%">
+              <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>
+            </td>
             <td style="text-align: left;">
               <div class="btn-bt-group"></div>
 
               <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
                 <button class="btn btn-warning ModalEditarCompras" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarCompras" ><i class="far fa-edit"></i></button>
-              <?php } else { ?> 
-                <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" ><i class="far fa-edit"></i></button>  
-              <?php  } ?>                            
+              <?php } else { ?>
+                <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" ><i class="far fa-edit"></i></button>
+              <?php  } ?>
               <button class="btn btn-danger btnEliminarFactura" idCompra="<?php echo $value['id_entrada_compra'] ?>" ><i  class="fas fa-trash"></i></button>
-              <?php if ($value['id_estado']==3 and $value['items']>0) { ?>    
+              <?php if ($value['id_estado']==3 and $value['items']>0) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimir(<?php echo $value['id_entrada_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
               <?php }  ?>
             </td>
-          </tr>   
+          </tr>
 
         <?php }  ?>
 
@@ -146,24 +146,24 @@
 
   .text_rojo{
     color:#C40000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_verde{
     color:#060;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_azul{
     color:#00F;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_naranja{
     color:#F60;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_negro{
     color:#000000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_normal{
@@ -171,7 +171,7 @@
 
   }
 
-  
+
 </style>
 
 
@@ -195,7 +195,7 @@
 
 
             <div id="print-area">
-                   
+
 
 
               <div class="row ">
@@ -205,7 +205,7 @@
                   <select class="proveedor2 form-control" name="proveedor2" id="proveedor2" required>
                     <option value="">Selecciona el proveedor</option>
                   </select>
-                  <h4><strong>Proveedor: </strong><Label id="proveedorNF"></Label></h4> 
+                  <h4><strong>Proveedor: </strong><Label id="proveedorNF"></Label></h4>
                   <span id="direccionF"></span>
                   <input type="hidden"  id="idProveedorF" name="idProveedorF"  value="" >
                   <h4><strong>E-mail: </strong><span id="emailF"></span></h4>
@@ -216,7 +216,7 @@
 
                       <label for="txtOrdenCompra">Orden de Compra</label>
                       <input type="text"  id="txtOrdenCompra" name="txtOrdenCompra" value="" onBlur="validarOrdenCompra(1);" autofocus required >
-                    </div> 
+                    </div>
                     <div class="col-lg-6">
                       <label for="txtNumeroFactura">No. Factura</label>
                       <input type="text"  id="txtNumeroFactura" name="txtNumeroFactura" value="" onBlur="validarNumeroFactura(1);" autofocus required>
@@ -245,13 +245,13 @@
                       <select id="txtFormaPagoF" name="txtFormaPagoF" class="form-control custom-select" onBlur="validarFormaPago(1);" required>
                         <option  selected disabled>Seleccione</option>
                         <?php
-                        $db = new BaseDatos();                                                           
+                        $db = new BaseDatos();
                         if($resultado=$db->buscar("formas_pagos","1")){
                           foreach($resultado as $row) { ?>
-                            <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                          </select>    
+                            <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                          </select>
 
-                        </div> 
+                        </div>
 
 
                         <div class="col-lg-5">
@@ -259,11 +259,11 @@
                           <select id="txtEnvioF" name="txtEnvioF" class="form-control custom-select" onBlur="validarMetodoEnvio(1);" required>
                             <option  selected disabled>Seleccines</option>
                             <?php
-                            $db = new BaseDatos();                                                           
+                            $db = new BaseDatos();
                             if($resultado=$db->buscar("plazos","1")){
                               foreach($resultado as $row) { ?>
-                                <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                              </select> 
+                                <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                              </select>
                             </div>
 
                           </div>
@@ -275,13 +275,13 @@
                               <select id="txtDeposito" name="txtDeposito" class="form-control custom-select" onBlur="validarDeposito(1);" >
                                 <option  selected disabled required>Seleccines</option>
                                 <?php
-                                $db = new BaseDatos();                                                           
+                                $db = new BaseDatos();
                                 if($resultado=$db->buscar("depositos","1")){
                                   foreach($resultado as $row) { ?>
-                                    <option value=<?=$row['id_deposito'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                  </select>    
+                                    <option value=<?=$row['id_deposito'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                  </select>
 
-                                </div> 
+                                </div>
 
 
                                 <div class="col-lg-5">
@@ -289,11 +289,11 @@
                                   <select id="txtMonedaF" name="txtMonedaF" class="form-control custom-select" onBlur="validarMoneda(1);" required>
                                     <option  selected disabled>Seleccines</option>
                                     <?php
-                                    $db = new BaseDatos();                                                           
+                                    $db = new BaseDatos();
                                     if($resultado=$db->buscar("monedas","1")){
                                       foreach($resultado as $row) { ?>
-                                        <option value=<?=$row['id_moneda'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                      </select> 
+                                        <option value=<?=$row['id_moneda'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                      </select>
                                     </div>
 
                                   </div>
@@ -305,13 +305,13 @@
                                     <select id="txtReceptor" name="txtReceptor" class="form-control custom-select" onBlur="validarReceptor(1);" required >
                                       <option  selected disabled>Seleccione</option>
                                       <?php
-                                      $db = new BaseDatos();                                                           
+                                      $db = new BaseDatos();
                                       if($resultado=$db->buscar("usuarios","1")){
                                         foreach($resultado as $row) { ?>
-                                          <option value=<?=$row['id_usuario'] ?>><?=$row['nombres'] ?></option> <?php } } ?>                                        
-                                        </select>    
+                                          <option value=<?=$row['id_usuario'] ?>><?=$row['nombres'] ?></option> <?php } } ?>
+                                        </select>
 
-                                      </div> 
+                                      </div>
                                     </div>
 
 
@@ -335,7 +335,7 @@
                                             <th class='text-center'>Total</th>
                                             <th class='text-center'></th>
                                           </tr>
-                                        </thead>                            
+                                        </thead>
                                         <tbody class='items'>
                                         </tbody>
 
@@ -379,15 +379,15 @@
                           <div class="modal-body">
 
                             <div class="row">
-                             <div class="col-lg-6 col-md-6 col-sm-6">                  
+                             <div class="col-lg-6 col-md-6 col-sm-6">
                               <select class="producto form-control" name="producto" id="producto" required>
                                 <option value="">Selecciona el producto</option>
-                              </select>                 
+                              </select>
                             </div>
 
                             <div class="col-md-12">
                               <label>Producto</label>
-                              <input class="form-control" id="descripcion" name="descripcion"  required  disabled="false"></input>           
+                              <input class="form-control" id="descripcion" name="descripcion"  required  disabled="false"></input>
                               <input type="hidden"  id="idCompra1" name="idCompra1"  value="" >
                               <input type="hidden" class="form-control" id="action" name="action"  value="ajax">
                             </div>
@@ -398,7 +398,7 @@
                             <div class="col-md-4">
                               <label>Cantidad</label>
                               <input type="text" class="form-control" id="cantidadC" name="cantidadC" required>
-                            </div>           
+                            </div>
 
                             <div class="col-md-4">
                               <label>Ultimo Precio</label>
@@ -417,7 +417,7 @@
                       </div>
                     </div>
                   </div>
-                </form> 
+                </form>
 
 
 
@@ -458,13 +458,13 @@
 
 
                           <div id="print-area">
-                           
+
                             <div class="row ">
                               <hr />
-                              <div class="col-lg-6 col-md-6 col-sm-6">                       
-                                <h2>Detalles del proveedor :</h2>                         
-                                <h4><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h4> 
-                                <input type="hidden"  id="proveedorCE" name="proveedorCE"  value="" >               
+                              <div class="col-lg-6 col-md-6 col-sm-6">
+                                <h2>Detalles del proveedor :</h2>
+                                <h4><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h4>
+                                <input type="hidden"  id="proveedorCE" name="proveedorCE"  value="" >
                                 <h4><strong>Dirección: </strong><Label id="direccionE"></Label>
                                   <h4><strong>E-mail: </strong><Label id="emailE"></Label></h4>
                                   <h4><strong>Teléfono: </strong><Label id="telefonoE"></Label></h4>
@@ -473,7 +473,7 @@
 
                                       <label for="txtOrdenCompraE">Orden de Compra</label>
                                       <input type="text"  id="txtOrdenCompraE" name="txtOrdenCompraE" value="" onBlur="validarOrdenCompra(2);" autofocus required>
-                                    </div> 
+                                    </div>
                                     <div class="col-lg-6">
                                       <label for="txtNumeroFacturaE">No. Factura</label>
                                       <input type="text"  id="txtNumeroFacturaE" name="txtNumeroFacturaE" value="" onBlur="validarNumeroFactura(2);" autofocus required >
@@ -493,7 +493,7 @@
                                       <input type="hidden"  id="idCompra1E" name="idCompra1E"  value="" >
                                     </div>
                                     <div class="col-lg-5">
-                                     <h5><strong>Fecha: </strong></h5><input type="text" id="datepickerCE" onBlur="validarFecha(2);" autofocus required="true">                         
+                                     <h5><strong>Fecha: </strong></h5><input type="text" id="datepickerCE" onBlur="validarFecha(2);" autofocus required="true">
                                    </div>
 
                                  </div>
@@ -504,13 +504,13 @@
                                     <select id="txtFormaPagoFE" name="txtFormaPagoFE" class="form-control custom-select" onBlur="validarFormaPago(2);" required>
                                       <option  selected disabled>Seleccines</option>
                                       <?php
-                                      $db = new BaseDatos();                                                           
+                                      $db = new BaseDatos();
                                       if($resultado=$db->buscar("formas_pagos","1")){
                                         foreach($resultado as $row) { ?>
-                                          <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                        </select>    
+                                          <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                        </select>
 
-                                      </div> 
+                                      </div>
 
 
                                       <div class="col-lg-5">
@@ -518,11 +518,11 @@
                                         <select id="txtEnvioFE" name="txtEnvioFE" class="form-control custom-select" onBlur="validarMetodoEnvio(2);" required>
                                           <option  selected disabled>Seleccione</option>
                                           <?php
-                                          $db = new BaseDatos();                                                           
+                                          $db = new BaseDatos();
                                           if($resultado=$db->buscar("plazos","1")){
                                             foreach($resultado as $row) { ?>
-                                              <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                            </select> 
+                                              <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                            </select>
                                           </div>
 
                                         </div>
@@ -534,13 +534,13 @@
                                           <select id="txtDepositoE" name="txtDepositoE" class="form-control custom-select" onBlur="validarDeposito(2);" required>
                                               <option  selected disabled>Seleccines</option>
                                               <?php
-                                              $db = new BaseDatos();                                                           
+                                              $db = new BaseDatos();
                                               if($resultado=$db->buscar("depositos","1")){
                                                 foreach($resultado as $row) { ?>
-                                                  <option value=<?=$row['id_deposito'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                                </select>    
+                                                  <option value=<?=$row['id_deposito'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                                </select>
 
-                                              </div> 
+                                              </div>
 
 
                                               <div class="col-lg-5">
@@ -548,11 +548,11 @@
                                                 <select id="txtMonedaFE" name="txtMonedaFE" class="form-control custom-select" onBlur="validarMoneda(2);">
                                                   <option  selected disabled>Selecciones</option>
                                                   <?php
-                                                  $db = new BaseDatos();                                                           
+                                                  $db = new BaseDatos();
                                                   if($resultado=$db->buscar("monedas","1")){
                                                     foreach($resultado as $row) { ?>
-                                                      <option value=<?=$row['id_moneda'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                                    </select> 
+                                                      <option value=<?=$row['id_moneda'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                                    </select>
                                                   </div>
 
                                                 </div>
@@ -564,13 +564,13 @@
                                                   <select id="txtReceptorE" name="txtReceptorE" class="form-control custom-select" onBlur="validarReceptor(2);">
                                                     <option  selected disabled>Seleccione</option>
                                                     <?php
-                                                    $db = new BaseDatos();                                                           
+                                                    $db = new BaseDatos();
                                                     if($resultado=$db->buscar("usuarios","1")){
                                                       foreach($resultado as $row) { ?>
-                                                        <option value=<?=$row['id_usuario'] ?>><?=$row['nombres'] ?></option> <?php } } ?>                                        
-                                                      </select>    
+                                                        <option value=<?=$row['id_usuario'] ?>><?=$row['nombres'] ?></option> <?php } } ?>
+                                                      </select>
 
-                                                    </div> 
+                                                    </div>
                                                   </div>
 
                                                 </div>
@@ -592,7 +592,7 @@
                                                           <th class='text-center'>Total</th>
                                                           <th class='text-center'></th>
                                                         </tr>
-                                                      </thead>                            
+                                                      </thead>
                                                       <tbody class='items'>
 
                                                       </tbody>
@@ -628,4 +628,3 @@
 
 
                                   </div>
-

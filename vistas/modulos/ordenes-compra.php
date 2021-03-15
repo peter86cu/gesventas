@@ -23,7 +23,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>       
+       <button class="btn btn-primary" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
 
 
      </div>
@@ -36,31 +36,31 @@
           <th>Número Orden</th>
           <th>Fecha</th>
           <th>Forma de Pago</th>
-          <th>Items</th>          
+          <th>Items</th>
           <th>Solicitado por</th>
           <th>Aprobado por</th>
-          <th>Proveedor</th>   
-          <th>Estado</th>        
+          <th>Proveedor</th>
+          <th>Estado</th>
           <th style="width: 7%">Acciones</th>
         </tr>
       </thead>
       <tbody>
 
 
-        <?php 
+        <?php
         $parametro= null;
         $datos= "SELECT oc.id_orden_compra,
         DATE_FORMAT(oc.fecha_hora, '%d-%m-%Y')   as fecha,
         p.descripcion as plazo,
-        f.descripcion as forma_pago, 
-        (select count(*) from ordenes_de_compras_detalle where id_orden_compra=oc.id_orden_compra) as items, 
+        f.descripcion as forma_pago,
+        (select count(*) from ordenes_de_compras_detalle where id_orden_compra=oc.id_orden_compra) as items,
         e.descripcion as estado,
         e.id_orden_compra_estado as id_estado,
         u.nombres,
         pro.razon_social as proveedor
         FROM plazos p, formas_pagos f, ordenes_de_compras_estados e,usuarios u,ordenes_de_compras oc
         left join proveedores  as pro on oc.id_proveedor=pro.id_proveedor
-        WHERE oc.id_plazo=p.id_plazo and oc.id_forma_pago = f.id_forma_pago and e.id_orden_compra_estado = oc.estado and u.id_usuario=oc.id_usuario and oc.fecha_baja is null order by id_orden_compra ";
+        WHERE oc.id_plazo=p.id_plazo and oc.id_forma_pago = f.id_forma_pago and e.id_orden_compra_estado = oc.estado and u.id_usuario=oc.id_usuario and oc.fecha_baja is null order by id_orden_compra desc";
         $ordenes = ControlOrdenes::mostrarOrdenes($parametro,$datos);
         foreach ($ordenes as $key => $value) {
           if($value['id_estado']==2){
@@ -80,8 +80,8 @@
           }else{
             $provee =$value['proveedor'];
           }
-          $parametro1=null;          
-          $usuario_aprobado="SELECT u.nombres from usuarios u inner join ordenes_compras_modificaciones om 
+          $parametro1=null;
+          $usuario_aprobado="SELECT u.nombres from usuarios u inner join ordenes_compras_modificaciones om
           on(u.id_usuario=om.id_usuario_autorizo) and om.id_orden_compra=".$value['id_orden_compra']."";
           $aprobado_por = ControlOrdenes::mostrarOrdenes($parametro1,$usuario_aprobado);
           $apobado="";
@@ -92,30 +92,30 @@
           ?>
 
           <tr>
-            <td style="width: 1%"><?php echo $value['id_orden_compra'] ?></td>                 
+            <td style="width: 1%"><?php echo $value['id_orden_compra'] ?></td>
             <td style="width: 8%"><?php echo $value['fecha']?></td>
             <td style="width: 8%"><?php echo $value['forma_pago']?></td>
-            <td style="width: 5%"><?php echo $value['items']?></td>                  
-            <td style="width: 8%"><?php echo $value['nombres']?></td> 
-            <td style="width: 8%"><?php echo $apobado ?></td>  
-            <td style="width: 8%"><?php echo $provee ?></td>  
-            <td style="width: 8%">                    
-              <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>                
-            </td>        
+            <td style="width: 5%"><?php echo $value['items']?></td>
+            <td style="width: 8%"><?php echo $value['nombres']?></td>
+            <td style="width: 8%"><?php echo $apobado ?></td>
+            <td style="width: 8%"><?php echo $provee ?></td>
+            <td style="width: 8%">
+              <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>
+            </td>
             <td style="text-align: left;">
               <div class="btn-bt-group"></div>
 
               <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
                 <button class="btn btn-warning ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarOrdenes" ><i class="far fa-edit"></i></button>
-              <?php } else { ?> 
-                <button class="btn btn-warning ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" ><i class="far fa-edit"></i></button>  
-              <?php  } ?>              
+              <?php } else { ?>
+                <button class="btn btn-warning ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" ><i class="far fa-edit"></i></button>
+              <?php  } ?>
               <button class="btn btn-danger btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" ><i  class="fas fa-trash"></i></button>
-              <?php if ($value['id_estado']==3 || $value['id_estado']==4 and $value['items']>0) { ?>    
+              <?php if ($value['id_estado']==3 || $value['id_estado']==4 and $value['items']>0) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimir(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
              <?php }  ?>
            </td>
-         </tr>   
+         </tr>
 
        <?php }  ?>
 
@@ -140,24 +140,24 @@
 
   .text_rojo{
     color:#C40000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_verde{
     color:#060;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_azul{
     color:#00F;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_naranja{
     color:#F60;
-    font-weight:bold; 
+    font-weight:bold;
   }
   .text_negro{
     color:#000000;
-    font-weight:bold; 
+    font-weight:bold;
   }
 
   .text_normal{
@@ -165,7 +165,7 @@
 
   }
 
-  
+
 </style>
 
 
@@ -197,7 +197,7 @@
                   <strong>E-mail : </strong> Prueba
                   <br />
                   <strong>Teléfono :</strong> Prueba <br />
-                  <strong>Sitio web :</strong> prueba.com 
+                  <strong>Sitio web :</strong> prueba.com
 
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4">
@@ -206,7 +206,7 @@
                   Dirección : alguna
                 </div>
 
-              </div>           
+              </div>
 
 
               <div class="row ">
@@ -216,7 +216,7 @@
                   <select class="proveedor form-control" name="proveedor" id="proveedor" required>
                     <option value="">Selecciona el proveedor</option>
                   </select>
-                  <h4><strong>Proveedor: </strong><Label id="proveedorN"></Label></h4> 
+                  <h4><strong>Proveedor: </strong><Label id="proveedorN"></Label></h4>
                   <span id="direccion"></span>
                   <input type="hidden"  id="idProveedor" name="idProveedor"  value="" >
                   <h4><strong>E-mail: </strong><span id="email"></span></h4>
@@ -242,13 +242,13 @@
                       <select id="txtFormaPago" name="txtFormaPago" class="form-control custom-select">
                         <option  selected disabled>Seleccines</option>
                         <?php
-                        $db = new BaseDatos();                                                           
+                        $db = new BaseDatos();
                         if($resultado=$db->buscar("formas_pagos","1")){
                           foreach($resultado as $row) { ?>
-                            <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                          </select>    
+                            <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                          </select>
 
-                        </div> 
+                        </div>
 
 
                         <div class="col-lg-6">
@@ -256,11 +256,11 @@
                           <select id="txtEnvio" name="txtEnvio" class="form-control custom-select">
                             <option  selected disabled>Seleccines</option>
                             <?php
-                            $db = new BaseDatos();                                                           
+                            $db = new BaseDatos();
                             if($resultado=$db->buscar("plazos","1")){
                               foreach($resultado as $row) { ?>
-                                <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                              </select> 
+                                <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                              </select>
                             </div>
 
                           </div>
@@ -284,7 +284,7 @@
                                   <th class='text-center'>Total</th>
                                   <th class='text-center'></th>
                                 </tr>
-                              </thead>                            
+                              </thead>
                               <tbody class='items'>
 
                               </tbody>
@@ -333,15 +333,15 @@
                 <div class="modal-body">
 
                   <div class="row">
-                   <div class="col-lg-6 col-md-6 col-sm-6">                  
+                   <div class="col-lg-6 col-md-6 col-sm-6">
                     <select class="producto form-control" name="producto" id="producto" required>
                       <option value="">Selecciona el producto</option>
-                    </select>                 
+                    </select>
                   </div>
 
                   <div class="col-md-12">
                     <label>Producto</label>
-                    <input class="form-control" id="descripcion" name="descripcion"  required required disabled="false"></input>           
+                    <input class="form-control" id="descripcion" name="descripcion"  required required disabled="false"></input>
                     <input type="hidden"  id="idOrdenT1" name="idOrdenT1"  value="" >
                     <input type="hidden" class="form-control" id="action" name="action"  value="ajax">
                   </div>
@@ -352,7 +352,7 @@
                   <div class="col-md-4">
                     <label>Cantidad</label>
                     <input type="text" class="form-control" id="cantidad" name="cantidad" required>
-                  </div>           
+                  </div>
 
                   <div class="col-md-4">
                     <label>Ultimo Precio</label>
@@ -371,7 +371,7 @@
             </div>
           </div>
         </div>
-      </form> 
+      </form>
 
 
 
@@ -420,7 +420,7 @@
                       <strong>E-mail : </strong> Prueba
                       <br />
                       <strong>Teléfono :</strong> Prueba <br />
-                      <strong>Sitio web :</strong> prueba.com 
+                      <strong>Sitio web :</strong> prueba.com
 
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-4">
@@ -429,15 +429,15 @@
                       Dirección : alguna
                     </div>
 
-                  </div>           
+                  </div>
 
 
                   <div class="row ">
                     <hr />
-                    <div class="col-lg-6 col-md-6 col-sm-6">                       
-                      <h2>Detalles del proveedor :</h2>                         
-                      <h4><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h4> 
-                      <input type="hidden"  id="proveedorE1" name="proveedorE1"  value="" >               
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <h2>Detalles del proveedor :</h2>
+                      <h4><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h4>
+                      <input type="hidden"  id="proveedorE1" name="proveedorE1"  value="" >
                       <h4><strong>Dirección: </strong><Label id="direccionE"></Label>
                         <h4><strong>E-mail: </strong><Label id="emailE"></Label></h4>
                         <h4><strong>Teléfono: </strong><Label id="telefonoE"></Label></h4>
@@ -450,7 +450,7 @@
                             <input type="hidden"  id="idOrden1E" name="idOrden1E"  value="" >
                           </div>
                           <div class="col-lg-5">
-                           <h5><strong>Fecha: </strong></h5><input type="text" id="datepickerE">                         
+                           <h5><strong>Fecha: </strong></h5><input type="text" id="datepickerE">
                          </div>
 
                        </div>
@@ -461,13 +461,13 @@
                           <select id="txtFormaPagoE" name="txtFormaPagoE" class="form-control custom-select">
                             <option  selected disabled>Seleccines</option>
                             <?php
-                            $db = new BaseDatos();                                                           
+                            $db = new BaseDatos();
                             if($resultado=$db->buscar("formas_pagos","1")){
                               foreach($resultado as $row) { ?>
-                                <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                              </select>    
+                                <option value=<?=$row['id_forma_pago'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                              </select>
 
-                            </div> 
+                            </div>
 
 
                             <div class="col-lg-6">
@@ -475,11 +475,11 @@
                               <select id="txtEnvioE" name="txtEnvioE" class="form-control custom-select">
                                 <option  selected disabled>Seleccines</option>
                                 <?php
-                                $db = new BaseDatos();                                                           
+                                $db = new BaseDatos();
                                 if($resultado=$db->buscar("plazos","1")){
                                   foreach($resultado as $row) { ?>
-                                    <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
-                                  </select> 
+                                    <option value=<?=$row['id_plazo'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>
+                                  </select>
                                 </div>
 
                               </div>
@@ -503,7 +503,7 @@
                                       <th class='text-center'>Total</th>
                                       <th class='text-center'></th>
                                     </tr>
-                                  </thead>                            
+                                  </thead>
                                   <tbody class='items'>
 
                                   </tbody>
@@ -539,4 +539,3 @@
 
 
               </div>
-

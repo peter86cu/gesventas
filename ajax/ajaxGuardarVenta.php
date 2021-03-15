@@ -24,18 +24,18 @@ for($i =0; $i<count($forma_pago);$i++){
 			$val_cotizacion=",'".$_claves["dolar"]."'";
 		}
 		if($formas_array[$forma_pago[$i]]=='11'){//si es credito.
-			$input_credito=",meses,tasa_interes";	
+			$input_credito=",meses,tasa_interes";
 			$val_input_credito=",'".$_POST['meses']."','".$_POST["interes_venta"]."'";
 		}
 		mysqli_query($con,"insert into ventas_cobros (id_venta,id_forma_cobro,valor ".$cotizacion.$input_credito.")values('".$_POST["id_venta"]."','".$formas_array[$forma_pago[$i]]."','".$cantidad[$i]."' ".$val_cotizacion." ".$val_input_credito.")");
 	}
 }
 
-error_log("que es esto ".$_POST["id_venta"]);
+
 if(isset($_POST["cliente"]) && $_POST["cliente"]!=''){
 	$cliente=	$_POST["cliente"];
 }else{
-	$cliente=0;	
+	$cliente=0;
 }
 
 $respuesta = array();
@@ -48,8 +48,8 @@ $respuesta = array();
 		$respuesta['exito']='no';
 		//$respuesta["error"]=pg_last_error();
 	}
-	
+
 	echo json_encode($respuesta);
 }
-	 
+
 ?>
