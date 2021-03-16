@@ -894,10 +894,7 @@ function guardar(evt){
            success: function(resultado){
              console.log(resultado);
              if(resultado){
-               for(let i=0; i< e.data.zonas.lenght;i++){
-                 $.post(`https://167.62.136.170/printapp/print/venta`,{venta:resultado,zonas:null})
-
-                }
+                 $.post(`https://printapp.ddns.net/printapp/print/venta`,{venta:resultado,zonas:null})
              }
 
              setTimeout(function() {location.reload();}, 1105)
