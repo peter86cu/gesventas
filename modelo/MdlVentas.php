@@ -1,7 +1,8 @@
 <?php
 
 
-require_once  ("conexion.php");
+require_once("conexion.php");
+ include "../vistas/recursos/mcript.php";
 @session_start();
 
 class ModeloVentas{
@@ -89,6 +90,33 @@ class ModeloVentas{
 	}
 
 
+		static public function validarLoginCaja($usuario,$pass){           
+					$descr = new encriptaDatos();
+				    $obj = new BaseDatos();  
+					$stmt= $obj->buscarSQL("select * from usuarios_caja where usuario ='".$usuario."'");
+					
+					$login=false;
+	 				if ($stmt) {
+
+	 						 foreach($stmt as $row) {
+						      $password= $row['password'];						      					      
+							 $pass_descriptado = $descr->desencriptar($password);												 
+					         if($pass_descriptado==$pass){					         				         	
+					         	if($_SESSION['loginCaja']='no_login'){			         						         		
+					         		$_SESSION['loginCaja']='conectado';
+					         		$_SESSION['usu_caja']=$row['usuario'];	
+					         		$_SESSION['id_usuario_caja']=$row['id_usu_caja'];
+					         		$login=true;					         	
+					         }
+					     }
+					 }
+					 }                                 
+					
+					return $login;
+					
+	}
+
+
 	static public function buscasAperturaCajero(){
 
 			$obj = new BaseDatos();  
@@ -172,6 +200,22 @@ static public function validarVentas($idApertura){
 
 	}
 
+
+	static public function validarVentasSalir(){
+		$obj = new BaseDatos();  
+		$ventas = $obj->buscarSQL("select v.id_venta from ventas_detalle vd,ventas v, aperturas_cajeros ac where vd.id_venta=v.id_venta and v.id_apertura_cajero=ac.id_apertura_cajero and ac.fecha_hora_cierre is null and v.estado=1 and  v.id_usuario=".$_SESSION['id']." ");
+	
+			foreach($ventas as $row) { 
+			$id= $row['id_venta'];			
+		}
+			if($id>0)
+				return true;
+			else
+				return false;
+
+
+	}
+
 	static public function buscarVentasTiempoReal($idVenta){
 				
 			$obj = new BaseDatos();  
@@ -196,6 +240,35 @@ static public function validarVentas($idApertura){
 			$delete=false;
 			if($id>0){
 				$delete= $obj->borrar("ventas_detalle","id_venta_detalle= ".$id."");
+			}
+			
+			return $delete;
+
+		}
+
+
+		static public function cancelarVenta($idVenta){
+				
+			$obj = new BaseDatos();  
+			$ventas= $obj->actualizar("ventas","estado=3,fecha_hora_cerrado=now(),fecha_baja=now()", "id_venta=".$idVenta."");
+
+			return $ventas;
+
+		}
+
+
+		static public function eliminarVentaSalir($idVenta){
+				
+			$obj = new BaseDatos(); 
+			$ventas= $obj->buscarSQL("select v.id_venta from ventas_detalle vd,ventas v, aperturas_cajeros ac where vd.id_venta=v.id_venta and v.id_apertura_cajero=ac.id_apertura_cajero and ac.fecha_hora_cierre is null and v.estado=1 and v.id_usuario=".$_SESSION['id']." and v.id_venta=".$idVenta." ");
+
+			$id=0;
+			foreach($ventas as $row) { 
+			$id= $row['id_venta'];						
+			}
+			$delete=false;
+			if($id>0 && $id!=null){
+				$delete= $obj->borrar("ventas","id_venta= ".$id."");
 			}
 			
 			return $delete;

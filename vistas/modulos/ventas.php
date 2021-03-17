@@ -11,6 +11,7 @@
           <img src="vistas/recursos/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <?php
+        include "../modelo/conexion.php";
           $db = new BaseDatos();
           $rol="";
           if($resultado=$db->buscar("rol","id_rol=".$_SESSION['rol']."")){
@@ -24,14 +25,14 @@
               $caja=$row2['nombre'];
             }
           }
+          
          ?>
         <div class="info">
           <h4 class="color"><strong>Bienvenido</strong></h4>
           <span class="color"><?php echo $_SESSION['user'] ?></span >
           <p><span class="color"><?php echo  $rol ?></span ></p>
-          <p><span class="color"><?php echo  $caja ?></span ></p>
-
-           <div> <a href="logout" class="d-block"> <strong>Cerrar Sessión</strong>  </a></div>
+          <p><span class="color"><?php echo  $caja ?></span ></p>          
+           <div> <a href="logoutcaja" class="d-block" onclick="cancelarVentaSalida()" > <strong>Salir</strong>  </a></div> 
       </div>
       </div>
 
@@ -488,6 +489,97 @@ function eliminar_producto(idVenta, idVentaDetalle, idProducto){
 });
 }
 
+
+function cancelarVenta(){
+
+  var idVenta = $('#txtVenta').val();
+  var accion ="cancelar";
+  var datos = new FormData();
+  datos.append("accion",accion);
+  datos.append("idVenta",idVenta);
+  
+ const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false      
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: 'Esta seguro de cancelar la venta?',     
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+         $.ajax({
+            url: "ajax/ajaxVentas.php",
+            method : "POST",
+            data: datos,
+            chache: false,
+            contentType: false,
+            processData:false,
+            dataType: "json",
+            success: function(respuesta){
+               if(respuesta){
+                  swalWithBootstrapButtons.fire(
+                     'Eliminado!',
+                     'La venta ha sido cancelada.',
+                     'success'                   
+                   ).then((result)=> {
+                     if (result.isConfirmed)
+                     location.reload();
+                   });
+                  
+               }else{
+                  Swal.fire({
+                     icon: 'error',
+                     title: 'Oops...',
+                     text: 'Ocurrio un error cancelando la venta'
+                     
+                  })
+               }
+               
+            }
+         });  
+
+        
+      } 
+    })
+  
+}
+
+
+function cancelarVentaSalida(){
+
+  var idVenta = $('#txtVenta').val();
+  var accion ="eliminarSalir";
+  var datos = new FormData();
+  datos.append("accion",accion);
+  datos.append("idVenta",idVenta);
+  
+         $.ajax({
+            url: "ajax/ajaxVentas.php",
+            method : "POST",
+            data: datos,
+            chache: false,
+            contentType: false,
+            processData:false,
+            dataType: "json",
+            success: function(respuesta){              
+               
+            }
+         });  
+
+        
+     
+  
+}
+
 function abrir(){
 
   if($('#total_venta').val()>0){
@@ -585,8 +677,8 @@ function cargar(evt,t){
       </tfoot>
     </table>
     <?php $titulo_form = "Confirmar Venta"; ?>
-
-    <button type="submit" id="btPagar" class="btn btn-info" style="float:right"  href="javascript:;" onclick="abrir(); return false" >Confirmar</button>
+   <button type="submit" id="btCancelar" class="btn btn-danger" style="float:center"  href="javascript:;" onclick="cancelarVenta(); return false" >Cancelar Venta</button> 
+      <button type="submit" id="btPagar" class="btn btn-info" style="float:right"  href="javascript:;" onclick="abrir(); return false" >Confirmar</button> 
     <input  type="hidden" value="" id="total_venta" name="total_venta"/>
   </div>
 </div>
@@ -891,14 +983,14 @@ function guardar(evt){
            data: "idVenta="+id_venta+'&accion='+accion,
            type: "POST",
            dataType: "json",
-           success: function(resultado){
-             console.log(resultado);
+           success: function(resultado){             
              if(resultado){
-                 $.post(`https://printapp.ddns.net/printapp/print/venta`,{venta:resultado,zonas:null})
-             }
+         console.log(resultado);
+                 $.post(`https://printapp.ddns.net/printapp/print/venta`,{venta:520,zonas:null})
+      }
 
-             setTimeout(function() {location.reload();}, 1105)
-             inicio();
+            // setTimeout(function() {location.reload();}, 1105)
+             //inicio();
            }
          });
 
@@ -1007,6 +1099,6 @@ function number_format (number, decimals, dec_point, thousands_sep) {
       <br>
       <h2>El Vuelto es:<label id="vuelto"></label></h2>
       <div style="position:absolute; bottom:1px;">Presione Enter Para confirmar</div>
-      <button id="finalizar"  class="skin_colour round_all" style="float:right; display:none" onclick="guardar(event)"> <img width="24" height="24" alt="Price Tag" src="images/icons/small/white/Price%20Tag.png"> <span>Finalizar</span></button>
+      <button id="finalizar"  class="skin_colour round_all" style="float:right; display:none" onclick="guardar(event)"> <img width="24" height="24" > <span>Finalizar</span></button>
     </fieldset>
   </div>

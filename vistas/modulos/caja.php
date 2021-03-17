@@ -18,8 +18,8 @@
   </section>
 
   <!-- Main content -->
-  <section class="content">
-
+  <section class="content">    
+       <input type="hidden" id="variable_sesion" value="<?php echo $_SESSION['loginCaja']; ?>"> 
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
@@ -363,3 +363,66 @@
               </div>
             </div>
           </div>
+
+
+<div class="modal" id="ModalLoginCaja" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <form role="form" method="POST" enctype="multipart/form-data">
+       
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="box-body">
+
+              <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Entrar a POS DE VENTAS<p>
+
+      <form  method="post">
+        <div class="input-group mb-2">
+         <input type="text" name="txt_usuario" id ="txt_usuario" class="form-control" placeholder="Usuario">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-2">
+          <input type="password" class="form-control" placeholder="Contraseña" name="txt_contra" id="txt_contra">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">          
+                       
+            <button type="submit" class="btn btn-primary btn-block" href="javascript:;"  onclick="entrarCaja(); return false">Entrar</button>
+          
+
+        </div>
+     
+     
+
+      </form>
+
+          
+    </div>
+    <!-- /.login-card-body -->
+  </div>  
+
+            
+          </div>
+        </div>
+
+
+        <!---OK-->
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

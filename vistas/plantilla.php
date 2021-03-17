@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Blank Page</title>
+  <title>GesVentas 1.0</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -23,7 +23,7 @@
 
 
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition <?php if(isset($_SESSION["login"])): ?> skin-blue sidebar-mini<?php else:?>login-page<?php endif;?>">
 <!-- Site wrapper -->
 
 
@@ -33,8 +33,8 @@
     #session_destroy();
 if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
      
-      if($_GET["enlace"]=="ventas"){
-        include "vistas/modulos/ventas.php";
+      if($_SESSION['login']=='activa' && $_GET["enlace"]=="ventas"){
+        include "vistas/modulos/ventas.php";        
       }else{
     
     echo '<div class="wrapper">';
@@ -47,7 +47,7 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 
      //pagias
       if(isset($_GET["enlace"])){
-      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="logout" ){
+      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="logoutcaja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="logout" ){
 
         include "vistas/modulos/".$_GET["enlace"].".php";
       }else{

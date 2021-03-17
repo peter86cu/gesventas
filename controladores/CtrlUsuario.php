@@ -32,7 +32,7 @@
                                  $_SESSION['login'] = 'activa';
                                  $_SESSION['user'] = $row['nombres'] ;
                                  $_SESSION['rol'] = $row['nivel'] ;
-
+                                 $_SESSION['loginCaja']='no_login';
                                   $ips= new ControlUsuario();
                                  $_SESSION['ip'] = $ips->get_client_ip();
                               
@@ -40,7 +40,7 @@
 
 
 					         }else{
-					         	echo '<div class="alert alert-danger padre">Login incocercto</div>';
+					         	echo '<div class="alert alert-danger">Login incorrecto</div>';
 					         }
 					     //Configuraciones del sistema
 					   /* $res_config=ModeloUsuario::buscarConfiguraciones();

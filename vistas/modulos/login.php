@@ -1,8 +1,8 @@
 
-<div class="padre">
+<div class="login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>Sistema </b>PRUEBA</a>
+    <a href="#"><b>Sistema </b>GesVentas</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

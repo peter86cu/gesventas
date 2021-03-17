@@ -1,5 +1,5 @@
 <?php
-require_once  "../controladores/CtrlOrdenesCompras.php";
+require_once  "../controladores/CtrlVentas.php";
 require_once  "../modelo/MdlVentas.php";
 class ventasAjax{
 
@@ -10,7 +10,8 @@ class ventasAjax{
   public $idVentaDetalle;
   public $idProducto;
   public $cantidad;
-
+  public $user;
+  public $pass;
 
 
   public function buscarArqueoParaVentasAjax(){
@@ -25,13 +26,20 @@ class ventasAjax{
       echo json_encode($respuesta);
     }
 
+
+     public function loginCajaAjax(){
+       $user = $this->user;
+       $pass = $this->pass;
+      $respuesta = ModeloVentas::validarLoginCaja($user,$pass);      
+      echo json_encode($respuesta);
+    }
+
   public function buscarVentasTiempoAjax(){
       $parametro = "buscar";
       $idVenta = $this->idVenta;
 
       $respuesta = ModeloVentas::buscarVentasTiempoReal($idVenta);
-      foreach ($respuesta as $key => $value) {
-      error_log($value['nombre']);
+      foreach ($respuesta as $key => $value) {      
       }
       echo json_encode($respuesta);
     }
@@ -41,6 +49,18 @@ class ventasAjax{
       $idVentaDetalle = $this->idVentaDetalle;
       $idProducto = $this->idProducto;
       $respuesta = ModeloVentas::eliminarVentasTiempoReal($idVenta,$idVentaDetalle,$idProducto);
+      echo json_encode($respuesta);
+    }
+
+     public function cancelarVentasAjax(){
+      $idVenta = $this->idVenta;      
+      $respuesta = ModeloVentas::cancelarVenta($idVenta);
+      echo json_encode($respuesta);
+    }
+
+    public function eliminarVentasSalirAjax(){
+      $idVenta = $this->idVenta;      
+      $respuesta = ModeloVentas::eliminarVentaSalir($idVenta);
       echo json_encode($respuesta);
     }
 
@@ -122,5 +142,25 @@ if($_POST["accion"]=="buscarArqueo" ){
   $obj_Modificar = new ventasAjax();
   $obj_Modificar -> accion = $_POST["accion"];
   $obj_Modificar ->buscarArqueoParaVentasCajaAjax();
+
+}if($_POST["accion"]=="loginCaja" ){
+
+  $obj_Modificar = new ventasAjax();
+  $obj_Modificar -> pass = $_POST["pass"];
+  $obj_Modificar -> user = $_POST["user"];
+
+  $obj_Modificar ->loginCajaAjax();
+
+}if($_POST["accion"]=="cancelar" ){
+
+  $obj_Modificar = new ventasAjax();
+  $obj_Modificar -> idVenta = $_POST["idVenta"];  
+  $obj_Modificar ->cancelarVentasAjax();
+
+}if($_POST["accion"]=="eliminarSalir" ){
+
+  $obj_Modificar = new ventasAjax();
+  $obj_Modificar -> idVenta = $_POST["idVenta"];  
+  $obj_Modificar ->eliminarVentasSalirAjax();
 
 }

@@ -16,9 +16,18 @@
           }
 
 
+        static  public function validarNoExistenVentas(){
 
 
-        
+          $resultado=ModeloVentas::validarVentasSalir();
+          
+           return $resultado;
+                       
+          }
+
+
+
+                 
   }
     
 

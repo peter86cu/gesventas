@@ -1,11 +1,26 @@
 
+function entrarCaja(){
 
+var user= $("#txt_usuario").val();
+var pass =$("#txt_contra").val();
+var datos = new FormData(); 
+    var accion = "loginCaja";
+    datos.append("accion",accion);
+    datos.append("user",user);
+    datos.append("pass",pass);
 
-$(document).keydown(function (tecla) {
-  if (tecla.keyCode == 112) {   
-
-
-    var datos = new FormData(); 
+    $.ajax({
+     url: "ajax/ajaxVentas.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){
+        if(respuesta){
+ $('#ModalLoginCaja').modal('hide'); 
+   var datos = new FormData(); 
     var accion = "buscarArqueo";
     datos.append("accion",accion);
 
@@ -36,7 +51,8 @@ $(document).keydown(function (tecla) {
          dataType: "json",
          success: function(datos){
          
-          if(datos){            
+          if(datos){ 
+            setTimeout(function() {location.reload();}, 5)
             window.open("ventas", 'Nombre de la ventana', "fullscreen,location=no,menubar=no,status=no,toolbar=no,RESIZABLE=0");
           }
 
@@ -57,7 +73,21 @@ $(document).keydown(function (tecla) {
   }
 });
 
+        }
+        }
+     });
+}
 
+$(document).keydown(function (tecla) {
+  if (tecla.keyCode == 112) { 
+    
+    var session = $("#variable_sesion").val();   
+    if(session=="no_login"){   
+      $('#ModalLoginCaja').modal('show');                
+    }else{   
+    setTimeout(function() {location.reload();}, 5)        
+   window.open("ventas", 'Nombre de la ventana', "fullscreen,location=no,menubar=no,status=no,toolbar=no,RESIZABLE=0");
+    }    
 
   }
 });
