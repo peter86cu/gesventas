@@ -8,7 +8,6 @@ if($_POST["accion"]=="parametros"){
 unset($_SESSION['accion_mail']);
 unset($_SESSION['id_mail']);
 unset($_SESSION['sin_leer']);
-unset($_SESSION['accion_mail']);
   $_SESSION['id_mail']  = $_POST["id_mail"];
   $_SESSION['sin_leer'] = $_POST["sin_leer"];
   $_SESSION['accion_mail'] = $_POST["accion_mail"];

@@ -11,11 +11,13 @@
               $identificador=""; 
               $sin_leer=0;
               $idMail="";
-                    if(isset($_SESSION['id_mail'])){
+              $accion="";
+
+                    if(isset($_SESSION['id_mail']) && $_SESSION['accion_mail']=="responder"){
                        if($_SESSION['accion_mail']=='responder'){
                          $identificador = $_SESSION['id_mail'];
                          $sin_leer = $_SESSION['sin_leer'];
-
+                         $accion=$_SESSION['accion_mail'];
                           setlocale(LC_TIME, 'spanish'); 
                     $parametro= null;
                     $datos= "SELECT * FROM `mail` WHERE id=".$identificador."";
@@ -133,19 +135,19 @@
           <div class="col-md-9">
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h3 class="card-title"> <?php if($_SESSION['accion_mail']=='responder') {?> Responder correo <?php }else{ ?>Redactar correo nuevo<?php } ?></h3>
+                <h3 class="card-title"> <?php if($accion=='responder') {?> Responder correo <?php }else{ ?>Redactar correo nuevo <?php } ?></h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <div class="form-group">
-                  <input class="form-control" id="txt_para" placeholder="Para:" value="<?php if($_SESSION['accion_mail']=='responder') echo $para_resp; ?>">
+                  <input class="form-control" id="txt_para" placeholder="Para:" value="<?php if($accion=='responder') echo $para_resp; ?>">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" id="txt_asunto" placeholder="Asunto:" value="<?php if($_SESSION['accion_mail']=='responder') echo $asunto_resp; ?>">
+                  <input class="form-control" id="txt_asunto" placeholder="Asunto:" value="<?php if($accion=='responder') echo $asunto_resp; ?>">
                 </div>
                 <div class="form-group">
                     <textarea id="compose-textarea" class="form-control" style="height: 300px">
-                     <?php if($_SESSION['accion_mail']=='responder') echo $mail_responder; ?>
+                     <?php if($accion=='responder') echo $mail_responder; ?>
                     </textarea>
                 </div>
                 <div class="form-group">
