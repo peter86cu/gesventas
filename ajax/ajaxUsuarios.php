@@ -1,7 +1,7 @@
 <?php
 
 require_once  "../modelo/MdlUsuario.php";
-require_once  "../vistas/recursos/mcript.php";
+require_once  "../modelo/mcript.php";
 
 class usuariosAjax{
 
@@ -47,7 +47,7 @@ class usuariosAjax{
        
 
            if($this->accion=="update"){
-            error_log("entro a update",0);
+            
           $respuesta = ModeloUsuario::updateUsuario($idUsuario,$nombre, $usuario ,$pass,$correo,$idRol,$idSucursal);      
           
         }else{
@@ -55,7 +55,7 @@ class usuariosAjax{
           $respuesta = ModeloUsuario::insertarUsuario($nombre, $usuario ,$pass,$correo,$idRol,$idSucursal);      
 
         }  
-           error_log("respuesta ".$respuesta ,0);
+           
         echo json_encode($respuesta);
           
           

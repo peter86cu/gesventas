@@ -5,7 +5,7 @@
 	Mail: info@obedalvarado.pw
 	---------------------------*/
 	 ob_start();
-	session_start();
+	@session_start();
 	/* Connect To Database*/
 	include("../../config/db.php");
 	include("../../config/conexion.php");

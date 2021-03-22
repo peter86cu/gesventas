@@ -16,7 +16,14 @@ class ModeloRol{
 						
 	}		
 					
-	
+	static public function coloresPagina( $datos ){  
+		
+    	
+   			$obj = new BaseDatos();      
+			$result=$obj -> buscarSQL($datos);   
+			return $result;
+						
+	}	
 
 	static public function mostrarRoles($parametro, $datos){
 

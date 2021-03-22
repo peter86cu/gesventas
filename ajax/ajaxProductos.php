@@ -25,8 +25,8 @@ class productosAjax{
 
   public function modificarProductoAjax(){
 
-   
-    if($this->accion=="update"){
+   error_log($this->accion);
+    if($this->accion=="update" || $this->accion=="buscar"){
 
     $parametro = "idProducto";  
     $idProducto = $this->idProducto;
@@ -104,6 +104,7 @@ if($_POST["accion"]=="buscar"){
 
   $obj_Modificar = new productosAjax();
   $obj_Modificar -> idProducto = $_POST["idProducto"];
+  $obj_Modificar -> accion = $_POST["accion"];
   $obj_Modificar ->modificarProductoAjax();
 
 }else if($_POST["accion"]=="update" || $_POST["accion"]=="insert"){

@@ -2,7 +2,7 @@
 
 
 require_once("conexion.php");
- include "../vistas/recursos/mcript.php";
+ include "mcript.php";
 @session_start();
 
 class ModeloVentas{

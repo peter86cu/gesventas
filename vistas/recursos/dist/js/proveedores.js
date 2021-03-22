@@ -59,16 +59,16 @@ function agregarProveedor(event){
 
 
 
- $(".btnEliminarRol").click(function(){  
+ $(".btnEliminarProveedor").click(function(){  
 
-   var idRol=  $(this).attr("idRol");
+   var idProveedor=  $(this).attr("idProveedor");
 
    var datos = new FormData();
 
    var accion = "delete";
 
    datos.append("accion",accion);
-   datos.append("idRol",idRol);
+   datos.append("idProveedor",idProveedor);
 
    const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -79,18 +79,16 @@ function agregarProveedor(event){
   })
 
    swalWithBootstrapButtons.fire({
-    title: 'Estas seguro?',
-    text: "Dar de baja al rol !",
-    icon: 'warning',
+    title: 'Confirma dar de baja al proveedor?',  
     showCancelButton: true,
-    confirmButtonText: 'Si! ',
-    cancelButtonText: 'No!',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No',
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
 
      $.ajax({
-      url: "ajax/ajaxRoles.php",
+      url: "ajax/ajaxProveedores.php",
       method : "POST",
       data: datos,
       chache: false,
@@ -100,9 +98,7 @@ function agregarProveedor(event){
       success: function(respuesta){
        if(respuesta){
         swalWithBootstrapButtons.fire(
-         'Eliminado!',
-         'El rol ha sido dado de baja.',
-         'success'                   
+         'Desahabilitado el proveedor'                         
          ).then((result)=> {
            if (result.isConfirmed)
              location.reload();
@@ -111,42 +107,27 @@ function agregarProveedor(event){
        }else{
         Swal.fire({
          icon: 'error',
-         title: 'Oops...',
-         text: 'Ocurrio un error eliminando el rol!',
-         footer: '<a href>Why do I have this issue?</a>'
+         title: 'Ocurrio un error'        
        })
       }
 
     }
-  });   
-
-
-   } else if (
-    /* Read more about handling dismissals below */
-    result.dismiss === Swal.DismissReason.cancel
-    ) {
-    swalWithBootstrapButtons.fire(
-      'Cancelado',
-      'Has cambiado de idea. Bien :)',
-      'error'
-      )
-  }
+  }); 
+   }
 })
+  })
 
-})
 
+ $(".btnEditarProveedor").click(function(){
 
- $(".btnEditarRol").click(function(){
-
-  var idRol = $(this).attr("idRol");
-  var datos = new FormData();
-  alert(idRol);
+  var idProveedor = $(this).attr("idProveedor");
+  var datos = new FormData();  
   var accion = "buscar";
   datos.append("accion",accion);
-  datos.append("idRol",idRol,);
+  datos.append("idProveedor",idProveedor);
 
   $.ajax({
-   url: "ajax/ajaxRoles.php",
+   url: "ajax/ajaxProveedores.php",
    method : "POST",
    data: datos,
    chache: false,
@@ -154,11 +135,22 @@ function agregarProveedor(event){
    processData:false,
    dataType: "json",
    success: function(respuesta){     
-    $("#idRol").val(respuesta["id_rol"]);
-    $("#txt_NombreEdit").val(respuesta["rol"]);
-    $("#txt_descripcionEdit").val(respuesta["descripcion"]);                     
-    $("#select_estadoEdit > option[value="+respuesta["estado"]+"]").attr("selected",true);
-
+    $("#txt_razon_socialE").val(respuesta["razon_social"]);
+    $("#txt_rucE").val(respuesta["ruc"]);
+    $("#txt_direccionE").val(respuesta["direccion"]);  
+    $("#txt_telefonoE").val(respuesta["telefono"]); 
+    $("#txt_celularE").val(respuesta["celular"]); 
+    $("#txt_emailE").val(respuesta["email"]); 
+    $("#txt_webE").val(respuesta["web"]);  
+    $("#idProveedor").val(respuesta["id_proveedor"]); 
+    
+    if (respuesta["fecha_baja"]==null) {
+     $("#customSwitch1").prop('checked', true);
+    } else{
+     $("#customSwitch1").prop('checked', false);
+    }   
+                  
+    
   }
   
 
@@ -166,24 +158,46 @@ function agregarProveedor(event){
 
 })
 
-function updateRol(event){ 
+function updateProveedorJS(event){
 
-   var idRol=  $('#idRol').val();
-   var rol = $('#txt_NombreEdit').val();
-   var descripcion = $("#txt_descripcionEdit").val();
-   var estado = $('#select_estadoEdit').val();
-   var datos = new FormData();
-   var accion = "update";
+   var idProveedor=  $('#idProveedor').val();
    
+   var razon_social = $('#txt_razon_socialE').val();
+   var ruc = $("#txt_rucE").val();
+   var direccion = $('#txt_direccionE').val();
+   var telefono = $('#txt_telefonoE').val();
+   var celular = $("#txt_celularE").val();
+   var email = $('#txt_emailE').val();
+   var web = $('#txt_webE').val();
+
+   var control = document.getElementById("customSwitch1");
+     var habilitado;
+   if(control.checked)
+   {
+       habilitado= true;
+   }
+    else
+   {
+        habilitado= false;
+   }
+   
+   var datos = new FormData();
+   var accion = "update";  
+
+   datos.append("idProveedor",idProveedor);
    datos.append("accion",accion);    
-   datos.append("rol",rol); 
-   datos.append("descripcion",descripcion);
-   datos.append("estado",estado);
-   datos.append("idRol",idRol);
+   datos.append("razon_social",razon_social); 
+   datos.append("ruc",ruc);
+   datos.append("direccion",direccion);
+   datos.append("telefono",telefono);    
+   datos.append("celular",celular); 
+   datos.append("email",email);
+   datos.append("web",web);
+   datos.append("habilitado",habilitado);
    
 
    $.ajax({
-     url: "ajax/ajaxRoles.php",
+     url: "ajax/ajaxProveedores.php",
      method : "POST",
      data: datos,
      chache: false,
@@ -193,11 +207,11 @@ function updateRol(event){
      success: function(respuesta){
 
       if(respuesta){
-        $('#ModalEditarRoles').modal('hide');
+        $('#ModalEditarProveedor').modal('hide');
         Swal.fire({
          position: "top-end",
          icon: "success",
-         title: "Rol modificado",
+         title: "Proveedor modificado",
          showConfirmButton: false,
          timer: 1500
        })
@@ -207,8 +221,7 @@ function updateRol(event){
 
         Swal.fire({
          icon: "error",
-         title: "Oops...",
-         text: "A ocurrido un error!",
+         title: "A ocurrido un error"         
         // footer: "<a href>Ver que mensaje dar?</a>"
       })
       }

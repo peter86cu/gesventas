@@ -71,12 +71,10 @@ function agregarRol(event){
   })
 
    swalWithBootstrapButtons.fire({
-    title: 'Estas seguro?',
-    text: "Dar de baja al rol !",
-    icon: 'warning',
+    title: 'Confirma desahabilitar el rol?',    
     showCancelButton: true,
-    confirmButtonText: 'Si! ',
-    cancelButtonText: 'No!',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No',
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
@@ -92,9 +90,7 @@ function agregarRol(event){
       success: function(respuesta){
        if(respuesta){
         swalWithBootstrapButtons.fire(
-         'Eliminado!',
-         'El rol ha sido dado de baja.',
-         'success'                   
+         'El rol ha sido desahabilitado'                        
          ).then((result)=> {
            if (result.isConfirmed)
              location.reload();
@@ -103,26 +99,14 @@ function agregarRol(event){
        }else{
         Swal.fire({
          icon: 'error',
-         title: 'Oops...',
-         text: 'Ocurrio un error eliminando el rol!',
-         footer: '<a href>Why do I have this issue?</a>'
+         title: 'No se pudo desahabilitar el rol' 
+         
        })
       }
 
     }
-  });   
-
-
-   } else if (
-    /* Read more about handling dismissals below */
-    result.dismiss === Swal.DismissReason.cancel
-    ) {
-    swalWithBootstrapButtons.fire(
-      'Cancelado',
-      'Has cambiado de idea. Bien :)',
-      'error'
-      )
-  }
+  });  
+   } 
 })
 
 })
@@ -131,8 +115,7 @@ function agregarRol(event){
  $(".btnEditarRol").click(function(){
 
   var idRol = $(this).attr("idRol");
-  var datos = new FormData();
-  alert(idRol);
+  var datos = new FormData();  
   var accion = "buscar";
   datos.append("accion",accion);
   datos.append("idRol",idRol,);
@@ -199,8 +182,8 @@ function updateRol(event){
 
         Swal.fire({
          icon: "error",
-         title: "Oops...",
-         text: "A ocurrido un error!",
+         title: "No se pudo actualizar el rol"
+         //text: "A ocurrido un error!",
         // footer: "<a href>Ver que mensaje dar?</a>"
       })
       }

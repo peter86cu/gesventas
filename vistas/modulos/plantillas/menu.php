@@ -132,7 +132,24 @@
           </li>
            <?php } ?>
 
-
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fab fa-shopify" style="color:#218838"></i>
+              <p>
+                MAILBOX
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="mailbox" class="nav-link">
+                  <i class="fas fa-file-invoice-dollar" style="color:#0069d9"></i>
+                  <p>Correo</p>
+                </a>
+              </li>
+             
+            </ul>
+          </li>
 
         </ul>
       </nav>

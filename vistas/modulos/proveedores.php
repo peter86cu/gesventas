@@ -1,3 +1,36 @@
+<?php 
+ $color_header="";
+ $i_principal="";
+ $botton_principal="";
+ $botton_editar="";
+ $botton_eliminar="";
+ $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -5,7 +38,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1><i class="fas fa-user-lock" style="color:#218838"></i>   Listado de Proveedores</h1>
+          <h1><i class="fas fa-user-lock" style="<?php echo $i_principal ?>"></i>   <strong>LISTADO DE PROVEEDORES</strong></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -32,17 +65,17 @@
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th style="width: 1%">Id</th>
-          <th style="width: 15%">Razon Social</th>
-          <th style="width: 10%">RUC</th>
-          <th style="width: 15%">Dirección</th>  
-          <th style="width: 8%">Teléfono</th>
-          <th style="width: 8%">Celular</th>
-          <th style="width: 10%">Email</th>
-          <th style="width: 10%">Web</th>  
-          <th style="width: 8%">Estado</th>           
-          <th style="width: 10%">Acciones</th>         
+        <tr style="<?php echo $color_tabla ?>">
+          <th style="width: 1%"><strong>ID</strong></th>
+          <th style="width: 15%"><strong>RAZON SOCIAL</strong></th>
+          <th style="width: 10%"><strong>RUC</strong></th>
+          <th style="width: 15%"><strong>DIRECCIÓN</strong></th>  
+          <th style="width: 8%"><strong>TELÉFONO</strong></th>
+          <th style="width: 8%"><strong>CELULAR</strong></th>
+          <th style="width: 10%"><strong>EMAIL</strong></th>
+          <th style="width: 10%"><strong>WEB</strong></th>  
+          <th style="width: 8%"><strong>ESTADO</strong></th>           
+          <th style="width: 10%"><strong>ACCIÓN</strong></th>         
         </tr>
       </thead>
       <tbody>
@@ -70,8 +103,8 @@
 
           <td>
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-warning btnEditarRol" idRol="<?php echo $value['id_proveedor'] ?>" data-toggle="modal" data-target="#ModalEditarRoles"><i class="far fa-edit"></i></button>
-          <button class="btn btn-danger btnEliminarRol" idRol="<?php echo $value['id_proveedor'] ?>"><i  class="fas fa-trash"></i></button>
+          <button class="btn btn-default btnEditarProveedor" idProveedor="<?php echo $value['id_proveedor'] ?>" style="<?php echo $botton_editar ?>" data-toggle="modal" data-target="#ModalEditarProveedor"><i class="far fa-edit"></i></button>
+          <button class="btn btn-default btnEliminarProveedor" style="<?php echo $botton_eliminar ?>" idProveedor="<?php echo $value['id_proveedor'] ?>"><i  class="fas fa-trash"></i></button>
           </td>
           </tr> 
        <?php  }
@@ -96,22 +129,19 @@
 
 
 <!-- The Modal Add Productos -->
-<div class="modal" id="ModalADDProveedor">
+<div class="modal" id="ModalADDProveedor" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog ">
     <div class="modal-content">
 
       <form role="form" method="POST" enctype="multipart/form-data">
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #218838">
-          <h4 class="modal-title">Agregar Proveedor</h4>         
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>NUEVO PROVEEDOR</strong></h4>         
         </div>
 
         <!-- Modal body -->
         <div class="modal-body">
        
-
-
-
             <div class="col-md-10" >
               <label for="txt_razon_social">Razón Social:</label>
               <input type="text" id="txt_razon_social" name="txt_razon_social"  class="form-control" placeholder="Razon Social" required>
@@ -152,7 +182,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-              <button type="submit"  class="btn btn-primary" href="javascript:;" onclick="agregarProveedor(); return false"  >Guardar</button>
+              <button type="submit"  class="btn btn-success" href="javascript:;" onclick="agregarProveedor(); return false"  >Guardar</button>
             </div>
 
             
@@ -170,54 +200,70 @@
 </div>
 
 
-<div class="modal" id="ModalEditarRoles">
+<div class="modal" id="ModalEditarProveedor" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog ">
     <div class="modal-content">
 
       <form role="form" method="POST" enctype="multipart/form-data">
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #ffc107">
-          <h4 class="modal-title">Agregar nuevo rol</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>EDITAR PROVEEDOR</strong></h4>         
         </div>
-
+        <input type="hidden" id="idProveedor" name="idProveedor" value="">
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="box-body">
+          <div class="col-md-10" >
+              <label for="txt_razon_social">Razón Social:</label>
+              <input type="text" id="txt_razon_socialE" name="txt_razon_social"  class="form-control" placeholder="Razon Social" required>
+            </div>
 
-                <input type="hidden" id="idRol" name="idRol" value="">
+
+            <div class="col-md-10 ">
+              <label for="txt_ruc">RUC:</label>
+              <input type="text"  id="txt_rucE" name="txt_ruc" class="form-control"  placeholder="RUC" required></input>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_direccion">Dirección:</label>
+              <input type="text"  id="txt_direccionE" name="txt_direccion" class="form-control"  placeholder="Dirección" required></input>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_telefono">Teléfono:</label>
+              <input type="text"  id="txt_telefonoE" name="txt_telefono" class="form-control"  placeholder="Teléfono" required></input>
+            </div> 
+
+            <div class="col-md-10 ">
+              <label for="txt_celular">Celular:</label>
+              <input type="text"  id="txt_celularE" name="txt_celular" class="form-control"  placeholder="Celular" ></input>
+            </div>
+
+             <div class="col-md-10 ">
+              <label for="txt_email">Email:</label>
+              <input type="text"  id="txt_emailE" name="txt_email" class="form-control"  placeholder="Email" required></input>
+            </div>
+
+            <div class="col-md-10 ">
+              <label for="txt_web">Web:</label>
+              <input type="text"  id="txt_webE" name="txt_web" class="form-control"  placeholder="Web" ></input>
+            </div>
+
            
-              <div class="col-md-6" >
-                <label for="txt_NombreEdit">Nombre:</label>
-                <input type="text" id="txt_NombreEdit" name="txt_NombreEdit"  class="form-control" placeholder="Nombre del rol" required>
-              </div>
-
-             
-                <div class="col-md-6 ">
-                  <label for="txt_descripcionEdit">Descripción:</label>
-                  <textarea type="text"  id="txt_descripcionEdit" name="txt_descripcionEdit" class="form-control" rows="2" placeholder="Descripcion del rol" required></textarea>
-                </div> 
-              
-
-              <div class="col-md-6">
-                <label for="select_estadoEdit">Estado:</label>
-                <select id="select_estadoEdit" name="select_estadoEdit" class="form-control custom-select" required>
-                  <option selected disabled>Seleccción</option>         
-                  <option value=1>Activo</option>
-                  <option value=0>Desactivado</option>
-                </select>
-              </div>  
-
-
-
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                <button type="submit"  class="btn btn-primary" href="javascript:;"  onclick="updateRol(); return false">Guardar</button>
-              </div>
+                                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="customSwitch1" >
+                      <label class="custom-control-label" for="customSwitch1">Habilitado</label>
+                    </div>
+                  </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              <button type="submit"  class="btn btn-success" href="javascript:;" onclick="updateProveedorJS(); return false"  >Guardar</button>
+            </div>
 
             
-          </div>
+          
         </div>
 
 

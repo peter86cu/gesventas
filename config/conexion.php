@@ -19,5 +19,3 @@ while($row_config = mysqli_fetch_array($res_config)){
 	//$_claves_imagen[$row_config['clave']]=$row_config['imagen'];
 }
 
-
-?>

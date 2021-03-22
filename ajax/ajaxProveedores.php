@@ -13,22 +13,23 @@ class proveedoresAjax{
     public $email;
     public $web;
     public $accion;
+    public $habilitado;
 
-    public function modificarRolAjax(){
+    public function modificarProveedorAjax(){
     
-      $parametro = "idRol";  
-      $idRol = $this->idRol;
-      $respuesta = ModeloRol::mostrarRoles($parametro,$idRol);      
+      $parametro = "idProveedor";  
+      $idProveedor = $this->idProveedor;
+      $respuesta = ModeloProveedor::mostrarProveedores($parametro,$idProveedor);      
       echo json_encode($respuesta);
      
 
     }
 
 
-    public function eliminarRolAjax(){
+    public function eliminarProveedorAjax(){
     
-      $idRol = $this->idRol;
-      $respuesta = ModeloRol::eliminarRol($idRol);      
+      $idProveedor = $this->idProveedor;
+      $respuesta = ModeloProveedor::eliminarProveedor($idProveedor);      
       echo json_encode($respuesta);
      
 
@@ -36,11 +37,6 @@ class proveedoresAjax{
 
      public function tratarProveedorAjax(){
     
-
-           if($this->accion=="update"){
-          $respuesta = ModeloRol::updateRoles($idRol,$nombre, $descripcion ,$estado);      
-          
-        }else{
            $razon_social = $this->razon_social;
            $ruc = $this->ruc;
            $direccion = $this->direccion;
@@ -48,6 +44,13 @@ class proveedoresAjax{
            $celular = $this->celular;
            $email = $this->email;
            $web = $this->web;
+           $habilitado = $this->habilitado;
+           if($this->accion=="update"){
+            $idProveedor = $this->idProveedor;
+          $respuesta = ModeloProveedor::updateProveedor($idProveedor,$razon_social, $ruc ,$direccion,$telefono,$celular,$email,$web, $habilitado);      
+          
+        }else{
+           
       
           $respuesta = ModeloProveedor::insertarProveedor($razon_social, $ruc ,$direccion,$telefono,$celular,$email,$web);      
 
@@ -61,9 +64,9 @@ class proveedoresAjax{
 
 if($_POST["accion"]=="buscar"){ 
 
-    $obj_Modificar = new rolesAjax();
-    $obj_Modificar -> idRol = $_POST["idRol"];
-    $obj_Modificar ->modificarRolAjax();
+    $obj_Modificar = new proveedoresAjax();
+    $obj_Modificar -> idProveedor = $_POST["idProveedor"];
+    $obj_Modificar ->modificarProveedorAjax();
 }else if($_POST["accion"]=="update" || $_POST["accion"]=="insert"){
   
   $obj_Modificar = new proveedoresAjax();
@@ -78,12 +81,13 @@ if($_POST["accion"]=="buscar"){
     $obj_Modificar -> celular = $_POST["celular"]; 
     $obj_Modificar -> email = $_POST["email"]; 
     $obj_Modificar -> web = $_POST["web"];
+    $obj_Modificar -> habilitado = $_POST["habilitado"];
     $obj_Modificar -> accion = $_POST["accion"];    
     $obj_Modificar ->tratarProveedorAjax();
     
 }else if($_POST["accion"]=="delete"){
 
-  $obj_Modificar = new rolesAjax();
-  $obj_Modificar -> idRol = $_POST["idRol"];
-  $obj_Modificar ->eliminarRolAjax();
+  $obj_Modificar = new proveedoresAjax();
+  $obj_Modificar -> idProveedor = $_POST["idProveedor"];
+  $obj_Modificar ->eliminarProveedorAjax();
 }

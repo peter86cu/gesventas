@@ -15,7 +15,7 @@
 		
 	//Variables por GET
 	$orden=intval($_GET['idOrden']);
-	error_log($orden,0);
+	
 
 	//Fin de variables por GET
 	/*$sql=mysqli_query($con, "select LAST_INSERT_ID(id) as last from ordenes order by id desc limit 0,1 ");
@@ -28,7 +28,6 @@
 	$rw_perfil=mysqli_fetch_array($perfil);
 
 
-	error_log("select p.* from proveedores p, ordenes_de_compras oc where oc.id_proveedor=p.id_proveedor and oc.id_orden_compra=".$orden." limit 0,1",0);
 	$sql_datos=mysqli_query($con,"SELECT  oc.id_orden_compra, fp.descripcion pago,pl.descripcion envio,u.nombres from ordenes_de_compras oc, ordenes_de_compras_detalle od , formas_pagos fp, plazos pl , ordenes_compras_modificaciones om, usuarios u
           where oc.id_orden_compra=od.id_orden_compra and oc.id_forma_pago=fp.id_forma_pago and pl.id_plazo = oc.id_plazo and om.id_orden_compra=oc.id_orden_compra and u.id_usuario=om.id_usuario_autorizo and oc.id_orden_compra=".$orden." limit 0,1");//Obtengo los datos del proveedor
 

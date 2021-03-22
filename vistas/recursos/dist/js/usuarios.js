@@ -77,12 +77,10 @@ function agregarUsuario(event){
   })
 
    swalWithBootstrapButtons.fire({
-    title: 'Estas seguro?',
-    text: "Dar de baja al usuario !",
-    icon: 'warning',
+    title: 'Confirma desahabilitar el usuario?',    
     showCancelButton: true,
-    confirmButtonText: 'Si! ',
-    cancelButtonText: 'No!',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No',
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
@@ -98,9 +96,7 @@ function agregarUsuario(event){
       success: function(respuesta){
        if(respuesta){
         swalWithBootstrapButtons.fire(
-         'Eliminado!',
-         'Se le dio de baja al usuario.',
-         'success'                   
+         'Desahabilitado el usuario.'                          
          ).then((result)=> {
            if (result.isConfirmed)
              location.reload();
@@ -109,8 +105,7 @@ function agregarUsuario(event){
        }else{
         Swal.fire({
          icon: 'error',
-         title: 'Oops...',
-         text: 'Ocurrio un error eliminando el usuario!',
+         title: 'Ocurrio un error'        
         // footer: '<a href>Why do I have this issue?</a>'
       })
       }
@@ -119,16 +114,7 @@ function agregarUsuario(event){
   });   
 
 
-   } else if (
-    /* Read more about handling dismissals below */
-    result.dismiss === Swal.DismissReason.cancel
-    ) {
-    swalWithBootstrapButtons.fire(
-      'Cancelado',
-      'Has cambiado de idea. Bien :)',
-      'error'
-      )
-  }
+   } 
 })
 
 })
@@ -219,9 +205,7 @@ function updateUsuario(event){
 
       Swal.fire({
        icon: "error",
-       title: "Oops...",
-       text: "A ocurrido un error!",
-       footer: "<a href>Ver que mensaje dar?</a>"
+       title: "Ocurrio un error."      
      })
     }
       

@@ -5,8 +5,7 @@ $(document).ready(function(){
     	var uploadFoto = document.getElementById("foto").value;
         var foto       = document.getElementById("foto").files;
         var nav = window.URL || window.webkitURL;
-        var contactAlert = document.getElementById('form_alert');
-        
+        var contactAlert = document.getElementById('form_alert');       
             if(uploadFoto !='')
             {
                 var type = foto[0].type;

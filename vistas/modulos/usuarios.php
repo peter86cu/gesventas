@@ -1,3 +1,37 @@
+<?php 
+ $color_header="";
+ $i_principal="";
+ $botton_principal="";
+ $botton_editar="";
+ $botton_eliminar="";
+ $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -5,7 +39,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-         <h1> <i class="fas fa-users-cog" style="color:#218838""></i> Lista de usuarios</h1>
+         <h1> <i class="fas fa-users-cog" style="<?php echo $i_principal ?>"></i> <strong>LISTA DE USUARIOS</strong></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -33,14 +67,14 @@
 
        <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th style="width: 1%">Id</th>
-          <th style="width: 5%">Usuario</th>
-          <th style="width: 10%">Nombre</th>
-          <th style="width: 10%">Rol</th> 
-          <th style="width: 5%">Sucursal</th> 
-          <th style="width: 5%">Estado</th> 
-          <th style="width: 5%">Acciones</th>         
+        <tr style="<?php echo $color_tabla ?>">
+          <th style="width: 1%"><strong>ID</strong></th>
+          <th style="width: 5%"><strong>USUARIO</strong></th>
+          <th style="width: 10%"><strong>NOMBRE</strong></th>
+          <th style="width: 10%"><strong>ROL</strong></th> 
+          <th style="width: 5%"><strong>SUCURSAL</strong></th> 
+          <th style="width: 5%"><strong>ESTADO</strong></th> 
+          <th style="width: 5%"><strong>ACCIÓN</strong></th>         
         </tr>
       </thead>
       <tbody>
@@ -65,8 +99,8 @@
 
           <td>
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-warning btnEditarUsuario" idUsuario="<?=$value['id_usuario'] ?>" data-toggle="modal" data-target="#ModalEditarUsuario"><i class="far fa-edit"></i></button>
-          <button class="btn btn-danger btnEliminarUsuario" idUsuario="<?=$value['id_usuario'] ?>"><i  class="fas fa-trash"></i></button>
+          <button class="btn btn-default btnEditarUsuario" idUsuario="<?=$value['id_usuario'] ?>" data-toggle="modal" data-target="#ModalEditarUsuario" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
+          <button class="btn btn-default btnEliminarUsuario" style="<?php echo $botton_eliminar ?>" idUsuario="<?=$value['id_usuario'] ?>"><i  class="fas fa-trash"></i></button>
           </td>
           </tr> 
        <?php  }
@@ -98,9 +132,8 @@
 
       <form role="form" method="POST" enctype="multipart/form-data">
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #218838">
-          <h4 class="modal-title">Agregar nuevo usuario</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>NUEVO USUARIO</strong></h4>          
         </div>
 
         <!-- Modal body -->
@@ -159,7 +192,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-              <button type="submit"  class="btn btn-primary" href="javascript:;" onclick="agregarUsuario(); return false"  >Guardar</button>
+              <button type="submit" class="btn btn-success" href="javascript:;" onclick="agregarUsuario(); return false"  >Guardar</button>
             </div>
 
             
@@ -185,9 +218,8 @@
 
       <form role="form" method="POST" enctype="multipart/form-data">
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #218838">
-          <h4 class="modal-title">Editar usuarios</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>EDITAR USUARIO</strong></h4>          
         </div>
 
         <!-- Modal body -->
@@ -247,7 +279,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-              <button type="submit"  class="btn btn-primary" href="javascript:;"  onclick="updateUsuario(); return false" >Guardar</button>
+              <button type="submit"  class="btn btn-success" href="javascript:;"  onclick="updateUsuario(); return false" >Guardar</button>
             </div>
 
             

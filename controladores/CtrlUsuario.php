@@ -11,9 +11,7 @@
 	 		global $IdUsuario_;
 	 		global $Usuario_;
 	 		if (isset($_POST["txt_usuario"])) {
-
-	 			if(preg_match('/^[a-zA-Z0-9]+$/', $_POST["txt_usuario"]) && preg_match('/^[a-zA-Z0-9]+$/', $_POST["txt_contra"]) ){
-
+                
 	 				$usuario= $_POST["txt_usuario"];
 	 				$passw= $_POST["txt_contra"];
 
@@ -25,13 +23,16 @@
 	 				if ($result) {
 	 						 foreach($result as $row) {
 						      $password= $row['password'];
-							 $pass_descriptado = $descr->desencriptar($password);
+							 $pass_descriptado = $descr->desencriptar($password);                           
 					         if($pass_descriptado==$passw){
 					         	 $_SESSION['id']=$row['id_usuario'] ;
 					         	 $_SESSION['sucursal']=$row['sucursal'] ;
                                  $_SESSION['login'] = 'activa';
                                  $_SESSION['user'] = $row['nombres'] ;
                                  $_SESSION['rol'] = $row['nivel'] ;
+                                 $_SESSION['email'] = $row['email'];
+                                 $_SESSION['nombres'] = $row['nombres'];
+                                 $_SESSION['password'] = $pass_descriptado;
                                  $_SESSION['loginCaja']='no_login';
                                   $ips= new ControlUsuario();
                                  $_SESSION['ip'] = $ips->get_client_ip();
@@ -42,29 +43,7 @@
 					         }else{
 					         	echo '<div class="alert alert-danger">Login incorrecto</div>';
 					         }
-					     //Configuraciones del sistema
-					   /* $res_config=ModeloUsuario::buscarConfiguraciones();
-					    foreach($res_config as $row_config) {
-						$_claves[$row_config['clave']] =$row_config['valor'];
-							}*/
-
-	 					/*  CORREO
- 							$headers =  'MIME-Version: 1.0' . "\r\n";
-							$headers .= 'From: Your name <info@address.com>' . "\r\n";
-							$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-
-
-                    	      if(mail("payalaortiz@gmail.com","prueba","Es una prueba",$headers )){
-
-							        error_log("Correo enviado") ;
-
-							    }else{
-
-							        error_log("Error de envio");
-
-							    }
-	 					*/
+					     
 
 
                     }
@@ -76,9 +55,7 @@
 
                 	echo '<div class="alert alert-danger padre">Login incocercto</div>';
                 }
-            }else{
-                	echo '<div class="alert alert-danger padre">Usuario o contraseña con caracteres no permitidos</div>';
-                }
+            
 
         }
 

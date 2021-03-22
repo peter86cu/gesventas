@@ -3,7 +3,7 @@ include("../config/db.php");
  $con=@mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $search = strip_tags(trim($_GET['q'])); 
 // Do Prepared Query
-$query = mysqli_query($con, "SELECT * FROM proveedores WHERE razon_social LIKE '%$search%' LIMIT 40");
+$query = mysqli_query($con, "SELECT * FROM proveedores WHERE razon_social LIKE '%$search%' and fecha_baja is null LIMIT 40");
 // Do a quick fetchall on the results
 $list = array();
 $data = array();

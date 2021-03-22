@@ -17,7 +17,14 @@
           }
 
 
+static  public function colores($datos){
 
+
+          $resultado=ModeloRol::coloresPagina($datos);
+          
+           return $resultado;
+                       
+          }
 
         
   }

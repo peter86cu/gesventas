@@ -5,7 +5,40 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1><i class="fas fa-cart-arrow-down" style="color:#218838"></i> Listado de Productos</h1>
+          <?php 
+         $color_header="";
+         $i_principal="";
+         $botton_principal="";
+         $botton_editar="";
+         $botton_eliminar="";
+         $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
+          <h1><i class="fas fa-cart-arrow-down" style="<?php echo $i_principal ?>"></i> <STRONG>LISTADO DE PRODUCTOS</STRONG></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -32,17 +65,17 @@
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th>Id</th>
-          <th>Imagen</th>
-          <th>Código</th>
-          <th>Nombnre Producto</th>
-          <th>Precio Venta</th>
-          <th>Categoria</th>
-          <th>Stock</th>
-          <th>Tipo</th>
-          <th>Impuesto</th>
-          <th>Acciones</th>
+        <tr style="<?php echo $color_tabla ?>">
+          <th><strong>ID</strong></th>
+          <th><strong>IMAGEN</strong></th>
+          <th><strong>CÓDIGO</strong></th>
+          <th><strong>NOMBRE PRODUCTO</strong></th>
+          <th><strong>PRECIO VENTA</strong></th>
+          <th><strong>CATEGORÍA</strong></th>
+          <th><strong>STOCK</strong></th>
+          <th><strong>TIPO</strong></th>
+          <th><strong>IMPUESTO</strong></th>
+          <th><strong>ACCIÓN</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -55,6 +88,15 @@
         WHERE p.id_categoria=c.id_categoria_producto and p.id_tipo_producto=t.id_tipo_producto and u.id_unidad_medida=p.id_unidad_medida and p.id_impuesto=i.id_impuesto and p.disponible=1";
         $productos = ControlProductos::mostrarProducto($parametro,$datos);
         foreach ($productos as $key => $value) {
+        
+        $stock= "select  s.cantidad stock from stock s where s.id_producto=".$value['id_producto']."";
+        $cantidad = ControlProductos::mostrarProducto($parametro,$stock);
+        $cantidad_stock=0;
+        foreach ($cantidad as $key => $values) {
+          $cantidad_stock=$values['stock'];
+        }
+
+print_r($value['id_producto']);
           $foto='vistas/recursos/dist/img/productos/'.$value['foto'];
           echo '<tr>
           <td style="width: 1%">'.$value['id_producto'].' </td>
@@ -63,13 +105,13 @@
           <td style="width: 15%">'.$value['nombre'].'</td>
           <td style="width: 8%">'.$value['precio_venta'].' '.$value['simbolo'].'</td>
           <td style="width: 10%">'.$value['categoria'].'</td>          
-          <td style="width: 10%">X</td>          
+          <td style="width: 10%">'.$cantidad_stock.'</td>          
           <td style="width: 8%">'.$value['tipo'].'</td>
           <td style="width: 8%">'.$value['impuesto'].'</td>
           <td style="width: 12%">
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-warning btnEditarProducto" idProducto="'.$value['id_producto'].'" data-toggle="modal" data-target="#ModalEditarProductos"><i class="far fa-edit"></i></button>
-          <button class="btn btn-danger btnEliminarProducto" idProducto="'.$value['id_producto'].'" ><i  class="fas fa-trash"></i></button>
+          <button class="btn btn-default btnEditarProducto" idProducto="'.$value['id_producto'].'" data-toggle="modal" data-target="#ModalEditarProductos" style="'.$botton_editar.'"><i class="far fa-edit"></i></button>
+          <button class="btn btn-default btnEliminarProducto" idProducto="'.$value['id_producto'].'" style="'.$botton_eliminar.'"><i  class="fas fa-trash"></i></button>
           </td>
           </tr>   ';
           
@@ -85,10 +127,10 @@ define('NUM_ITEMS_BY_PAGE', 6);
 $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c,tipos_productos t, unidades_medidas u , impuestos i WHERE p.id_categoria=c.id_categoria_producto and p.id_tipo_producto=t.id_tipo_producto and u.id_unidad_medida=p.id_unidad_medida and p.id_impuesto=i.id_impuesto and p.disponible=1 ";
         $cant_registros = ControlProductos::cantidadRegistros($cantidad_row);
          foreach ($cant_registros as $key => $value) {
-        printf("Result set has %d rows.\n", $value['cantidad']);
+        //printf("Result set has %d rows.\n", $value['cantidad']);
       }
 ?>
-<div class="card-footer clearfix">
+<!---<div class="card-footer clearfix">
                 <ul class="pagination pagination-sm m-0 float-right">
                   <li class="page-item"><a class="page-link" href="#">«</a></li>
                   <li class="page-item"><a class="page-link" href="#">1. <?php echo $value['cantidad'] ?></a></li>
@@ -96,7 +138,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                   <li class="page-item"><a class="page-link" href="#">3</a></li>
                   <li class="page-item"><a class="page-link" href="#">»</a></li>
                 </ul>
-              </div>
+              </div> -->
 
     </div>
 
@@ -114,15 +156,14 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
 
 
 <!-- The Modal Add Productos -->
-<div class="modal" id="ModalADDProductos">
+<div class="modal" id="ModalADDProductos" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
       <form role="form" method="POST" enctype="multipart/form-data">
           <!-- Modal Header -->
-          <div class="modal-header" style="background: #218838">
-            <h4 class="modal-title">Agregar nuevos productos</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div class="modal-header" style="<?php echo $color_header?>">
+            <h4 class="modal-title">NUEVO PRODUCTO</h4>           
           </div>
 
                 <!-- Modal body -->
@@ -295,15 +336,14 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
 
 
 
-<div class="modal" id="ModalEditarProductos">
+<div class="modal" id="ModalEditarProductos" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
       <form role="form" method="POST" enctype="multipart/form-data">
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #ffc107">
-          <h4 class="modal-title">Modificar Producto</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>MODIFICAR PRODUCTO</strong></h4>          
         </div>
 
         <!-- Modal body -->
@@ -457,7 +497,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                          <!-- Modal footer -->
                          <div class="modal-footer">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                          <button type="submit"  class="btn btn-primary" href="javascript:;"  onclick="updateProducto(); return false" >Guardar</button>
+                          <button type="submit"  class="btn btn-success" href="javascript:;"  onclick="updateProducto(); return false" >Guardar</button>
                         </div>
 
                       

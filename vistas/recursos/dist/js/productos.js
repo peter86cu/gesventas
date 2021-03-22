@@ -1,11 +1,7 @@
 $(".btnEditarProducto").click(function(){
 
 var idProducto = $(this).attr("idProducto");
-
-
-
 var datos = new FormData();
-
 var accion = "buscar";
 
 datos.append("accion",accion);
@@ -34,9 +30,10 @@ $.ajax({
            $("#inputUnidadEdit > option[value="+respuesta["id_unidad_medida"]+"]").attr("selected",true);
            $("#inputInveEdit > option[value="+respuesta["inventariable"]+"]").attr("selected",true);
            $("#inputDispoEdit > option[value="+respuesta["disponible"]+"]").attr("selected",true);
-           $("#inputMonedaEdit > option[value="+respuesta["id_moneda"]+"]").attr("selected",true);
-           
-
+           $("#inputMonedaEdit > option[value="+respuesta["id_moneda"]+"]").attr("selected",true);           
+           //document.getElementById("foto").val("vistas/recursos/dist/img/productos/"+respuesta["foto"]);
+           $("#foto").val("vistas/recursos/dist/img/productos/"+respuesta["foto"]);
+          
 
 
        }

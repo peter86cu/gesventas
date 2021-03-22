@@ -31,6 +31,7 @@
     @session_start();
 
     #session_destroy();
+  
 if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
      
       if($_SESSION['login']=='activa' && $_GET["enlace"]=="ventas"){
@@ -47,7 +48,7 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 
      //pagias
       if(isset($_GET["enlace"])){
-      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="logoutcaja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="logout" ){
+      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="mailbox" || $_GET["enlace"]=="read-mail" || $_GET["enlace"]=="logoutcaja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="mailsend" || $_GET["enlace"]=="maildelete"  || $_GET["enlace"]=="redactar-mail" || $_GET["enlace"]=="logout" ){
 
         include "vistas/modulos/".$_GET["enlace"].".php";
       }else{
@@ -108,6 +109,8 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 <script src="vistas/recursos/dist/js/ventas.js"></script>
 <!--  proveedor -->
 <script src="vistas/recursos/dist/js/proveedores.js"></script>
+<!--  mail -->
+<script src="vistas/recursos/dist/js/mail.js"></script>
 <!--  varios -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
