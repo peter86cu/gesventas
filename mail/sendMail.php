@@ -30,11 +30,23 @@ $mail = new PHPMailer(true); // create a new object
  
  $mail->From=$_SESSION['email'];
  $mail->FromName= $_SESSION['nombres'];
-
  
  $mail->Subject = $_POST["asunto"];
  $mail->Body = $_POST["body"];
  $mail->addAddress($_POST["para"]);
+
+if(!empty($archivos_adjuntos_ruta)){
+foreach($archivos_adjuntos_ruta as $archivo){
+$mail->AddAttachment($archivo); // attachment
+}
+}
+
+if(!empty($archivos_adjuntos_temp)){
+foreach($archivos_adjuntos_temp as $nombrearchivo=>$contenidoArchivo){
+$mail->AddStringAttachment($contenidoArchivo,$nombrearch ivo,'base64');
+}
+}
+$mail->Timeout = 20;
 
 
  $mail_salved= "From: ".$_SESSION['email']."\r\n"

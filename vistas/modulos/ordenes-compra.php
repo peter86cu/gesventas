@@ -1,3 +1,38 @@
+<?php 
+ $color_header="";
+ $i_principal="";
+ $botton_principal="";
+ $botton_editar="";
+ $botton_eliminar="";
+ $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
+
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -5,12 +40,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1><i class="fas fa-shipping-fast" style="color:#218838"></i> Ordenes de compras</h1>
+          <h1><i class="fas fa-shipping-fast" style="<?php echo $i_principal ?>"></i> <strong>ORDENES DE COMPRAS</strong></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="inicio">Inicio</a></li>
-            <li class="breadcrumb-item active">Productos</li>
+            <li class="breadcrumb-item active">Ordenes de compras</li>
           </ol>
         </div>
       </div>
@@ -23,7 +58,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
+       <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
 
 
      </div>
@@ -32,16 +67,16 @@
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th>Número Orden</th>
-          <th>Fecha</th>
-          <th>Forma de Pago</th>
-          <th>Items</th>
-          <th>Solicitado por</th>
-          <th>Aprobado por</th>
-          <th>Proveedor</th>
-          <th>Estado</th>
-          <th style="width: 7%">Acciones</th>
+        <tr style="<?php echo $color_tabla ?>">
+          <th><strong>NÚMERO</strong></th>
+          <th><strong>FECHA</strong></th>
+          <th><strong>FORMA DE PAGO</strong></th>
+          <th><strong>ITEMS</strong></th>
+          <th><strong>SOLICITADO POR</strong></th>
+          <th><strong>APROBADO POR</strong></th>
+          <th><strong>PROVEEDOR</strong></th>
+          <th><strong>ESTADO</strong></th>
+          <th style="width: 7%"><strong>ACCIÓN</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -106,13 +141,13 @@
               <div class="btn-bt-group"></div>
 
               <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
-                <button class="btn btn-warning ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarOrdenes" ><i class="far fa-edit"></i></button>
+                <button class="btn btn-warning ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>" idEstado="<?php echo $value['id_estado'] ?>" data-toggle="modal" data-target="#ModalEditarOrdenes" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php } else { ?>
-                <button class="btn btn-warning ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" ><i class="far fa-edit"></i></button>
+                <button class="btn btn-warning ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
               <?php  } ?>
-              <button class="btn btn-danger btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" ><i  class="fas fa-trash"></i></button>
+              <button class="btn btn-danger btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" style="<?php echo $botton_eliminar ?>"><i  class="fas fa-trash"></i></button>
               <?php if ($value['id_estado']==3 || $value['id_estado']==4 and $value['items']>0) { ?>
-                <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimir(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
+                <button class="btn btn-success" style="color:#001f3f"  href="javascript:;" style="<?php echo $botton_eliminar ?>" onclick="datosImprimir(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
              <?php }  ?>
            </td>
          </tr>
@@ -178,13 +213,13 @@
       <form class="form-horizontal" role="form" id="datos_presupuesto" method="post">
 
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #218838">
-          <h4 class="modal-title">Nueva orden de compra</h4>
-
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title">NUEVA ORDEN DE COMPRA</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body" style = "overflow: hidden;">
+        <div class="modal-body" >
           <div class="box-body">
 
 
@@ -305,7 +340,7 @@
 
                       <div class="col-lg-12 col-md-12 col-sm-12">
                         <button type="submit" class="btn btn-success" href="javascript:;" onclick="guardar_orden(1); return false">Crear orden de compra</button>
-                        <button type="submit" class="btn btn-danger" style ="float: right;" href="javascript:;" onclick="guardar_orden(0); return false">Cerrar</button>
+                        <button type="submit" class="btn btn-danger" style ="float: right;" href="javascript:;" onclick="guardar_orden(0); return false">Guardar borrador</button>
                       </div>
                     </div>
                   </div>
@@ -401,9 +436,9 @@
           <form class="form-horizontal" role="form" id="datos_editar" method="post">
 
             <!-- Modal Header -->
-            <div class="modal-header" style="background: #ffc107">
-              <h4 class="modal-title">Nueva orden de compra</h4>
-
+            <div class="modal-header" style="<?php echo $color_header?>">
+              <h4 class="modal-title">EDITAR ORDEN DE COMPRA</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <!-- Modal body -->
@@ -519,10 +554,10 @@
                         </div>
                         <div class="row"> <hr /></div>
 
-                        <button type="submit" class="btn btn-success" href="javascript:;" onclick="guardar_ordenEditadas(2); return false"><span>AUTORIZAR ORDEN<br><b>A <label id="autorizo"></label></b></span></button>
+                        <button type="submit"  id="bttautorizo" class="btn btn-success" href="javascript:;" onclick="guardar_ordenEditadas(2); return false"><span>AUTORIZAR ORDEN<br><b>A <label id="autorizo"></label></b></span></button>
 
 
-                        <button type="submit" class="btn btn-danger"  style ="float: right;" href="javascript:;" onclick="guardar_ordenEditadas(5); return false"><span>CANCELAR<br><b>A <label id="cancelo"></b></span></button>
+                        <button type="submit" class="btn btn-danger" id="bttcancelo"  style ="float: right;" href="javascript:;" onclick="guardar_ordenEditadas(5); return false"><span>CANCELAR<br><b>A <label id="cancelo"></b></span></button>
 
 
 

@@ -7,13 +7,13 @@
                       $sin_leer=$value['sin_leer'];
                     }
 
-
               $identificador=""; 
               $sin_leer=0;
               $idMail="";
               $accion="";
+              $adjuntos = array();
 
-                    if(isset($_SESSION['id_mail']) && $_SESSION['accion_mail']=="responder"){
+                    if(isset($_SESSION['id_mail'])){
                        if($_SESSION['accion_mail']=='responder'){
                          $identificador = $_SESSION['id_mail'];
                          $sin_leer = $_SESSION['sin_leer'];
@@ -53,9 +53,28 @@
                        }
                      
 
-                    }else{
-                         $_SESSION['accion_mail']=="nuevo";
-                       }
+                    }if(isset($_SESSION['archivo']) && $_SESSION['archivo']=='mostrar' && $_SESSION['accion_mail']=="nuevo"){
+                      $parametro= null;
+                    $datos= "select fa.*,(select cf.class from class_tipo_fichero cf where cf.tipo=fa.tipo) class from mail_sent ms inner join fichero_adjuntos fa on(fa.id_mail=ms.id_mail) where ms.id_usuario= -1 and ms.accion=6 and fa.estado=5 and fa.id_mail='".$_SESSION['id_new_mail']."' ";
+                    $mail = ControlMail::buscarMail($parametro,$datos);
+                    error_log($datos);
+                     foreach ($mail as $key => $values) { 
+
+                          $adjuntos[] =  array (
+                                'name' => $values['nombre'],
+                                'ext' =>  $values['tipo'],
+                                'class' =>  $values['class'],
+                                'size' =>  $values['size'],
+                                'id_fichero' =>  $values['id'],
+                                'path' =>  $values['direccion']
+                              );
+
+                     }
+                     for ($j=0; $j <count($adjuntos) ; $j++) {
+                       $adjuntos[$j]['path'].$adjuntos[$j]['name'];
+                     }
+
+                    }
            ?> 
 
 <!-- Content Wrapper. Contains page content -->
@@ -150,15 +169,29 @@
                      <?php if($accion=='responder') echo $mail_responder; ?>
                     </textarea>
                 </div>
-                <div class="form-group">
-                  <div class="btn btn-default btn-file">
-                    <i class="fas fa-paperclip"></i> Attachment
-                    <input type="file" name="attachment">
-                  </div>
-                  <p class="help-block">Max. 32MB</p>
+                <div id='here' class="form-group">
+                
+                    <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+                    
+                 <?php for ($j=0; $j <count($adjuntos) ; $j++) { error_log(count($adjuntos)); ?>
+                <li>
+                 <a href="<?php echo $adjuntos[$j]['path'].$adjuntos[$j]['name'] ?>" target="_blank"> <span class="mailbox-attachment-icon"><i <?php echo $adjuntos[$j]['class'] ?> ></i></span>                   
+                  <div class="mailbox-attachment-info">
+                    <a href="<?php echo $adjuntos[$j]['path'].$adjuntos[$j]['name'] ?>" target="_blank" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> <?php echo $adjuntos[$j]['name'] ?></a>
+                    <button type="button" class="close" onclick="eliminarAdjunto('<?php echo $adjuntos[$j]['path'].$adjuntos[$j]['name'] ?>','<?php echo $adjuntos[$j]['id_fichero'] ?>')">&times;</button> 
+                </li>
+                <?php }  ?>
+                    
+                 </ul>
                 </div>
+                 <form method="post" enctype="multipart/form-data">
+                  <div class="btn btn-default btn-file">
+                    <i class="fas fa-paperclip"></i> Adjuntar           
+                  <input type="file" name="attachment" id="idAdjunto" onchange="validarFicheroAdjunto()">
+                     
+                  </div></form>
               </div>
-              <!-- /.card-body -->
+               <!-- /.card-body -->
               <div class="card-footer">
                 <div class="float-right">
                   <button type="button" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Borrador</button>

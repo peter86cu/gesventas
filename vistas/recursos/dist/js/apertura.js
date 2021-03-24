@@ -67,6 +67,44 @@ function abrirCaja(idUsuario) {
 }
 
 
+function eliminaAperturaInicio() {
+
+  
+  var datos = new FormData();
+  var accion = "inicio";
+
+  datos.append("accion",accion);
+  var resul;
+
+  $.ajax({
+    url: "ajax/ajaxApertura.php",
+    method : "POST",
+    data: datos,
+    chache: false,
+    contentType: false,
+    processData:false,
+    dataType: "json",
+    success: function(respuesta){
+
+     if(respuesta==null){             
+
+     }else{
+      console.log(respuesta)
+      $("#txtConsecutivo").val(respuesta["nro_consecutivo"]);
+      $("#idApertura").val(respuesta["id_apertura_cajero"]);             
+      $("#txtTurno > option[value="+respuesta["id_turno"]+"]").attr("selected",true);
+      $("#txtTurno").attr('disabled', 'disabled');
+      $("#txtTipo > option[value="+1+"]").attr("disabled",true);  
+      document.getElementById("btEjecutar").visible = true;  
+      document.getElementById("btAbrir").style.display = 'none';    
+      $('#modalInicioCaja').modal('show');
+    }
+
+
+  }
+}); 
+}
+
 
 function abrirTurno(arqueo) {
 
@@ -109,8 +147,6 @@ function abrirTurno(arqueo) {
     } 
   }
 }); 
-
-  
 
  }
 

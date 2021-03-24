@@ -19,9 +19,11 @@
                     $from="";
                     $date="";
                     $body="";
+                    $adjuntos = array();
                      foreach ($mail as $key => $value) { 
                         $asunto = encriptaDatos::desencriptar($value['subject']);
                          $nombre = encriptaDatos::desencriptar($value['nombre']);
+                         error_log($nombre);
                         $from =encriptaDatos::desencriptar($value['email_origen']);
                         $date = encriptaDatos::desencriptar($value['datemail']);
                         $body = encriptaDatos::desencriptar($value['body']);
@@ -29,6 +31,26 @@
                   $prettydate = strftime("%A, %d de %B de %Y %H : %M :%S", strtotime($nueva_fecha));
                   $dateutf = ucfirst(iconv("ISO-8859-1","UTF-8",$prettydate));
                   $idMail=$value['id'];
+                  //Buscar adjuntos                  
+                    $adj= "SELECT  DISTINCT f.*,(select cf.class from class_tipo_fichero cf where cf.tipo=f.tipo) class  FROM mail m inner JOIN fichero_adjuntos f on(m.id_mail=f.id_mail)  WHERE m.id_usuario='".
+                    $value["id_usuario"]."' and m.fecha_delete is  null and m.accion=1 and f.estado=4 and m.id=".$value["id"]." ";
+                  
+                    $consul_adjunto = ControlMail::buscarMail($parametro,$adj);
+                      if($consul_adjunto!=null)
+                         foreach ($consul_adjunto as $key => $values){
+
+                          $adjuntos[] =  array (
+                                'name' => $values['nombre'],
+                                'ext' =>  $values['tipo'],
+                                'class' =>  $values['class'],
+                                'size' =>  $values['size'],
+                                'path' =>  $values['direccion']
+                              );
+                         
+                                                   
+                         }
+
+                        
                       } 
 
                 }if($_SESSION['accion_mail']=='salida'){
@@ -126,7 +148,7 @@
         <div class="col-md-9">
           <div class="card card-primary card-outline">
             <div class="card-header">
-              <h3 class="card-title"><p><h5><strong>De: </strong><?php echo $nombre ?></h5>
+              <h3 class="card-title"><p><h5><strong>De: </strong><?php if($_SESSION['accion_mail']!='salida') { echo $nombre; }else{ echo $_SESSION['nombres']; } ?> </h5>
                     <?php if($_SESSION['accion_mail']=='salida') { ?> <p><h5><strong>Para: </strong><?php echo $from ?></h5> <?php } ?></h3>
 
             </div>
@@ -153,22 +175,21 @@
               <!-- /.mailbox-read-message -->
             </div>
             <!-- /.card-body -->
+             <?php if($adjuntos!=null){ ?>
             <div class="card-footer bg-white">
               <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+                <?php for ($j=0; $j <count($adjuntos) ; $j++) { ?>
                 <li>
-                  <span class="mailbox-attachment-icon"><i class="far fa-file-pdf"></i></span>
-
+                 <a href="<?php echo $adjuntos[$j]['path'].$adjuntos[$j]['name'] ?>" target="_blank"> <span class="mailbox-attachment-icon"><i <?php echo $adjuntos[$j]['class'] ?> ></i></span>                   
                   <div class="mailbox-attachment-info">
-                    <a href="#" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> Sep2014-report.pdf</a>
-                        <span class="mailbox-attachment-size clearfix mt-1">
-                          <span>1,245 KB</span>
-                          <a href="#" class="btn btn-default btn-sm float-right"><i class="fas fa-cloud-download-alt"></i></a>
-                        </span>
+                    <a href="<?php echo $adjuntos[$j]['path'].$adjuntos[$j]['name'] ?>" target="_blank" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> <?php echo $adjuntos[$j]['name'] ?></a>
+                        
                   </div>
                 </li>          
-                
+                 <?php } ?>
               </ul>
             </div>
+          <?php } ?>
             <!-- /.card-footer -->
             <div class="card-footer">
               <div class="float-right">

@@ -140,4 +140,8 @@ if($_POST["accion"]=="inicio" || $_POST["accion"]=="respuesta" || $_POST["accion
 
     $obj_Modificar = new aperturaAjax();      
     $obj_Modificar ->buscarVentasAjax();
+}else if($_POST["accion"]=="elimina_inicio" ){
+    
+    $obj_Modificar = new aperturaAjax();      
+    $obj_Modificar ->buscarVentasAjax();
 }

@@ -50,6 +50,7 @@ $('#myModal').on('hidden.bs.modal', function (e) {
 
 $(".ModalEditarOrdenes").click(function(){
 
+ var estado = $(this).attr("idEstado");
   var idOrden = $(this).attr("idOrden");  
 
   var datos = new FormData();
@@ -80,6 +81,14 @@ $(".ModalEditarOrdenes").click(function(){
     $("#idOrden1E").val(respuesta["id_orden_compra"]);
     $("#proveedorE1").val(respuesta["id_proveedor"]);
     $("#datepickerE").val(respuesta["fecha_hora"]);
+
+    if(estado==4){
+       document.getElementById("bttautorizo").disabled = true;
+       document.getElementById("bttcancelo").disabled = true;
+    }
+    if(estado==3){
+       document.getElementById("bttautorizo").disabled = true;      
+    }
 
   }
   
@@ -452,7 +461,7 @@ function guardar_ordenEditadas(estado){
   var idOrden = $('#idOrden1E').val();
   var plazo = $('#txtEnvioE').val();
   var forma_pago = $('#txtFormaPagoE').val();
-  var fecha = $('#datepicker').val();
+  var fecha = $('#datepickerE').val();  
   var datos = new FormData();
   var accion = "update";
 

@@ -1,3 +1,37 @@
+<?php 
+ $color_header="";
+ $i_principal="";
+ $botton_principal="";
+ $botton_editar="";
+ $botton_eliminar="";
+ $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -5,7 +39,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1><i class="fas fa-hand-holding-usd" style="color:#218838"></i> Apertura de caja</h1>
+          <h1><i class="fas fa-hand-holding-usd" style="<?php echo $i_principal ?>"></i> <strong>APERTURA DE CAJA</strong></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -31,16 +65,16 @@
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th style="text-align: center;"># Arqueo</th>
-          <th style="text-align: center;">Fecha</th>
-          <th style="text-align: center;"># Apertura</th>
-          <th style="text-align: center;">Turno</th>
-          <th style="text-align: center;">Caja</th>
-          <th style="text-align: center;">Tipo Arqueo</th>
-          <th style="text-align: center;">Cajero</th>
-          <th style="text-align: center;">Estado</th>
-          <th style="width: 4%; text-align: center;">Acciones</th>
+        <tr style="<?php echo $color_tabla ?>">
+          <th style="text-align: center;"><strong># ARQUEO</strong></th>
+          <th style="text-align: center;"><strong>FECHA</strong></th>
+          <th style="text-align: center;"><strong># APERTURA</strong></th>
+          <th style="text-align: center;"><strong>TURNO</strong></th>
+          <th style="text-align: center;"><strong>CAJA</strong></th>
+          <th style="text-align: center;"><strong>TIPO DE ARQUE</strong></th>
+          <th style="text-align: center;"><strong>CAJERO</strong></th>
+          <th style="text-align: center;"><strong>ESTADO</strong></th>
+          <th style="width: 4%; text-align: center;"><strong>ACCIÓN</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -114,7 +148,7 @@
           ?>
 
           <tr>
-            <td style="width: 1%;text-align: center;"><?php echo $value['id_arqueo'] ?></td>
+            <td style="width: 3%;text-align: center;"><?php echo $value['id_arqueo'] ?></td>
             <td style="width: 10%;text-align: center;"><?php echo $value['fecha']?></td>
             <td style="width: 5% ; text-align: center;"><?php echo $value['id_apertura_cajero']?></td>
             <td style="width: 8%; text-align: center;"><?php echo $turno ?></td> 

@@ -96,12 +96,62 @@ static public function moverEliminadosSeleccion($listaIdMail,$accion){
 			$stmt= $obj->actualizar("mail_sent", "accion = 2,fecha_delete=now()", 	"id = ".$idMail."");
 		   
 		}
-		
-		
 
 		return $stmt;
 					
 	}
+
+
+	static public function adjuntoTemp($nombre,$tipo,$size,$direccion){           
+					
+		$obj = new BaseDatosMail(); 		      
+		$result=$obj -> insertar("fichero_adjuntos", "'".$_SESSION['id']."', '".$nombre."', '".$tipo."', '".$size."', '".$direccion."', 5 ,'".$_SESSION['id_new_mail']."'");		
+		
+		if($result){
+
+		$_SESSION['archivo']='mostrar';
+  		$_SESSION['accion_mail']='nuevo';
+  		
+		}
+
+		return $result;
+
+					
+	}
+
+
+
+	static public function crearBorrador(){
+		$id_mail=uniqid() ;		        
+		 
+		$obj = new BaseDatosMail(); 		      
+		$result=$obj -> insertarCamposEspecificos("mail_sent","id,id_usuario,estado,accion,id_mail", " '".$_SESSION['id']."','0', '6', '".$id_mail."'");		
+		
+		if($result){
+
+		unset($_SESSION['id_new_mail']);
+		$_SESSION['id_new_mail']=  $id_mail; 
+  		
+		}
+
+		return $result;
+
+					
+	}
+
+
+
+
+	static public function eliminarFicheroAdjunto($id){           
+					
+		$obj = new BaseDatosMail(); 
+		
+			$stmt= $obj->borrar("fichero_adjuntos", "id_mail = '".$_SESSION['id_new_mail']."' and id=".$id."");
+			
+		return $stmt;
+					
+	}
+
 
 
 

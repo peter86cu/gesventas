@@ -73,7 +73,7 @@ $(".ModalEditarCompras").click(function(){
     $("#txtEnvioFE > option[value="+respuesta["id_plazo"]+"]").attr("selected",true);
     $("#txtDepositoE > option[value="+respuesta["id_deposito"]+"]").attr("selected",true);
     $("#txtMonedaFE > option[value="+respuesta["id_moneda"]+"]").attr("selected",true);
-    $("#txtReceptorE > option[value="+respuesta["receptor"]+"]").attr("selected",true);
+    $("#txtReceptorE > option[value="+respuesta["id_usuario_recibio"]+"]").attr("selected",true);
     buscar_proveedor_factura(respuesta["id_proveedor"],"1");
     mostrar_itemsFactura(respuesta["id_entrada_compra"],"editar");
     $("#txtOrdenCompraE").val(respuesta["id_orden_compra"]);
@@ -91,14 +91,14 @@ $(".ModalEditarCompras").click(function(){
     }
 
 
-    validarNumeroFactura(2);
+   /* validarNumeroFactura(2);
     validarFecha(2);
     validarOrdenCompra(2);
     validarFormaPago(2);
     validarMetodoEnvio(2);
     validarDeposito(2);
     validarReceptor(2);
-    validarMoneda(2);
+    validarMoneda(2);*/
   }
 
 

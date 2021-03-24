@@ -2,7 +2,31 @@
 function leerMail(idMail,cantidad,accion_mail){
 
 if(accion_mail=='nuevo'){
- window.location.href = 'redactar-mail';
+  var datos = new FormData(); 
+    var accion ="borrador";    
+    datos.append("accion",accion);
+    
+
+    $.ajax({
+     url: "ajax/procesoMail.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){
+      console.log(respuesta)
+      if(respuesta){
+       window.location.href = 'redactar-mail';
+      }
+
+      
+        
+    }
+     });
+
+
 }else{
   var datos = new FormData(); 
     var accion ="parametros";
@@ -20,6 +44,7 @@ if(accion_mail=='nuevo'){
      processData:false,
      dataType: "json",
      success: function(respuesta){
+     
       if(accion_mail=='responder'){
         window.location.href = 'redactar-mail';
       }else{
@@ -31,6 +56,97 @@ if(accion_mail=='nuevo'){
     }
      });
 }
+
+}
+
+
+function nuevo_mail_borrado(accion_mail){
+
+
+  var datos = new FormData(); 
+    var accion ="borrador";    
+    datos.append("accion",accion);
+    datos.append("accion_mail",accion_mail);
+
+    $.ajax({
+     url: "ajax/procesoMail.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){
+      console.log(accion_mail)
+      if(respuesta){
+        if(accion_mail=='responder'){
+        window.location.href = 'redactar-mail';
+      }else{
+        window.location.href = 'read-mail';
+      }
+      }
+      
+
+      
+        
+    }
+     });
+}
+
+
+function eliminarAdjunto(fichero, id){
+
+  var datos = new FormData(); 
+    var accion ="eliminar_adjunto";    
+    datos.append("accion",accion);
+    datos.append("fichero_adjunto",fichero);
+    datos.append("id_fichero",id);
+
+    $.ajax({
+     url: "ajax/procesoMail.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){
+      console.log(respuesta)
+      if(respuesta){
+         $( "#here" ).load(window.location.href + " #here" );
+      }
+        
+    }
+     });
+}
+
+
+
+function validarFicheroAdjunto(){
+
+
+    var datos = new FormData(); 
+    var accion ="validar_fichero";
+    var adjunto  =$('#idAdjunto')[0].files[0];
+    datos.append("accion",accion);
+    datos.append("adjunto",adjunto);
+
+    $.ajax({
+     url: "ajax/procesoMail.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){
+           if(respuesta){
+            $( "#here" ).load(window.location.href + " #here" );
+           }
+                  
+    }
+     });
+
 
 }
 

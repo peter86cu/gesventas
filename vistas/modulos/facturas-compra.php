@@ -1,3 +1,37 @@
+<?php 
+ $color_header="";
+ $i_principal="";
+ $botton_principal="";
+ $botton_editar="";
+ $botton_eliminar="";
+ $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
+
+ ?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -5,7 +39,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1> <i class="fas fa-file-invoice-dollar" style="color:#218838"></i> Facturas de compras</h1>
+          <h1> <i class="fas fa-file-invoice-dollar" style="<?php echo $i_principal ?>"></i> <strong>FACTURAS DE COMPRAS</strong></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -23,7 +57,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
+       <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
 
      </div>
    </div>
@@ -32,16 +66,16 @@
 
      <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th>Número</th>
-          <th>Fecha</th>
-          <th>Items</th>
-          <th>Total</th>
-          <th>Entrado por</th>
-          <th>Recibido por</th>
-          <th>Proveedor</th>
-          <th>Estado</th>
-          <th style="width: 7%">Acciones</th>
+        <tr style="<?php echo $color_tabla ?>">
+          <th><strong>NÚMERO</strong></th>
+          <th><strong>FECHA</strong></th>
+          <th><strong>ITEMS</strong></th>
+          <th><strong>TOTAL</strong></th>
+          <th><strong>ENTRADA POR</strong></th>
+          <th><strong>RECIBIDO POR</strong></th>
+          <th><strong>PROVEEDOR</strong></th>
+          <th><strong>ESTADO</strong></th>
+          <th style="width: 7%"><strong>ACCIÓN</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -112,11 +146,11 @@
               <div class="btn-bt-group"></div>
 
               <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
-                <button class="btn btn-warning ModalEditarCompras" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarCompras" ><i class="far fa-edit"></i></button>
+                <button class="btn btn-warning ModalEditarCompras" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarCompras" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php } else { ?>
-                <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" ><i class="far fa-edit"></i></button>
+                <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php  } ?>
-              <button class="btn btn-danger btnEliminarFactura" idCompra="<?php echo $value['id_entrada_compra'] ?>" ><i  class="fas fa-trash"></i></button>
+              <button class="btn btn-danger btnEliminarFactura" style="<?php echo $botton_eliminar ?>" idCompra="<?php echo $value['id_entrada_compra'] ?>" ><i  class="fas fa-trash"></i></button>
               <?php if ($value['id_estado']==3 and $value['items']>0) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimir(<?php echo $value['id_entrada_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
               <?php }  ?>
@@ -184,13 +218,13 @@
       <form class="form-horizontal" role="form" id="datos_factura" id="datos_factura" method="post">
 
         <!-- Modal Header -->
-        <div class="modal-header" style="background: #218838">
-          <h4 class="modal-title">Entradas facturas de compras</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title">NUEVA FACTURA DE COMPRA</h4>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body" style = "overflow: hidden;">
+        <div class="modal-body" >
           <div class="box-body">
 
 
@@ -447,8 +481,8 @@
                     <form class="form-horizontal" role="form" id="datos_editar" method="post">
 
                       <!-- Modal Header -->
-                      <div class="modal-header" style="background: #218838">
-                        <h4 class="modal-title">Editar entrada factura</h4>
+                      <div class="modal-header" style="<?php echo $color_header?>">
+                        <h4 class="modal-title">EDITAR FACTURA DE ENTRADA</h4>
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
 
