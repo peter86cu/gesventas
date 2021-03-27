@@ -3,7 +3,7 @@
 
 require_once("conexion.php");
  include "mcript.php";
-@session_start();
+
 
 class ModeloVentas{
 	

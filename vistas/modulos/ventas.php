@@ -985,11 +985,10 @@ function guardar(evt){
            dataType: "json",
            success: function(resultado){             
              if(resultado){
-         console.log(resultado);
-                 $.post(`https://printapp.ddns.net/printapp/print/venta`,{venta:520,zonas:null})
+         
       }
 
-            // setTimeout(function() {location.reload();}, 1105)
+             setTimeout(function() {location.reload();}, 1105)
              //inicio();
            }
          });

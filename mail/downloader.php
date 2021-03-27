@@ -4,7 +4,7 @@
     include("config/conexionMail.php");
 
 ob_start();
-    @session_start();
+
 
 $username = 'soporte@gesventas.ml';
 $password = 'Admin1233*';

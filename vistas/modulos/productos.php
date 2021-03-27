@@ -96,7 +96,7 @@
           $cantidad_stock=$values['stock'];
         }
 
-print_r($value['id_producto']);
+
           $foto='vistas/recursos/dist/img/productos/'.$value['foto'];
           echo '<tr>
           <td style="width: 1%">'.$value['id_producto'].' </td>

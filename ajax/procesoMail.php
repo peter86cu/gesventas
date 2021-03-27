@@ -4,17 +4,21 @@ require_once  "../modelo/MdlMail.php";
 require_once  "../modelo/mcript.php";
 
 if($_POST["accion"]=="parametros"){
-  @session_start();
-
+  
   unset($_SESSION['id_mail']);
-  unset($_SESSION['sin_leer']);
+  unset($_SESSION['sin_leer']);  
   $_SESSION['id_mail']  = $_POST["id_mail"];
   $_SESSION['sin_leer'] = $_POST["sin_leer"];
   $_SESSION['accion_mail'] = $_POST["accion_mail"];
 
+  if( $_POST["accion_mail"]=='responder'){ 
+  
+  $_SESSION['archivo']="no_mostrar"; 
+  $resultado = ModeloMail::insertaMailRecibidoBorrador($_POST["id_mail"]);  
+  $_SESSION['id_mail']  = $_POST["id_mail"];
+}
 
-  echo json_encode(true);
-
+ echo json_encode(true);
 }
 
 
@@ -22,7 +26,9 @@ if($_POST["accion"]=="marcarLectura"){
 
   $encri = new encriptaDatos();
 
-  $resultado = ModeloMail::marcarComoLeido($_POST["id_mail"],$encri->encriptar($_SESSION['id']));
+  $resultado = ModeloMail::marcarComoLeido($_POST["id_mail"],$encri->encriptar($_SESSION['id']),$_POST["accion_mail"]);
+
+  
 
   echo json_encode($resultado);
 
@@ -47,6 +53,16 @@ if($_POST["accion"]=="delete_lectura"){
   echo json_encode($resultado);
 
 }
+
+if($_POST["accion"]=="actualizar_borrador"){
+
+  
+  $resultado = ModeloMail::actualizarBorrador($_POST["id_mail"],$_POST["para"],$_POST["asunto"],$_POST["body"]);
+
+  echo json_encode($resultado);
+
+}
+
 
 
 if($_POST["accion"]=="validar_fichero"){
@@ -76,7 +92,7 @@ if($_POST["accion"]=="validar_fichero"){
 
 }
 
-if($_POST["accion"]=="borrador"){
+if($_POST["accion"]=="borrador" ){
   unset($_SESSION['accion_mail']);
   unset($_SESSION['archivo']);
   $_SESSION['accion_mail']="nuevo";

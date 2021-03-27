@@ -5,7 +5,7 @@
 	Mail: info@obedalvarado.pw
 	---------------------------*/
 	 ob_start();
-	@session_start();
+	
 	/* Connect To Database*/
 	include("../../config/db.php");
 	include("../../config/conexion.php");
@@ -60,6 +60,7 @@
         $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
         // send the PDF
         $html2pdf->Output('orden.pdf');
+
     }
     catch(HTML2PDF_exception $e) {
         echo $e;

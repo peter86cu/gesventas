@@ -627,6 +627,34 @@ function datosImprimir(idOrden){
    }
 
 
+   function datosEnviarMail(idOrden){   
+
+   var datos = new FormData();  
+   datos.append("idOrden",idOrden);
+
+       $.ajax({
+      url: "pdf/documentos/orden-correo.php",
+      method : "POST",
+      data: datos,
+      chache: false,
+      contentType: false,
+      processData:false,
+      dataType: "json",
+      success: function(respuesta){
+       if(respuesta){
+
+        window.location.href = 'redactar-mail';
+
+       }
+     }
+       
+         });
+
+     
+     
+   }
+
+
 
 function VentanaCentrada(theURL,winName,features, myWidth, myHeight, isCenter) { //v3.0
   if(window.screen)if(isCenter)if(isCenter=="true"){

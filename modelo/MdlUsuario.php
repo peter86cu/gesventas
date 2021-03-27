@@ -37,7 +37,16 @@ class ModeloUsuario{
 			return $result;
 						
 	}		
-					
+	
+
+	static public function insertarSession( $idSession, $usuario,$accion  ){  
+		
+    	
+   			$obj = new BaseDatos();      
+			$result=$obj -> insertar("log_session","'".$idSession."','".$usuario."',now(), '".$accion."'");  
+			return $result;
+						
+	}				
 	
 
 	static public function mostrarUsuario($parametro, $datos){

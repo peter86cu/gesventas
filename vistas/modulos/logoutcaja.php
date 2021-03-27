@@ -1,7 +1,5 @@
 <?php
 
-@session_start();
-
  $ventas = ControlVentas::validarNoExistenVentas();        
           
  if($ventas){ 

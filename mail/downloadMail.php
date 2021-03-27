@@ -5,7 +5,7 @@
     include("../modelo/mcript.php");
 
     ob_start();
-    @session_start();
+    
 
      $encri = new encriptaDatos();
      
@@ -34,7 +34,8 @@ if($connection   = imap_open($hostname,$username,$password)){
         'body'      => imap_body($connection, $i),
         'structure' => imap_fetchstructure($connection, $i)
       );
-       
+      imap_delete($connection, $i);
+      imap_expunge($connection);
     }
 
      for ($j=1; $j <count($inbox) ; $j++) {
@@ -53,15 +54,16 @@ if($connection   = imap_open($hostname,$username,$password)){
       adjunto($inbox[$j]['structure'],$connection,$j,$con,$id);
        $body = ((imap_fetchbody($connection,$j,1.1)));       
     }else{
-       $body = (nl2br(htmlspecialchars(imap_fetchbody($connection,$j,1))));
+       $body = imap_fetchbody($connection,$j,1);
        
     }
+    // $body = (nl2br(htmlspecialchars(imap_fetchbody($connection,$j,1))));
+    //$filtro= str_replace("=20",'',$body); str_replace("<br />",'',$filtro)
 
     if(mysqli_query($con,"INSERT INTO mail(datemail,id_usuario,email_origen,nombre, subject, body, estado,accion,id_mail) VALUES ('".$encri->encriptar($header->udate)."','".$encri->encriptar($_SESSION['id'])."','".$encri->encriptar($email)."','".$encri->encriptar($name)."','".$subj."','". $encri->encriptar($body)."',0,1,'".$id."')")){
        $bandera=true;
        $cantidad_descargados=$j;
-      /*imap_delete($connection, $j);
-      imap_expunge($connection);*/
+     
     }else{
        $bandera=false;
     }
@@ -144,8 +146,8 @@ $ruta="";
           if(mysqli_query($con,"INSERT INTO mail_sent(datemail,id_usuario,email_destinos, subject, body, estado,accion) VALUES ('".$encri->encriptar($header->udate)."','".$encri->encriptar($_SESSION['id'])."','".encriptaDatos::encriptar($email)."','".$encri->encriptar($subj)."','".$encri->encriptar($body)."',1,1)")){
             $bandera=true;
             $cantidad_enviadas=$j;
-         imap_delete($connection, $i);
-          imap_expunge($connection);
+        /* imap_delete($connection, $i);
+          imap_expunge($connection);*/
           }else{
             $bandera=false;
           }

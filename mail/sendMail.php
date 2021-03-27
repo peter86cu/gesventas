@@ -4,19 +4,22 @@
 include "PHPMailer.php";
 include "SMTP.php";
 include "Exception.php";
+include("../config/db.php");
+include("../config/conexionMail.php");
+include("../modelo/mcript.php");
 
 //Load Composer's autoloader
 require '../vendor/autoload.php';
-@session_start();
 
-
+ob_start();
+$encri = new encriptaDatos();
 
 if($_POST["accion"]=="enviar"){
 
 
 $mail = new PHPMailer(true); // create a new object
 
- $mail->SMTPDebug = 4; 
+ //$mail->SMTPDebug = 4; 
  $mail->SMTPAuth = true; // authentication enabled
 
  $mail->Username = $_SESSION['email'];
@@ -35,34 +38,56 @@ $mail = new PHPMailer(true); // create a new object
  $mail->Body = $_POST["body"];
  $mail->addAddress($_POST["para"]);
 
-if(!empty($archivos_adjuntos_ruta)){
-foreach($archivos_adjuntos_ruta as $archivo){
-$mail->AddAttachment($archivo); // attachment
-}
-}
 
-if(!empty($archivos_adjuntos_temp)){
-foreach($archivos_adjuntos_temp as $nombrearchivo=>$contenidoArchivo){
-$mail->AddStringAttachment($contenidoArchivo,$nombrearch ivo,'base64');
-}
-}
+ if(!$con){
+        error_log("imposible conectarse: ".mysqli_error($con));
+    }else{
+       error_log("conectado");
+    }
+
+$direccion="C:/xampp/htdocs/gesventas/vistas/recursos/dist/adjuntoMail/";
+ if($a=mysqli_query($con,"select fa.*,(select cf.class from class_tipo_fichero cf where cf.tipo=fa.tipo) class from mail_sent ms inner join fichero_adjuntos fa on(fa.id_mail=ms.id_mail) where ms.id_usuario= '".$encri->encriptar($_SESSION['id'])."' and ms.accion=6 and fa.estado=5 and fa.id_mail='". $_POST["id_mail"]."' ")){
+  
+  if($a){
+    while($row=mysqli_fetch_array($a)){ 
+      $mail->AddAttachment( $direccion.$row['nombre'] ,$row['nombre']);  
+     }
+    
+  }
+  
+ }
+ 
+
+
+
+ 
+      
+     /* $mail->AddAttachment( $direccion.$row['nombre'] ,$row['nombre']);
+      error_log($direccion.$row['nombre']); */
+ 
+
 $mail->Timeout = 20;
-
-
+/* //salvar correo buzon Sent del servido
+$buzon = 'Sent';
+saved_mail($mail_salved, $mail->Username, $mail->Password,$buzon);
  $mail_salved= "From: ".$_SESSION['email']."\r\n"
                ."Personal: ".$_SESSION['nombres']."\r\n"
                    . "To: ".$_POST["para"]."\r\n"
                    . "Subject: ".$_POST["asunto"]."\r\n"
                    . "\r\n"
                    . $_POST["body"]."\r\n";
-error_log($mail_salved);
-$buzon = 'Sent';
-saved_mail($mail_salved, $mail->Username, $mail->Password,$buzon);
+
+*/
  if(!$mail->Send()) {
-  //echo json_encode ("Error de envio: " . $mail->ErrorInfo);
+  echo json_encode ("Error de envio: " . $mail->ErrorInfo);
   echo json_encode(false);
  } else {
- 	
+  
+   if(mysqli_query($con,"UPDATE `mail_sent` SET `datemail`='".$encri->encriptar(time())."', `id_usuario`='".$encri->encriptar($_SESSION['id'])."', `email_destinos`='".$encri->encriptar($_POST["para"])."',`subject`='".$encri->encriptar($_POST["asunto"])."',`body`='".$encri->encriptar($_POST["body"])."',`estado`=0,`accion`=7 WHERE id_mail='". $_POST["id_mail"]."'")){
+   
+   }
+
+
    //echo json_encode ("Correo enviado");
    echo json_encode(true);
  }
@@ -83,9 +108,9 @@ if ($boxes == false) {
     echo "Call failed<br />\n";
 } else {
     foreach ($boxes as $val) {
-    	if (strpos($val, $buzon)!== false) {
-    		$ruta= $val ;
-    	}        
+      if (strpos($val, $buzon)!== false) {
+        $ruta= $val ;
+      }        
     }
 }
 
@@ -94,7 +119,7 @@ if ($boxes == false) {
 $connection2   = conectar_server($user, $pass,$ruta);
 
 $check = imap_check($connection2);
-error_log("Msg Count despues: ". $check->Nmsgs . "\n");
+
 imap_close($connection);
 
     return $result;
@@ -113,9 +138,9 @@ if ($boxes == false) {
     echo "Call failed<br />\n";
 } else {
     foreach ($boxes as $val) {
-    	if (strpos($val, $buzon)!== false) {
-    		$ruta= $val ;
-    	}        
+      if (strpos($val, $buzon)!== false) {
+        $ruta= $val ;
+      }        
     }
 }
 

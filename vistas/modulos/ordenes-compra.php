@@ -5,6 +5,7 @@
  $botton_editar="";
  $botton_eliminar="";
  $color_tabla="";
+ $botton_imprimir="";
         $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
         $colores = ControlRoles::colores($datos);
         
@@ -26,6 +27,9 @@
             }
             if($value['posicion']==6){
                $color_tabla=$value['style'];               
+            }
+            if($value['posicion']==7){
+               $botton_imprimir=$value['style'];               
             }
            
         }
@@ -76,7 +80,7 @@
           <th><strong>APROBADO POR</strong></th>
           <th><strong>PROVEEDOR</strong></th>
           <th><strong>ESTADO</strong></th>
-          <th style="width: 7%"><strong>ACCIÓN</strong></th>
+          <th style="width: 7.2%"><strong>ACCIÓN</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -141,13 +145,17 @@
               <div class="btn-bt-group"></div>
 
               <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
-                <button class="btn btn-warning ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>" idEstado="<?php echo $value['id_estado'] ?>" data-toggle="modal" data-target="#ModalEditarOrdenes" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
+                <button class="btn btn-default ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>" idEstado="<?php echo $value['id_estado'] ?>" data-toggle="modal" data-target="#ModalEditarOrdenes" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php } else { ?>
-                <button class="btn btn-warning ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
+                <button class="btn btn-default ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
               <?php  } ?>
-              <button class="btn btn-danger btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" style="<?php echo $botton_eliminar ?>"><i  class="fas fa-trash"></i></button>
+              <button class="btn btn-default btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" style="<?php echo $botton_eliminar ?>"><i  class="fas fa-trash"></i></button>
               <?php if ($value['id_estado']==3 || $value['id_estado']==4 and $value['items']>0) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;" style="<?php echo $botton_eliminar ?>" onclick="datosImprimir(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
+             <?php }  ?>
+
+              <?php if ( $value['id_estado']==3 and $value['items']>0) { ?>
+                <button class="btn btn-default"   href="javascript:;" style="<?php echo $botton_imprimir ?>" onclick="datosEnviarMail(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="far fa-paper-plane"></i></button>
              <?php }  ?>
            </td>
          </tr>

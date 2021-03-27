@@ -18,14 +18,14 @@ class ordenesAjax{
 
   public function modificarOrdenAjax(){
 
-    error_log("orden accion ".$this->accion,0);
+  
     if($this->accion=="buscar"){
       $parametro = "idOrden";  
       $idOrden = $this->idOrden;      
       $respuesta = ModeloOrdenes::mostrarOrdenes($parametro,$idOrden); 
     }else{
       $idProveedor = $this->idProveedor;
-      error_log("llegue a modificar ajax con id ".$idProveedor,0);
+   
       $respuesta = ModeloOrdenes::mostrarDatosProveedor($idProveedor); 
     }
 

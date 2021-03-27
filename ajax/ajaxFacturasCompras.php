@@ -23,7 +23,7 @@ class facturasComprasAjax{
 
   public function modificarFacturasComprasAjax(){
 
-    error_log("orden accion ".$this->accion,0);
+    
     if($this->accion=="buscar"){
 
       $parametro = "idCompra";
@@ -33,7 +33,7 @@ class facturasComprasAjax{
     }elseif($this->accion=="buscarProveedor"){
 
       $idProveedor = $this->idProveedor;
-      error_log("llegue a modificar ajax con id ".$idProveedor,0);
+     
       $respuesta = ModeloFacturasCompras::mostrarDatosProveedor($idProveedor);
 
     }elseif($this->accion=="validar"){

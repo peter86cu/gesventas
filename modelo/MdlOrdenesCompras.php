@@ -2,7 +2,7 @@
 
 
 require_once  ("conexion.php");
-@session_start();
+
 
 class ModeloOrdenes{
 	
@@ -40,7 +40,7 @@ static public function insertarDetalleOrden($idOrden, $idProducto,$cantidad, $im
 
 
 		if($parametro != null){
-			error_log("llegue al modelo ".$datos,0);
+			
 			$obj = new BaseDatos();  
 			$stmt= $obj->buscarAjax("ordenes_de_compras","id_orden_compra ='".$datos."'");
 			

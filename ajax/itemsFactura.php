@@ -11,7 +11,7 @@ if($action == 'ajax'){
 		$id=intval($_REQUEST['id']);		
 		$delete=mysqli_query($con,"delete from entradas_compras_detalle where id_entrada_compra_detalle='$id'");
 	}
-	error_log("accion 2".$action2,0 );
+	
 	$dis="enabled";	
  if($action2=="editar"){
  	$dis="disabled";	
