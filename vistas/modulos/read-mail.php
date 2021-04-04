@@ -14,10 +14,18 @@ foreach ($cantidad_borrador as $key => $value) {
 
 }
 
+  $parametro= null;
+  $cant= "SELECT count(*) sin_leer FROM `mail` WHERE id_usuario='".encriptaDatos::encriptar($_SESSION['id'])."' and estado=0 and accion=1";                    
+  $cantidad = ControlMail::buscarMail($parametro,$cant);
+  $sin_leer=0;
+  foreach ($cantidad as $key => $value) {
+    $sin_leer=$value['sin_leer'];
+  }
+
 if (isset($_SESSION['id_mail'])){  
   if($_SESSION['accion_mail']=='entrada'){
    $identificador = $_SESSION['id_mail'];
-   $sin_leer = $_SESSION['sin_leer'];
+ 
                 /*unset($_SESSION['id_mail']);
                 unset($_SESSION['sin_leer']);*/
                 setlocale(LC_TIME, 'spanish'); 
@@ -64,7 +72,7 @@ if (isset($_SESSION['id_mail'])){
 
               }if($_SESSION['accion_mail']=='salida'){
                $identificador = $_SESSION['id_mail'];
-               $sin_leer = $_SESSION['sin_leer'];
+               
                 /*unset($_SESSION['id_mail']);
                 unset($_SESSION['sin_leer']);*/
                 setlocale(LC_TIME, 'spanish'); 

@@ -3,6 +3,8 @@
 require_once  "../modelo/MdlMail.php";
 require_once  "../modelo/mcript.php";
 
+@session_start();
+
 if($_POST["accion"]=="parametros"){
   
   unset($_SESSION['id_mail']);

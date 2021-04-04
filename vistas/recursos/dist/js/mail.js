@@ -325,8 +325,7 @@ function marcarLeido(idMail,accion_mail){
     datos.append("accion",accion);
     datos.append("id_mail",idMail); 
     datos.append("accion_mail",accion_mail);
-    alert(accion_mail)
-
+  
     $.ajax({
      url: "ajax/procesoMail.php",
      method : "POST",
@@ -349,8 +348,6 @@ function marcarLeido(idMail,accion_mail){
 
 
 function enviarMail(idMail){
-
-  alert(idMail)
 
   var datos = new FormData(); 
   var accion = "enviar";
@@ -407,7 +404,7 @@ function moverDelete(accion_mail){
    datos.append("accion",accion);   
    datos.append("accion_mail",accion_mail);
    datos.append("array",JSON.stringify(listado));
-alert(accion_mail)
+
    $.ajax({
      url: "ajax/procesoMail.php",
      method : "POST",

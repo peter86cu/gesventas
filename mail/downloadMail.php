@@ -5,7 +5,7 @@
     include("../modelo/mcript.php");
 
     ob_start();
-    
+    @session_start();
 
      $encri = new encriptaDatos();
      

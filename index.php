@@ -28,7 +28,7 @@ require_once  "controladores/CtrlMail.php";
  require_once  "config/lib.php";
  //require_once  "mail/downloadMail.php";
 //require_once  "mail/copiarMail22.php";
- include "vistas/modulos/modal-stock.php";
+ //include "vistas/modulos/modal-stock.php";
 
 
 
