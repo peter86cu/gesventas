@@ -89,7 +89,7 @@ error_log("accion ".$_SESSION['accion_mail']);
 
 if(isset($_SESSION['archivo']) && $_SESSION['archivo']=='mostrar' && ($_SESSION['accion_mail']=="nuevo" || $_SESSION['accion_mail']=="borrador" || $_SESSION['accion_mail']=='enviar_adjunto')){
   $parametro= null;
-  $datos= "select fa.*,(select cf.class from class_tipo_fichero cf where cf.tipo=fa.tipo) class from mail_sent ms inner join fichero_adjuntos fa on(fa.id_mail=ms.id_mail) where ms.id_usuario= '".($_SESSION["id"])."' and ms.accion=6 and fa.estado=5 and fa.id_mail='".$_SESSION['id_new_mail']."' ";
+  $datos= "select fa.*,(select cf.class from class_tipo_fichero cf where cf.tipo=fa.tipo) class from mail_sent ms inner join fichero_adjuntos fa on(fa.id_mail=ms.id_mail) where ms.id_usuario= '".encriptaDatos::encriptar($_SESSION["id"])."' and ms.accion=6 and fa.estado=5 and fa.id_mail='".$_SESSION['id_new_mail']."' ";
   $mail = ControlMail::buscarMail($parametro,$datos);
   error_log($datos);
   foreach ($mail as $key => $values) { 

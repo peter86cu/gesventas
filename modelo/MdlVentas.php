@@ -4,7 +4,7 @@
 require_once("conexion.php");
  include "mcript.php";
 
-
+@session_start();
 class ModeloVentas{
 	
 	
@@ -69,13 +69,59 @@ class ModeloVentas{
 
 	}	
 
+
+
+	static public function buscarCliente($ci){
+	
+	$obj = new BaseDatos();  
+	$cliente = $obj->buscarAjaxSQL("select * from clientes where nro_documento='".$ci."' and fecha_baja is null");
+	 if(!$cliente){
+	 	return false;
+	 }else
+
+	 return $cliente;
+
+
+	}	
+
+
+
+	static public function comparativoAnualdeVentas(){
+	
+	$obj = new BaseDatos();  
+	$ventas= $obj->buscarSQL("select  Date_format(now(),'%Y') actual, sum(v.monto_total) monto_total  from ventas v where Date_format(v.fecha_hora,'%Y') = Date_format(now(),'%Y')");
+	 if(!$ventas){
+	 	return false;
+	 }else
+
+	 return $ventas;
+
+
+	}
+
+
+
+
+	static public function procientoCrecimietoUltimoMensual(){
+	
+	$obj = new BaseDatos();  
+	$ventas= $obj->buscarSQL("select  DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%M') actual, sum(v.monto_total) monto_total  from ventas v where fecha_hora BETWEEN DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01 00:00:00') AND DATE_FORMAT(LAST_DAY(NOW() - INTERVAL 1 MONTH), '%Y-%m-%d 23:59:59') and v.estado=2 union
+select  Date_format(now(),'%M') actual, case when v.monto_total>0 then sum(v.monto_total) else 0 end monto_total  from ventas v where Date_format(v.fecha_hora,'%M') = Date_format(now(),'%M') and v.estado=2");
+	 if(!$ventas){
+	 	return false;
+	 }else
+
+	 return $ventas;
+
+
+	}	
+
 	static public function buscasAperturaCajeroVentas($parametro,$datos){
 
 		if($parametro != null){
 
 			$obj = new BaseDatos();  
-			$stmt= $obj->buscarAjaxSQL("select ac.id_apertura_cajero, case when estado=1 then v.nro_consecutivo else v.nro_consecutivo+1 end consecutivo, v.id_venta from ventas v, aperturas_cajeros ac where ac.id_apertura_cajero=v.id_apertura_cajero 
-				and v.id_usuario='".$_SESSION['id']."' and v.fecha_hora_cerrado is null ");
+			$stmt= $obj->buscarAjaxSQL("select ac.id_apertura_cajero, case when estado=1 then v.nro_consecutivo else v.nro_consecutivo+1 end consecutivo, v.id_venta,c.nombres,c.id_cliente  from ventas v, aperturas_cajeros ac, clientes c where ac.id_apertura_cajero=v.id_apertura_cajero and v.id_cliente=c.id_cliente and v.id_usuario='".$_SESSION['id']."' and v.fecha_hora_cerrado is null");
 			
 			return $stmt;
 
@@ -93,21 +139,29 @@ class ModeloVentas{
 		static public function validarLoginCaja($usuario,$pass){           
 					$descr = new encriptaDatos();
 				    $obj = new BaseDatos();  
-					$stmt= $obj->buscarSQL("select * from usuarios_caja where usuario ='".$usuario."'");
-					
+					$stmt= $obj->buscarSQL("select * from usuarios_caja where usuario ='".$usuario."'");					
 					$login=false;
 	 				if ($stmt) {
 
 	 						 foreach($stmt as $row) {
 						      $password= $row['password'];						      					      
 							 $pass_descriptado = $descr->desencriptar($password);												 
-					         if($pass_descriptado==$pass){					         				         	
-					         	if($_SESSION['loginCaja']='no_login'){			         						         		
+					         if($pass_descriptado==$pass){
+					        if(isset($_SESSION['loginCaja'])) {
+					        	if($_SESSION['loginCaja']='no_login'){			         						         		
 					         		$_SESSION['loginCaja']='conectado';
 					         		$_SESSION['usu_caja']=$row['usuario'];	
 					         		$_SESSION['id_usuario_caja']=$row['id_usu_caja'];
 					         		$login=true;					         	
 					         }
+					        }else{
+					        	error_log("esta mal");
+					        	 $_SESSION['loginCaja']='conectado';
+					        	 $_SESSION['usu_caja']=$row['usuario'];	
+					         	 $_SESSION['id_usuario_caja']=$row['id_usu_caja'];
+					         	 $login=true;				
+					        }					         			         	
+					         	
 					     }
 					 }
 					 }                                 
@@ -119,7 +173,7 @@ class ModeloVentas{
 
 	static public function buscasAperturaCajero(){
 
-			$obj = new BaseDatos();  
+			$obj = new BaseDatos(); 
 			$stmt= $obj->buscarAjaxSQL("select ac.id_apertura_cajero from  aperturas_cajeros ac where  ac.id_usuario='".$_SESSION['id']."' and ac.fecha_hora_cierre is null ");
 			
 			return $stmt;
@@ -128,7 +182,18 @@ class ModeloVentas{
 	}
 
 
-	
+		static public function ventasAnioActualyPasado(){
+
+			$obj = new BaseDatos(); 
+			$stmt= $obj->buscarSQL("select Date_format(v.fecha_hora,'%b') mes, Date_format(v.fecha_hora,'%Y') anio, case when Date_format(v.fecha_hora,'%Y')= Date_format(now(),'%Y') then  count(*) 
+ when Date_format(v.fecha_hora,'%Y')= Date_format(v.fecha_hora,'%Y') then  count(*) else 0
+end vendido, sum(v.monto_total) monto_total from ventas v 
+where  v.estado in (2) group by mes, anio");
+			
+			return $stmt;
+
+		
+	}
 
 
 	static public function buscarVentas($idApertura){  
@@ -202,6 +267,7 @@ static public function validarVentas($idApertura){
 
 
 	static public function validarVentasSalir(){
+		error_log("miraaaaa");
 		$obj = new BaseDatos();  
 		$ventas = $obj->buscarSQL("select v.id_venta from ventas_detalle vd,ventas v, aperturas_cajeros ac where vd.id_venta=v.id_venta and v.id_apertura_cajero=ac.id_apertura_cajero and ac.fecha_hora_cierre is null and v.estado=1 and  v.id_usuario=".$_SESSION['id']." ");
 	
@@ -274,6 +340,41 @@ static public function validarVentas($idApertura){
 			return $delete;
 
 		}
+
+
+
+		static public function actualizarClientePorVenta($idCliente,$idVenta){
+				
+			$obj = new BaseDatos();  
+			$ventas= $obj->actualizar("ventas","id_cliente=".$idCliente."", "id_venta=".$idVenta."");
+
+			return $ventas;
+
+		}
+
+
+		/*=============================================
+	RANGO FECHAS
+	=============================================*/	
+
+	static public function mdlRangoFechasVentas( $fechaInicial, $fechaFinal){
+		
+		$obj = new BaseDatos();
+		if($fechaInicial != null && $fechaFinal != null){
+
+					
+				$stmt = $obj->buscarSQL("select productos.codigo, productos.nombre, sum(ventas.monto_total) total, productos.foto from ventas_detalle, productos, ventas where ventas.id_venta=ventas_detalle.id_venta and ventas_detalle.id_producto=productos.id_producto
+and ventas.fecha_hora  BETWEEN '".$fechaInicial."' AND '".$fechaFinal."' and estado=2
+group by productos.codigo, productos.nombre");
+
+			}		
+			
+
+			return $stmt ;
+
+		
+
+	}
 	
 
 

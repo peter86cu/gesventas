@@ -50,7 +50,7 @@ function abrirCaja(idUsuario) {
 
 
      }else{
-      console.log(respuesta)
+      
       $("#txtConsecutivo").val(respuesta["nro_consecutivo"]);
       $("#idApertura").val(respuesta["id_apertura_cajero"]);             
       $("#txtTurno > option[value="+respuesta["id_turno"]+"]").attr("selected",true);
@@ -89,7 +89,7 @@ function eliminaAperturaInicio() {
      if(respuesta==null){             
 
      }else{
-      console.log(respuesta)
+      
       $("#txtConsecutivo").val(respuesta["nro_consecutivo"]);
       $("#idApertura").val(respuesta["id_apertura_cajero"]);             
       $("#txtTurno > option[value="+respuesta["id_turno"]+"]").attr("selected",true);
@@ -236,14 +236,14 @@ function validarEntrada(id, id_moneda){
   var encontre =false;
   var pos;
   if(arqueos.length<1){
-    console.log("lebght < 0 "+arqueos.length)
+   
     var arq = new Arqueo( id, obtenerValue(id_moneda));
     arqueos.push(arq);
-    console.log(arqueos);
+   
   }else{
 
     for(var i=0; i<arqueos.length; i++){
-      console.log("lebght > 0 "+arqueos.length)    
+        
       if (arqueos[i].id ==id){  
         encontre=true;
         pos=i;  
@@ -254,10 +254,10 @@ function validarEntrada(id, id_moneda){
     if (!encontre) { 
       var arq = new Arqueo( id, obtenerValue(id_moneda));
       arqueos.push(arq);
-      console.log(arqueos);
+     
     }else{
       arqueos[pos].value = obtenerValue(id_moneda);       
-      console.log("modificado "+arqueos);       
+         
     }
   }
 }

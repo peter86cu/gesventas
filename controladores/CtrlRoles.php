@@ -17,6 +17,17 @@
           }
 
 
+
+       static  public function mostrarModulos($parametro, $datos){
+
+
+          $resultado=ModeloRol::mostrarRoles($parametro, $datos);
+          
+           return $resultado;
+                       
+          }
+
+
 static  public function colores($datos){
 
 

@@ -30,6 +30,15 @@
            
         }
 
+          $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=5");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -56,7 +65,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDProveedor"><i class="fas fa-plus"></i>Agregar</button>       
+      <?php if(in_array(2, $niveles)) { ?>   <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDProveedor"><i class="fas fa-plus"></i>Agregar</button>   <?php } ?>      
 
 
      </div>
@@ -75,13 +84,14 @@
           <th style="width: 10%"><strong>EMAIL</strong></th>
           <th style="width: 10%"><strong>WEB</strong></th>  
           <th style="width: 8%"><strong>ESTADO</strong></th>           
-          <th style="width: 10%"><strong>ACCIÓN</strong></th>         
+         <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?>   <th style="width: 10%"><strong>ACCIÓN</strong></th>   <?php } ?>       
         </tr>
       </thead>
       <tbody>
 
 
         <?php 
+        $activo="";
         $parametro= null;
         $datos= "SELECT * FROM `proveedores` WHERE  1";
         $proveedores = ControlProveedor::mostrarProveedores($parametro,$datos);
@@ -97,15 +107,15 @@
           <td><?php echo $value['web']?></td>          
           <td>
           <?php if($value['fecha_baja']==null) { ?>         
-          <span class="badge badge-success">Activo</span> <?php }else { ?> 
-          <span class="badge badge-danger">Inactivo</span> <?php } ?>
+          <span class="badge badge-success">Activo</span> <?php  }else { ?> 
+          <span class="badge badge-danger">Inactivo</span> <?php $activo="disabled";} ?>
         </td>
 
-          <td>
+         <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?>  <td>
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-default btnEditarProveedor" idProveedor="<?php echo $value['id_proveedor'] ?>" style="<?php echo $botton_editar ?>" data-toggle="modal" data-target="#ModalEditarProveedor"><i class="far fa-edit"></i></button>
-          <button class="btn btn-default btnEliminarProveedor" style="<?php echo $botton_eliminar ?>" idProveedor="<?php echo $value['id_proveedor'] ?>"><i  class="fas fa-trash"></i></button>
-          </td>
+          <?php if(in_array(3, $niveles)) { ?> <button class="btn btn-default btnEditarProveedor" idProveedor="<?php echo $value['id_proveedor'] ?>" style="<?php echo $botton_editar ?>" data-toggle="modal" data-target="#ModalEditarProveedor"><i class="far fa-edit"></i></button> <?php } ?>
+          <?php if(in_array(4, $niveles)) { ?> <button class="btn btn-default btnEliminarProveedor" <?php echo $activo ?> style="<?php echo $botton_eliminar ?>" idProveedor="<?php echo $value['id_proveedor'] ?>"><i  class="fas fa-trash"></i></button> <?php } ?>
+          </td> <?php } ?>
           </tr> 
        <?php  }
 

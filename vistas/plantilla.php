@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GesVentas 1.0</title>
+  <link rel="shortcut icon" href="favicon.png">
+  
+
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -21,6 +24,46 @@
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
+ <!-- Daterange picker -->
+  <link rel="stylesheet" href="vistas/recursos/plugins/bootstrap-daterangepicker/daterangepicker.css">
+
+
+
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="vistas/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="vistas/bower_components/font-awesome/css/font-awesome.min.css">
+
+
+   <!-- SweetAlert 2 -->
+  <script src="vistas/plugins/sweetalert2/sweetalert2.all.js"></script>
+   <!-- By default SweetAlert2 doesn't support IE. To enable IE 11 support, include Promise polyfill:-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+
+  <!-- iCheck 1.0.1 -->
+  <script src="vistas/plugins/iCheck/icheck.min.js"></script>
+
+  <!-- InputMask -->
+  <script src="vistas/plugins/input-mask/jquery.inputmask.js"></script>
+  <script src="vistas/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+  <script src="vistas/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+  <!-- jQuery Number -->
+  <script src="vistas/plugins/jqueryNumber/jquerynumber.min.js"></script>
+
+  <!-- daterangepicker http://www.daterangepicker.com/-->
+  <script src="vistas/bower_components/moment/min/moment.min.js"></script>
+  <script src="vistas/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+  <!-- Morris.js charts http://morrisjs.github.io/morris.js/-->
+  <script src="vistas/bower_components/raphael/raphael.min.js"></script>
+  <script src="vistas/bower_components/morris.js/morris.min.js"></script>
+
+  <!-- ChartJS http://www.chartjs.org/-->
+  <script src="vistas/bower_components/Chart.js/Chart.js"></script>
+
+ <!--  apertura -->
+<script src="vistas/recursos/dist/js/apertura.js"></script>
 
 </head>
 <body class="hold-transition <?php if(isset($_SESSION["login"])): ?> skin-blue sidebar-mini<?php else:?>login-page<?php endif;?>">
@@ -47,7 +90,7 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 
      //pagias
       if(isset($_GET["enlace"])){
-      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="mailbox" || $_GET["enlace"]=="read-mail" || $_GET["enlace"]=="logoutcaja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="mailsend" || $_GET["enlace"]=="maildelete"  || $_GET["enlace"]=="mailborrador" || $_GET["enlace"]=="redactar-mail" || $_GET["enlace"]=="reporte-stock" || $_GET["enlace"]=="logout" ){
+      if( $_GET["enlace"]=="inicio" || $_GET["enlace"]=="productos" || $_GET["enlace"]=="facturas-compra" || $_GET["enlace"]=="ordenes-compra" || $_GET["enlace"]=="nueva-orden" || $_GET["enlace"]=="rol" || $_GET["enlace"]=="ventas" || $_GET["enlace"]=="usuarios" || $_GET["enlace"]=="caja" || $_GET["enlace"]=="mailbox" || $_GET["enlace"]=="read-mail" || $_GET["enlace"]=="logoutcaja" || $_GET["enlace"]=="proveedores" || $_GET["enlace"]=="mailsend" || $_GET["enlace"]=="maildelete"  || $_GET["enlace"]=="mailborrador" || $_GET["enlace"]=="redactar-mail" || $_GET["enlace"]=="reporte-stock" || $_GET["enlace"]=="logout" || $_GET["enlace"]=="clientes" || $_GET["enlace"]=="control-asistencia" || $_GET["enlace"]=="categorias" || $_GET["enlace"]=="billetes-monedas" || $_GET["enlace"]=="reporte-ventas" || $_GET["enlace"]=="perfil-empresa" || $_GET["enlace"]=="admin-ventas" || $_GET["enlace"]=="reportes"){
 
         include "vistas/modulos/".$_GET["enlace"].".php";
       }else{
@@ -82,14 +125,22 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 
 
 
-<!-- jQuery -->
-<script src="vistas/recursos/plugins/jquery/jquery.min.js"></script>
+<!--  varios -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
+<script src="vistas/recursos/plugins/jquery-ui/jquery-ui.js"></script>
+
+  
+
 <!-- Bootstrap 4 -->
 <script src="vistas/recursos/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="vistas/recursos/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="vistas/recursos/dist/js/demo.js"></script>
+
 <!-- Funciones -->
 <script src="vistas/recursos/dist/js/Funciones.js"></script>
 <!--  Producto -->
@@ -102,8 +153,6 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 <script src="vistas/recursos/dist/js/ordenes.js"></script>
 <!--  facturas -->
 <script src="vistas/recursos/dist/js/facturas.js"></script>
- <!--  apertura -->
-<script src="vistas/recursos/dist/js/apertura.js"></script>
 <!--  ventas -->
 <script src="vistas/recursos/dist/js/ventas.js"></script>
 <!--  proveedor -->
@@ -112,10 +161,19 @@ if (isset($_SESSION['login']) && $_SESSION['login']=='activa') {
 <script src="vistas/recursos/dist/js/mail.js"></script>
 <!--  reportes -->
 <script src="vistas/recursos/dist/js/reportes.js"></script>
-<!--  varios -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
-<script src="vistas/recursos/plugins/jquery-ui/jquery-ui.js"></script>
+<!--  clientes -->
+<script src="vistas/recursos/dist/js/clientes.js"></script>
+<!--  categorias de productos -->
+<script src="vistas/recursos/dist/js/categorias.js"></script>
+<!--  billetes por monedas -->
+<script src="vistas/recursos/dist/js/billetes.js"></script>
+
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="vistas/recursos/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+
+<script src="vistas/recursos/dist/js/dashventas.js"></script>
 
 
 </body>

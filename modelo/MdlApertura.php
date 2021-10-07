@@ -3,8 +3,8 @@
 
 require_once  ("conexion.php");
 
-@session_start();
 
+@session_start();
 class ModeloApertura{
 	
 	
@@ -62,7 +62,7 @@ class ModeloApertura{
 		if($result){
 			$id_apertura= $apertura -> getArqueo($idApertura);
 			foreach ($data as $values) { 
-			error_log("el id de bille es ".$values['id']." y el valor es ".$values['value']) ; 				
+			 				
    				$resultado=$obj -> insertar("arqueos_detalle", "".$values['id'].", ".$id_apertura.",".$values['value']."");     				
 				}
 
@@ -101,7 +101,7 @@ class ModeloApertura{
 		$monto_total=$monto_inicial+$monto_ventas;
 
 		}
-		error_log($monto_total);
+		
 		return $monto_total;
 		
 

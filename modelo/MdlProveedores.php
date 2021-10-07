@@ -45,10 +45,11 @@ class ModeloProveedor{
 
 	static public function updateProveedor($idProveedor,$razon_social, $ruc ,$direccion,$telefono,$celular,$email,$web,$habilitado ){
 			$hab="";
-			if ($habilitado) {
-				$hab=",fecha_baja=null";
-			}else{
+			error_log("message ".$habilitado);
+			if ($habilitado==0) {				
 				$hab=",fecha_baja=now()";
+			}else{
+				$hab=",fecha_baja=null";
 			}
 			$obj = new BaseDatos();  
 			$stmt= $obj->actualizar("proveedores", "razon_social = '".$razon_social."' , ruc='".$ruc."' , direccion='".$direccion."', telefono='".$telefono."' , celular='".$celular."' , email='".$email."' , web='".$web."' ".$hab." ", 

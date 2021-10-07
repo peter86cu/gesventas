@@ -1,14 +1,14 @@
-<?php
+  <?php
  class BaseDatos{
-  /*  private $host   ="localhost";
+   /* private $host   ="localhost";
     private $usuario="root";
     private $clave  ="admin";
-    private $db     ="test";*/
+    private $db     ="test1";*/
 
-    private $host   ="localhost";
-    private $usuario="test";
-    private $clave  ="@dmin860809*";
-    private $db     ="admin_ventas";
+    private $host   ="178.33.57.246";
+    private $usuario="lmjqusfo_root";
+    private $clave  ="Ayala860809-";
+    private $db     ="lmjqusfo_gesventas";
     public $conexion;
 
 
@@ -23,7 +23,7 @@
     }
     //INSERTAR
     public function insertar($tabla, $datos){
-        error_log("INSERT INTO $tabla VALUES (null,$datos)");
+      
         $resultado =  $this->conexion->query("INSERT INTO $tabla VALUES (null,$datos)");
         if($resultado)
             return true;
@@ -33,7 +33,7 @@
 
      //INSERTAR CAMPOS ESPECIFICOS
     public function insertarCamposEspecificos($tabla,$campos, $datos){
-            error_log("INSERT INTO $tabla ($campos) VALUES (null,$datos)");
+         
         $resultado =  $this->conexion->query("INSERT INTO $tabla ($campos) VALUES (null,$datos)");
         if($resultado)
             return true;
@@ -53,7 +53,7 @@
 
     //BORRAR
     public function borrar($tabla, $condicion){
-        error_log("DELETE FROM $tabla WHERE $condicion");
+
         $resultado  =   $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die($this->conexion->error);
         if($resultado)
             return true;
@@ -61,7 +61,7 @@
     }
     //ACTUALIZAR
     public function actualizar($tabla, $campos, $condicion){
-
+error_log("UPDATE $tabla SET $campos WHERE $condicion");
            $resultado  =   $this->conexion->query("UPDATE $tabla SET $campos WHERE $condicion") or die($this->conexion->error);
             if($resultado)
                 return true;
@@ -73,19 +73,26 @@
     public function buscar($tabla, $condicion){
 
         $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die($this->conexion->error);
-        if($resultado)
-            return $resultado->fetch_all(MYSQLI_ASSOC);
-        return false;
+        $filas= array();
+      if($resultado){
+          while ($fila = $resultado->fetch_assoc()) {
+        $filas[] = $fila;
+          } 
+          return $filas;
+      }else
+      return false;
 
     }
 
     //BUSCAR Ajax
     public function buscarAjax($tabla, $condicion){
-     error_log("SELECT * FROM $tabla WHERE $condicion");
+
         $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die($this->conexion->error);
-        if($resultado)
-            return $resultado->fetch_array(MYSQLI_ASSOC);
-        return false;
+        $filas= array();
+      if($resultado){
+          return  $resultado->fetch_array();
+      }else
+      return false;
 
     }
 
@@ -93,19 +100,28 @@
     public function buscarAjaxSQL( $query){
 
         $resultado = $this->conexion->query($query) or die($this->conexion->error);
-        if($resultado)
-            return $resultado->fetch_array(MYSQLI_ASSOC);
-        return false;
+        $filas= array();
+      if($resultado){
+        return  $resultado->fetch_array();
+      }else
+      return false;
 
     }
 
     //BUSCAR
     public function buscarSQL($query){
-
+           
         $resultado = $this->conexion->query($query) or die($this->conexion->error);
-        if($resultado)
-            return $resultado->fetch_all(MYSQLI_ASSOC);
-        return false;
+        /*if($resultado)
+            return $resultado->fetch_all(MYSQLI_ASSOC);*/
+            $filas= array();
+      if($resultado){
+          while ($fila = $resultado->fetch_assoc()) {
+        $filas[] = $fila;
+          } 
+          return $filas;
+      }else
+      return false;
 
     }
 }

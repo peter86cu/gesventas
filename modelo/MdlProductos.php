@@ -43,7 +43,7 @@ class ModeloProductos{
 	static public function buscarProductos( $datos){
 				
 			$obj = new BaseDatos();  
-			$stmt= $obj->buscarAjax("productos","codigo ='".$datos."'");
+			$stmt= $obj->buscarAjax("productos","codigo ='".$datos."' and disponible=1");
 			
 			return $stmt;
 

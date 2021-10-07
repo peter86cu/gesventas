@@ -30,6 +30,15 @@
            
         }
 
+         $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=9");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -57,14 +66,15 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
+      <?php if(in_array(2, $niveles)) { ?>   <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarFacturaInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>  <?php } ?> 
 
      </div>
    </div>
    <div class="card-body">
-
-
-     <table id="example1" class="table table-bordered table-striped">
+<div align="right" class="form-group">
+ <input type="text" class="form-control pull-right" style="width:20%;"  id="searchfacturas" placeholder="Type to search table...">
+</div>
+      <table id="factura" class="table table-bordered table-striped">
       <thead>
         <tr style="<?php echo $color_tabla ?>">
           <th><strong>NÚMERO</strong></th>
@@ -75,10 +85,10 @@
           <th><strong>RECIBIDO POR</strong></th>
           <th><strong>PROVEEDOR</strong></th>
           <th><strong>ESTADO</strong></th>
-          <th style="width: 7%"><strong>ACCIÓN</strong></th>
+         <?php if(in_array(3, $niveles) || in_array(4, $niveles) || in_array(5, $niveles)) { ?>  <th style="width: 9%"><strong>ACCIÓN</strong></th>  <?php } ?>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="myFacturaBody">
 
 
         <?php
@@ -142,19 +152,19 @@
             <td style="width: 8%">
               <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>
             </td>
-            <td style="text-align: left;">
+          <?php if(in_array(3, $niveles) || in_array(4, $niveles) || in_array(5, $niveles)) { ?>  <td style="text-align: left;">
               <div class="btn-bt-group"></div>
 
-              <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
+              <?php if ($value['id_estado']!=1 and $value['items']>0 and in_array(3, $niveles)) { ?>
                 <button class="btn btn-warning ModalEditarCompras" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalEditarCompras" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php } else { ?>
-                <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
-              <?php  } ?>
-              <button class="btn btn-danger btnEliminarFactura" style="<?php echo $botton_eliminar ?>" idCompra="<?php echo $value['id_entrada_compra'] ?>" ><i  class="fas fa-trash"></i></button>
-              <?php if ($value['id_estado']==3 and $value['items']>0) { ?>
+                <?php if(in_array(2, $niveles)) { ?>  <button class="btn btn-warning ModalADDFacturas" idCompra="<?php echo $value['id_entrada_compra'] ?>"  data-toggle="modal" data-target="#ModalADDFacturas" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
+              <?php } } ?>
+              <?php if(in_array(4, $niveles)) { ?>  <button class="btn btn-danger btnEliminarFactura" style="<?php echo $botton_eliminar ?>" idCompra="<?php echo $value['id_entrada_compra'] ?>" ><i  class="fas fa-trash"></i></button><?php }  ?>
+              <?php if ($value['id_estado']==3 and $value['items']>0 and in_array(5, $niveles)) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimir(<?php echo $value['id_entrada_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
               <?php }  ?>
-            </td>
+            </td> <?php }  ?>
           </tr>
 
         <?php }  ?>
@@ -163,6 +173,12 @@
 
 
       </table>
+
+      <div class="col-md-12 text-center">
+           <ul class="pagination pagination-lg pager" id="myPager"></ul>
+       </div>
+
+
 
     </div>
 
@@ -206,13 +222,38 @@
   }
 
 
+a.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+
+div.nav {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.nav.a {display: inline;}
+
+ a.bot  {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+
+
 </style>
 
 
 
 <!-- The Modal Add Ordenes -->
-<div class="modal" id="ModalADDFacturas" data-backdrop="static" data-keyboard="false" tabindex="-1" >
-  <div class="modal-dialog modal-xl"  tabindex="-1" >
+<div class="modal" id="ModalADDFacturas" data-backdrop="static" data-keyboard="false"  >
+  <div class="modal-dialog modal-xl"   >
     <div class="modal-content">
 
       <form class="form-horizontal" role="form" id="datos_factura" id="datos_factura" method="post">
@@ -236,20 +277,28 @@
                 <hr />
                 <div class="col-lg-6 col-md-6 col-sm-6">
                   <h2>Detalles del proveedor :</h2>
-                  <select class="proveedor2 form-control" name="proveedor2" id="proveedor2" required>
-                    <option value="">Selecciona el proveedor</option>
+                  <select style="width: 50%" class="proveedor2 form-control" name="proveedor2" id="proveedor2">
+                    <option  value="">Selecciona el proveedor</option>
                   </select>
-                  <h4><strong>Proveedor: </strong><Label id="proveedorNF"></Label></h4>
+                  <h5><strong>Proveedor: </strong><Label id="proveedorNF"></Label></h5>
                   <span id="direccionF"></span>
                   <input type="hidden"  id="idProveedorF" name="idProveedorF"  value="" >
-                  <h4><strong>E-mail: </strong><span id="emailF"></span></h4>
-                  <h4><strong>Teléfono: </strong><span id="telefonoF"></span></h4>
+                  <h5><strong>E-mail: </strong><span id="emailF"></span></h5>
+                  <h5><strong>Teléfono: </strong><span id="telefonoF"></span></h5>
 
                   <div class="row">
                     <div class="col-lg-6">
 
                       <label for="txtOrdenCompra">Orden de Compra</label>
-                      <input type="text"  id="txtOrdenCompra" name="txtOrdenCompra" value="" onBlur="validarOrdenCompra(1);" autofocus required >
+                     <!-- <input type="text"  id="txtOrdenCompra" name="txtOrdenCompra" value="" onBlur="validarOrdenCompra(1);" autofocus required > -->
+                        <select id="txtOrdenCompra" name="txtOrdenCompra" class="form-control custom-select" onBlur="validarOrdenCompra(1);" required>
+                        <option value="1"  selected >S/N</option>
+                        <?php
+                        $db = new BaseDatos();
+                        if($resultado=$db->buscar("ordenes_de_compras","estado = 3")){
+                          foreach($resultado as $row) { ?>
+                            <option value=<?=$row['id_orden_compra'] ?>><?=$row['id_orden_compra'] ?></option> <?php } } ?>
+                          </select>
                     </div>
                     <div class="col-lg-6">
                       <label for="txtNumeroFactura">No. Factura</label>
@@ -404,7 +453,7 @@
 
                   <form class="form-horizontal" name="guardar_item" id="guardar_item">
                     <!-- Modal -->
-                    <div class="modal fade bs-example-modal-lg" id="myModalCompra" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade bs-example-modal-lg" id="myModalCompra"  role="dialog" aria-labelledby="myModalLabel">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -414,7 +463,7 @@
 
                             <div class="row">
                              <div class="col-lg-6 col-md-6 col-sm-6">
-                              <select class="producto form-control" name="producto" id="producto" required>
+                              <select style="width: 100%" class="producto form-control" name="producto" id="producto" required>
                                 <option value="">Selecciona el producto</option>
                               </select>
                             </div>
@@ -497,16 +546,25 @@
                               <hr />
                               <div class="col-lg-6 col-md-6 col-sm-6">
                                 <h2>Detalles del proveedor :</h2>
-                                <h4><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h4>
+                                <h5><strong>Proveedor: </strong><Label id="proveedorNE"></Label></h5>
                                 <input type="hidden"  id="proveedorCE" name="proveedorCE"  value="" >
-                                <h4><strong>Dirección: </strong><Label id="direccionE"></Label>
-                                  <h4><strong>E-mail: </strong><Label id="emailE"></Label></h4>
-                                  <h4><strong>Teléfono: </strong><Label id="telefonoE"></Label></h4>
+                                <h5><strong>Dirección: </strong><Label id="direccionE"></Label></h5>
+                                  <h5><strong>E-mail: </strong><Label id="emailE"></Label></h5>
+                                  <h5><strong>Teléfono: </strong><Label id="telefonoE"></Label></h5>
                                   <div class="row">
                                     <div class="col-lg-6">
 
                                       <label for="txtOrdenCompraE">Orden de Compra</label>
-                                      <input type="text"  id="txtOrdenCompraE" name="txtOrdenCompraE" value="" onBlur="validarOrdenCompra(2);" autofocus required>
+                                     <!-- <input type="text"  id="txtOrdenCompraE" name="txtOrdenCompraE" value="" onBlur="validarOrdenCompra(2);" autofocus required> -->
+                                          <select id="txtOrdenCompraE" name="txtOrdenCompraE" class="form-control custom-select" onBlur="validarOrdenCompra(2);" required>
+                                          <option  selected >S/N</option>
+                                          <?php
+                                          $db = new BaseDatos();
+                                          if($resultado=$db->buscar("ordenes_de_compras","estado = 3")){
+                                            foreach($resultado as $row) { ?>
+                                              <option value=<?=$row['id_orden_compra'] ?>><?=$row['id_orden_compra'] ?></option> <?php } } ?>
+                                            </select>
+
                                     </div>
                                     <div class="col-lg-6">
                                       <label for="txtNumeroFacturaE">No. Factura</label>

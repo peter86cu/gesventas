@@ -23,21 +23,11 @@
   
   setInterval("comprobar_refresco()", 10);
 
-  function comprobar_refresco() {
+  /*function comprobar_refresco() {
     var datos = new FormData(); 
     var accion ="user";    
     datos.append("accion",accion);
 
-  
- /* $.ajax({
-    type: 'POST',
-     data: datos,
-    url: 'procesos/dashboard.php'
-  }).success(function(resultado) {
-    if (resultado.indexOf('REFRESCAR') > -1) {
-      location.reload();
-    }
-  });*/
 
      $.ajax({
      url: "procesos/dashboard.php",
@@ -47,8 +37,7 @@
      contentType: false,
      processData:false,
      dataType: "json",
-     success: function(respuesta){
-      console.log(respuesta)
+     success: function(respuesta){      
       if(respuesta){
        document.querySelector('#login').innerText = respuesta;
        // $( "#idLogin" ).load(window.location.href + " #idLogin" );
@@ -58,7 +47,7 @@
 
    }
  });
-}
+}*/
 
 </script>
 

@@ -30,7 +30,17 @@
            
         }
 
+         $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=11");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
+
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -57,7 +67,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" href="javascript:;" onclick="abrirCaja(<?php echo $_SESSION['id'] ?>); return false" ><i class="fas fa-plus"></i> Apertura y Cierre</button>
+      <?php if(in_array(7, $niveles)) { ?> <button class="btn btn-primary" href="javascript:;" onclick="abrirCaja(<?php echo $_SESSION['id'] ?>); return false" ><i class="fas fa-plus"></i> Apertura y Cierre</button> <?php } ?>
 
      </div>
    </div>
@@ -74,7 +84,7 @@
           <th style="text-align: center;"><strong>TIPO DE ARQUE</strong></th>
           <th style="text-align: center;"><strong>CAJERO</strong></th>
           <th style="text-align: center;"><strong>ESTADO</strong></th>
-          <th style="width: 4%; text-align: center;"><strong>ACCIÓN</strong></th>
+       <?php if(in_array(5, $niveles)) { ?>   <th style="width: 4%; text-align: center;"><strong>ACCIÓN</strong></th> <?php } ?> 
         </tr>
       </thead>
       <tbody>
@@ -82,11 +92,19 @@
 
         <?php
 
-        if( $_SESSION['rol']==2 || $_SESSION['rol']==3  ) {
+        /*if( $_SESSION['rol']==2 || $_SESSION['rol']==3  ) {
           $sql= "and a.id_usuario=".$_SESSION['id'];
         } else if($_SESSION['rol']==1){
           $sql= "";
+        }*/
+        
+          
+         if($_SESSION['rol']==1){
+          $sql= "";
+        }else{
+          $sql= "and a.id_usuario=".$_SESSION['id'];
         }
+
         $parametro= null;
         $datos= "SELECT ar.id_arqueo,
         a.id_apertura_cajero,
@@ -162,12 +180,12 @@
             </td>
 
 
-            <td style="text-align: center;" >
+            <?php if(in_array(5, $niveles)) { ?>  <td style="text-align: center;" >
               <div class="btn-bt-group"></div>
 
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;"  onclick="datosImprimirArqueo(<?php echo $value['id_apertura_cajero'] ?>,<?php echo $value['id_arqueo'] ?>,<?php echo $value['id_tipo_arqueo'] ?>); return false" ><i class="fas fa-print" ></i></button>
 
-            </td>
+            </td>  <?php } ?> 
           </tr>
 
         <?php }  ?>
@@ -225,7 +243,7 @@
 
 
 
-<form class="form-horizontal" name="apertura" id="apertura">
+
   <!-- Modal -->
   <div class="modal fade bs-example-modal-lg" id="modalInicioCaja" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -303,7 +321,7 @@
                 </div>
               </div>
 
-            </form>
+          
 
 
 
@@ -349,7 +367,7 @@
                           $m_defecto= $row['id_moneda'];
                         }
 
-                        if($resultado=$db->buscar("billetes","fecha_baja is null and id_moneda=".$m_defecto."")){
+                        if($resultado=$db->buscar("billetes","estado =1  and id_moneda=".$m_defecto."")){
 
 
                           foreach($resultado as $lista){

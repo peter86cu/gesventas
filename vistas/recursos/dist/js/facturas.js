@@ -66,8 +66,13 @@ $(".ModalEditarCompras").click(function(){
    dataType: "json",
    success: function(respuesta){
 
-
-    document.querySelector('#idCompraE').innerText = respuesta["id_entrada_compra"];
+    if(respuesta["id_entrada_compra"]==1){
+      $("#txtFormaPagoFE > option[value=S/N]").attr("selected",true);
+    }else{
+      $("#txtFormaPagoFE > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);
+       document.querySelector('#idCompraE').innerText = respuesta["id_entrada_compra"];
+    }
+   
     //document.querySelector('#datepicker').innerText = respuesta["fecha_hora"];
     $("#txtFormaPagoFE > option[value="+respuesta["id_forma_pago"]+"]").attr("selected",true);
     $("#txtEnvioFE > option[value="+respuesta["id_plazo"]+"]").attr("selected",true);
@@ -191,7 +196,7 @@ if(idorden==''){
    dataType: "json",
    success: function(respuesta){
 
-    if(respuesta==idorden){
+    if(respuesta==idorden || idorden ){
       $('#txtOrdenCompra').removeClass("form-control is-invalid");
       $('#txtOrdenCompra').addClass("form-control is-valid");
       $('#txtOrdenCompraE').removeClass("form-control is-invalid");
@@ -526,7 +531,7 @@ $(document).ready(function() {
                 results: data
               };
             },
-            cache: true
+            cache: false
           },
           minimumInputLength: 2
         }).on('change', function (e){
@@ -542,6 +547,7 @@ $(document).ready(function() {
           $('#telefonoF').html(telefono);
           $('#direccionF').html(direccion);
           guardar_proveedorFactura(idProveedor);
+          $("#proveedor2").select2('data', null);
 
         })
       });
@@ -574,7 +580,9 @@ $(document).ready(function() {
           $("#precio").val($('.producto').select2('data')[0].precio);
 
 
+
         })
+         $("#producto").empty();
       });
 
 
@@ -668,8 +676,8 @@ $.ajax({
     Swal.fire({
      icon: "error",
      title: "Oops...",
-     text: "A ocurrido un error!",
-     footer: "<a href>Ver que mensaje dar?</a>"
+     text: "A ocurrido un error!"
+     
    })
   }
 }
@@ -896,3 +904,114 @@ function datosImprimir(idOrden){
 
 
 }
+
+//Busqueda en a tabla
+
+$(document).ready(function(){
+ $("#searchfacturas").keyup(function(){
+ _this = this;
+ // Show only matching TR, hide rest of them
+ $.each($("#factura tbody tr"), function() {
+ if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+ $(this).hide();
+ else
+ $(this).show();
+ });
+ });
+});
+
+
+
+//Aqui va el paginado
+
+
+$(document).ready(function(){
+    
+ addPagerToTables('#factura', 8);
+    
+});
+
+function addPagerToTables(tables, rowsPerPage = 10) {
+
+    tables = 
+        typeof tables == "string"
+      ? document.querySelectorAll(tables)
+      : tables;
+
+    for (let table of tables) 
+        addPagerToTable(table, rowsPerPage);
+
+}
+
+function addPagerToTable(table, rowsPerPage = 10) {
+
+    let tBodyRows = table.querySelectorAll('tBody tr');
+    let numPages = Math.ceil(tBodyRows.length/rowsPerPage);
+
+    let colCount = 
+    [].slice.call(
+        table.querySelector('tr').cells
+    )
+    .reduce((a,b) => a + parseInt(b.colSpan), 0);
+
+    table
+    .createTFoot()
+    .insertRow()
+    .innerHTML = `<td colspan=${colCount}><div class="nav"></div></td>`;
+
+    if(numPages == 1)
+        return;
+
+    for(i = 0;i < numPages;i++) {
+
+        let pageNum = i + 1;
+
+        table.querySelector('.nav')
+        .insertAdjacentHTML(
+            'beforeend',
+            `<a class="bot" href="#" rel="${i}"> ${pageNum}</a> `        
+        );
+
+    }
+
+    changeToPage(table, 1, rowsPerPage);
+
+    for (let navA of table.querySelectorAll('.nav a'))
+        navA.addEventListener(
+            'click', 
+            e => changeToPage(
+                table, 
+                parseInt(e.target.innerHTML), 
+                rowsPerPage
+            )
+        );
+
+}
+
+function changeToPage(table, page, rowsPerPage) {
+
+    let startItem = (page - 1) * rowsPerPage;
+    let endItem = startItem + rowsPerPage;
+    let navAs = table.querySelectorAll('.nav a');
+    let tBodyRows = table.querySelectorAll('tBody tr');
+
+    for (let nix = 0; nix < navAs.length; nix++) {
+
+        if (nix == page - 1)
+            navAs[nix].classList.add('active');
+        else 
+            navAs[nix].classList.remove('active');
+
+        for (let trix = 0; trix < tBodyRows.length; trix++) 
+            tBodyRows[trix].style.display = 
+                (trix >= startItem && trix < endItem)
+                ? 'table-row'
+                : 'none';  
+
+    }
+
+}
+
+
+
+

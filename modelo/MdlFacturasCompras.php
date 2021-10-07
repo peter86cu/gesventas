@@ -39,6 +39,9 @@ static public function buscarOrdenCompra($idOrden){
 				$id= $row['orden'];
 		}
 
+		if($idOrden==1)
+			$id=1;
+		
 		return $id;
 
 	}

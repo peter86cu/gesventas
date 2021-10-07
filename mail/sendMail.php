@@ -26,7 +26,7 @@ $mail = new PHPMailer(true); // create a new object
  $mail->Password = $_SESSION['password'];
 
  $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
- $mail->Host = "gesventas.ml";
+ $mail->Host = "mail.exfrxedl.lucusvirtual.es";
  $mail->Port = 465; 
  $mail->Mailer = "smtp";
  $mail->isHTML(true);

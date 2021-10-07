@@ -37,6 +37,17 @@
            
         }
 
+
+
+      $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=7");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
           <h1><i class="fas fa-cart-arrow-down" style="<?php echo $i_principal ?>"></i> <STRONG>LISTADO DE PRODUCTOS</STRONG></h1>
         </div>
@@ -56,7 +67,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDProductos"><i class="fas fa-plus"></i>Agregar</button>       
+      <?php if(in_array(2, $niveles)) { ?> <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDProductos"><i class="fas fa-plus"></i>Agregar</button> <?php } ?>       
 
 
      </div>
@@ -75,7 +86,8 @@
           <th><strong>STOCK</strong></th>
           <th><strong>TIPO</strong></th>
           <th><strong>IMPUESTO</strong></th>
-          <th><strong>ACCIÓN</strong></th>
+          <th><strong>ESTADO</strong></th>
+        <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?>  <th><strong>ACCIÓN</strong></th>  <?php } ?>
         </tr>
       </thead>
       <tbody>
@@ -83,9 +95,10 @@
 
         <?php 
         $parametro= null;
-        $datos= "SELECT c.descripcion as categoria,p.*,t.descripcion as tipo, u.simbolo, i.descripcion as impuesto
+        $activo="";
+        $datos= "SELECT c.categoria as categoria,p.*,t.descripcion as tipo, u.simbolo, i.descripcion as impuesto, p.disponible
         FROM productos p, categorias_productos c,tipos_productos t, unidades_medidas u , impuestos i
-        WHERE p.id_categoria=c.id_categoria_producto and p.id_tipo_producto=t.id_tipo_producto and u.id_unidad_medida=p.id_unidad_medida and p.id_impuesto=i.id_impuesto and p.disponible=1";
+        WHERE p.id_categoria=c.id_categoria_producto and p.id_tipo_producto=t.id_tipo_producto and u.id_unidad_medida=p.id_unidad_medida and p.id_impuesto=i.id_impuesto";
         $productos = ControlProductos::mostrarProducto($parametro,$datos);
         foreach ($productos as $key => $value) {
         
@@ -94,30 +107,33 @@
         $cantidad_stock=0;
         foreach ($cantidad as $key => $values) {
           $cantidad_stock=$values['stock'];
-        }
+        } 
 
-
-          $foto='vistas/recursos/dist/img/productos/'.$value['foto'];
-          echo '<tr>
-          <td style="width: 1%">'.$value['id_producto'].' </td>
-          <td style="width: 4%"><img class="table-avatar" alt="Avatar" src="'.$foto.'" alt="'.$value['foto'].'  width="80" height="70""></td>         
-          <td style="width: 12%">'.$value['codigo'].' </td>
-          <td style="width: 15%">'.$value['nombre'].'</td>
-          <td style="width: 8%">'.$value['precio_venta'].' '.$value['simbolo'].'</td>
-          <td style="width: 10%">'.$value['categoria'].'</td>          
-          <td style="width: 10%">'.$cantidad_stock.'</td>          
-          <td style="width: 8%">'.$value['tipo'].'</td>
-          <td style="width: 8%">'.$value['impuesto'].'</td>
-          <td style="width: 12%">
+       
+          $foto='vistas/recursos/dist/img/productos/'.$value['foto']; { ?> 
+          <tr>
+          <td style="width: 1%"> <?php echo $value['id_producto'] ?> </td>
+          <td style="width: 4%"><img class="table-avatar" alt="Avatar" src="<?php echo $foto ?>" alt="<?php echo $value['foto'] ?>"  width="80" height="70"></td>         
+          <td style="width: 12%"><?php echo $value['codigo'] ?> </td>
+          <td style="width: 15%"><?php echo $value['nombre'] ?></td>
+          <td style="width: 8%"><?php echo $value['precio_venta'].' '.$value['simbolo'] ?></td>
+          <td style="width: 10%"><?php echo $value['categoria'] ?></td>          
+          <td style="width: 10%"><?php echo $cantidad_stock ?></td>          
+          <td style="width: 8%"><?php echo $value['tipo'] ?></td>
+          <td style="width: 8%"><?php echo $value['impuesto']?> </td>
+           <td>
+          <?php if($value['disponible']==1) { ?>         
+          <span class="badge badge-success">Activo</span> <?php $activo=""; }else { ?> 
+          <span class="badge badge-danger">Desactivo</span> <?php $activo="disabled"; } ?>
+        </td>
+          <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?> <td style="width: 12%">
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-default btnEditarProducto" idProducto="'.$value['id_producto'].'" data-toggle="modal" data-target="#ModalEditarProductos" style="'.$botton_editar.'"><i class="far fa-edit"></i></button>
-          <button class="btn btn-default btnEliminarProducto" idProducto="'.$value['id_producto'].'" style="'.$botton_eliminar.'"><i  class="fas fa-trash"></i></button>
-          </td>
-          </tr>   ';
+          <?php if(in_array(3, $niveles)) { ?> <button class="btn btn-default btnEditarProducto" idProducto="<?php echo $value['id_producto'] ?>" data-toggle="modal" data-target="#ModalEditarProductos" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button> <?php } ?>
+          <?php if(in_array(4, $niveles)) { ?> <button class="btn btn-default btnEliminarProducto" <?php echo $activo ?> idProducto="<?php echo $value['id_producto'] ?>" style="<?php echo $botton_eliminar ?>"><i  class="fas fa-trash"></i></button> <?php } ?>
+          </td> <?php } ?>
+          </tr> 
           
-        }
-
-        ?>
+      <?php   }  } ?>
       </tbody>
 
       </table>
@@ -213,7 +229,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                         <div class="col-md-4">
                           <label for="inputPCompra">I.V.A de Venta:</label>
                             <select id="inputIVAVenta" name="inputIVAVenta" class="form-control custom-select">
-                              <option  selected disabled>Select one</option>
+                              <option  selected disabled>Seleccionar</option>
                                 <?php
                                 $db = new BaseDatos();                                                           
                                 if($resultado=$db->buscar("impuestos","1")){
@@ -229,19 +245,19 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                           <div class="form-group col-md-3">
                             <label for="inputStatus">Categoría:</label>
                             <select id="inputCategoria" name="inputCategoria" class="form-control custom-select">
-                              <option  selected disabled>Select one</option>
+                              <option  selected disabled>Seleccionar</option>
                               <?php
                               $db = new BaseDatos();   
-                              if($resultado=$db->buscar("categorias_productos","1")){
+                              if($resultado=$db->buscar("categorias_productos","estado=1")){
                                 foreach($resultado as $row) { ?>
-                                <option value=<?=$row['id_categoria_producto'] ?> ><?=$row['descripcion'] ?></option> <?php } } ?>                                        
+                                <option value=<?=$row['id_categoria_producto'] ?> ><?=$row['categoria'] ?></option> <?php } } ?>                                        
                               </select>                
                             </div>
 
                             <div class="form-group col-md-3">
                               <label for="inputStatus">Marca:</label>
                               <select id="input_id_marca" name="inputId_marca" class="form-control custom-select">
-                                <option selected disabled>Select one</option> 
+                                <option selected disabled>Seleccionar</option> 
                                 <?php
                                 $db = new BaseDatos();                                                         
                                 if($resultado=$db->buscar("marcas","1")){
@@ -254,7 +270,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                               <div class="imput-group col-md-3">
                                 <label for="inputStatus">Tipo Producto:</label>
                                 <select id="input_tipo_producto" name="inputTipo_producto" class="form-control custom-select">
-                                  <option selected disabled>Select one</option>                
+                                  <option selected disabled>Seleccionar</option>                
                                   <?php
                                   $db = new BaseDatos();       
                                   if($resultado=$db->buscar("tipos_productos","1")){
@@ -268,7 +284,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                                         <div class="form-group col-md-3">
                                         <label for="inputStatus">Unidad de medida:</label>
                                         <select id="inputUnidad" name="inputUnidad" class="form-control custom-select">
-                                        <option selected disabled>Select one</option>                
+                                        <option selected disabled>Seleccionar</option>                
                                         <?php
                                         $db = new BaseDatos();        
 
@@ -282,7 +298,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                                   <div class="form-group col-md-3">
                                     <label for="inputStatus">Inventariable:</label>
                                     <select id="inputInve" name="inputInve" class="form-control custom-select">
-                                      <option selected disabled>Select one</option>                
+                                      <option selected disabled>Seleccionar</option>                
                                       <option value=1>SI</option>
                                       <option value=0>NO</option>
                                     </select>
@@ -291,7 +307,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                                   <div class="form-group col-md-3">
                                     <label for="inputStatus">Disponible:</label>
                                     <select id="inputDispo" name="inputDispo" class="form-control custom-select">
-                                      <option selected disabled>Select one</option>         
+                                      <option selected disabled>Seleccionar</option>         
                                       <option value=1>SI</option>
                                       <option value=0>NO</option>
                                     </select>
@@ -301,7 +317,7 @@ $cantidad_row="SELECT COUNT(*) cantidad FROM productos p, categorias_productos c
                                   <div class="form-group col-md-3">
                                     <label for="inputStatus">Moneda:</label>
                                     <select id="inputMoneda" name="inputMoneda" class="form-control custom-select">
-                                      <option selected disabled>Select one</option>                
+                                      <option selected disabled>Seleccionar</option>                
                                       <?php
                                       $db = new BaseDatos();        
                                       if($resultado=$db->buscar("monedas","1")){

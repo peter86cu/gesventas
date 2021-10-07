@@ -10,12 +10,43 @@ class ModeloUsuario{
             
 						
 				    $obj = new BaseDatos();  
-					$stmt= $obj->buscarSQL("select * from usuarios where usuario ='".$usuario."'");
+					$stmt= $obj->buscarSQL("select * from usuarios inner join rol on (usuarios.nivel=rol.id_rol) where usuario ='".$usuario."' and rol.estado=1");
 					
 					return $stmt;
 					
 	}
 
+	static public function validaSession($usuario){
+            
+						
+				    $obj = new BaseDatos();  
+					$log= $obj->buscarSQL("select  MAX(id) id, id_session from log_session inner join usuarios on (usuarios.id_usuario=log_session.id_usuario) where usuarios.usuario ='".$usuario."'");
+
+					$idsession="";
+					$session="";
+					if($log){
+
+						foreach($log as $row) { 
+						$idsession= $row['id_session'];			
+							}	
+
+					$acceso= $obj->buscarSQL("select count(*) count from log_session where id_session='".$idsession."'");
+						
+						foreach($acceso as $row) { 
+						$session= $row['count'];			
+							}	
+
+					}
+					
+					if($session==1)
+						return $idsession;
+					else
+						return false;
+
+
+	}
+					
+	
 
 	static public function buscarConfiguraciones(){
             
@@ -39,11 +70,11 @@ class ModeloUsuario{
 	}		
 	
 
-	static public function insertarSession( $idSession, $usuario,$accion  ){  
+	static public function insertarSession( $idSession, $usuario,$accion,$ip){  
 		
     	
    			$obj = new BaseDatos();      
-			$result=$obj -> insertar("log_session","'".$idSession."','".$usuario."',now(), '".$accion."'");  
+			$result=$obj -> insertar("log_session","'".$idSession."','".$usuario."',now(), '".$accion."', '".$ip."'");  
 			return $result;
 						
 	}				

@@ -30,6 +30,15 @@
            
         }
 
+  $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=4");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -58,7 +67,7 @@
     <div class="card">
      <div class="card">
       <div class="card-header">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDUsuarios"><i class="fas fa-plus"></i> Agregar</button>       
+       <?php if(in_array(2, $niveles)) { ?>  <button class="btn btn-primary" data-toggle="modal" data-target="#ModalADDUsuarios"><i class="fas fa-plus"></i> Agregar</button> <?php } ?>     
 
 
       </div>
@@ -74,13 +83,14 @@
           <th style="width: 10%"><strong>ROL</strong></th> 
           <th style="width: 5%"><strong>SUCURSAL</strong></th> 
           <th style="width: 5%"><strong>ESTADO</strong></th> 
-          <th style="width: 5%"><strong>ACCIÓN</strong></th>         
+        <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?>   <th style="width: 5%"><strong>ACCIÓN</strong></th>  <?php } ?>        
         </tr>
       </thead>
       <tbody>
 
 
         <?php 
+        $activo="";
         $parametro= null;
         $datos= "SELECT u.id_usuario,u.usuario,u.nombres,u.email,u.estado,r.descripcion as rol,s.descripcion as sucursal FROM usuarios u, rol r, sucursales s WHERE  u.nivel = r.id_rol and u.sucursal= s.id_sucursal";
         $usuarios = ControlUsuario::mostrarUsuario($parametro,$datos);
@@ -93,15 +103,15 @@
           <td><?php echo $value['sucursal']?></td> 
           <td>
           <?php if($value['estado']==1) { ?>         
-          <span class="badge badge-success">Activo</span> <?php }else { ?> 
-          <span class="badge badge-danger">Desactivo</span> <?php } ?>
+          <span class="badge badge-success">Activo</span> <?php $activo=""; }else { ?> 
+          <span class="badge badge-danger">Desactivo</span> <?php $activo="disabled"; } ?>
         </td>
 
-          <td>
+          <?php if(in_array(3, $niveles) || in_array(4, $niveles)) { ?>  <td>
           <div class="btn-bt-group"></div> 
-          <button class="btn btn-default btnEditarUsuario" idUsuario="<?=$value['id_usuario'] ?>" data-toggle="modal" data-target="#ModalEditarUsuario" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
-          <button class="btn btn-default btnEliminarUsuario" style="<?php echo $botton_eliminar ?>" idUsuario="<?=$value['id_usuario'] ?>"><i  class="fas fa-trash"></i></button>
-          </td>
+         <?php if(in_array(3, $niveles)) { ?> <button class="btn btn-default btnEditarUsuario" idUsuario="<?=$value['id_usuario'] ?>" data-toggle="modal" data-target="#ModalEditarUsuario" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button> <?php } ?> 
+         <?php if(in_array(4, $niveles)) { ?> <button class="btn btn-default btnEliminarUsuario" <?php echo $activo ?> style="<?php echo $botton_eliminar ?>" idUsuario="<?=$value['id_usuario'] ?>"><i  class="fas fa-trash"></i></button> <?php } ?> 
+          </td>  <?php } ?> 
           </tr> 
        <?php  }
 

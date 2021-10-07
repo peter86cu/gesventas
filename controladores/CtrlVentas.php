@@ -26,6 +26,37 @@
           }
 
 
+       static public function ctrRangoFechasVentas($fechaInicial, $fechaFinal){
+    
+
+        $respuesta = ModeloVentas::mdlRangoFechasVentas($fechaInicial, $fechaFinal);
+
+        return $respuesta;
+       
+    
+        }
+
+
+         static public function comparativoAnualdeVentas(){
+    
+
+        $respuesta = ModeloVentas::comparativoAnualdeVentas();
+
+        return $respuesta;
+       
+    
+        }
+
+
+        static public function crecimientoMesActualAnterior(){
+    
+
+        $respuesta = ModeloVentas::procientoCrecimietoUltimoMensual();
+
+        return $respuesta;
+       
+    
+        }
 
                  
   }

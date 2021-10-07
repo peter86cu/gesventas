@@ -45,6 +45,7 @@ class proveedoresAjax{
            $email = $this->email;
            $web = $this->web;
            $habilitado = $this->habilitado;
+           
            if($this->accion=="update"){
             $idProveedor = $this->idProveedor;
           $respuesta = ModeloProveedor::updateProveedor($idProveedor,$razon_social, $ruc ,$direccion,$telefono,$celular,$email,$web, $habilitado);      

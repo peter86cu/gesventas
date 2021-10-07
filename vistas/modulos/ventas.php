@@ -11,7 +11,7 @@
           <img src="vistas/recursos/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <?php
-        include "../modelo/conexion.php";
+        require_once ("././modelo/conexion.php");
           $db = new BaseDatos();
           $rol="";
           if($resultado=$db->buscar("rol","id_rol=".$_SESSION['rol']."")){
@@ -25,6 +25,37 @@
               $caja=$row2['nombre'];
             }
           }
+
+           $color_header="";
+           $i_principal="";
+           $botton_principal="";
+           $botton_editar="";
+           $botton_eliminar="";
+           $color_tabla="";
+        $datos= "SELECT * FROM `color_sistema` WHERE modulo=1";
+        $colores = ControlRoles::colores($datos);
+        
+        foreach ($colores as $key => $value) {
+            if($value['posicion']==2){              
+              $i_principal=$value['style'];
+            }            
+            if($value['posicion']==1){
+               $color_header=$value['style'];
+            }
+            if($value['posicion']==3){
+               $botton_principal=$value['style'];
+            }
+            if($value['posicion']==4){
+               $botton_editar=$value['style'];              
+            }
+            if($value['posicion']==5){
+               $botton_eliminar=$value['style'];               
+            }
+            if($value['posicion']==6){
+               $color_tabla=$value['style'];               
+            }
+           
+        }
           
          ?>
         <div class="info">
@@ -45,6 +76,17 @@
               <input type="text" name="txt" id="txtApertura" style=" border: 0;color: #000000;" disabled="true"></p>
               <p class="color"><strong> # Ticket:</strong>
               <input type="text" name="txt" id="txtOrden" style=" border: 0;color: #000000;" disabled="true"></p>
+
+              <input type="hidden" id="idCliente" name="idCliente" value="">
+
+      </div>
+
+      <div>
+        
+        <p class="color"><strong> Cliente Plus:</strong>
+             <input type="search" id="buscar_cliente" placeholder="Documento">
+              
+            </p>
 
       </div>
      </aside>
@@ -86,13 +128,14 @@
                 <p class="card-text">
                   <input type="text" name="txtProductoV" id="txtProductoV" style=" border: 0;">
 
-                  <input type="text" name="txtCantP" id="txtCantP" style=" border: 0; float: right;" size=10 value="1" >
+                  <input type="text" name="txtCantP" id="txtCantP" style=" border: 0; float: right;" size=10 value="1.0" >
                 </p>
                 <script type="text/javascript">
 
+                  
                   function ponleFocusCantidadProductos(){
                     document.getElementById("txtCantP").focus();
-                    $('#txtCantP').val(1);
+                    $('#txtCantP').val(1.0);
                   }
                     showTime();
                   function showTime(){
@@ -137,6 +180,9 @@
                          $('#txtApertura').val(resp['id_apertura_cajero']) ;
                          $('#txtVenta').val(resp['id_venta']) ;
                          $('#txtOrden').val(resp['consecutivo']) ;
+                         $('#buscar_cliente').val(resp['nombres']);
+                         $('#idCliente').val(resp['id_cliente']);
+
                          genera_tabla();
 
                        }else{
@@ -262,7 +308,7 @@
            dataType: "json",
            success: function(respuesta){
 
-            console.log(respuesta)
+            
             if (respuesta) {
 
               var datos = new FormData();
@@ -280,7 +326,7 @@
                dataType: "json",
                success: function(cantidad){
                 console.log(cantidad)
-                if(cantidad>0 && cantidad > cant){
+                if(cantidad>0 ){
                  document.querySelector('#nombreProductoV').innerText = respuesta["nombre"];
                  document.querySelector('#codigoProdV').innerText = respuesta["codigo"];
                  document.querySelector('#precioP').innerText = respuesta["precio_venta"];
@@ -328,6 +374,7 @@
                          success: function(resul){
                           $('#g-table > tbody').empty();
                           $('#h-table > tfoot').empty();
+                          var cantotal=0;
                           var cantotal1=0;
                           var cantotal2=0;
                           var cantotal3=0;
@@ -378,8 +425,10 @@
                         if(resul[i].id_impuesto==3)
                           cantotal3=resul[i].precio*resul[i].cantidad;
 
+                        cantidad= resul[i].precio*resul[i].cantidad;
+
                         var tr2 = `<tr style="background: #ccffcc">
-                        <td style="width: 5%"><h5><strong>`+resul[i].cantidad+ `</strong></h5></td><td style="width: 12%"><h5><strong>`+resul[i].codigo+`</strong></td><td style="width: 34%"><h5><strong>`+resul[i].nombre+`</strong></td><td style="width: 12%" align="center"><h5><strong>`+resul[i].precio+ ' ' +resul[i].moneda+ `</strong></td><td style="width: 12%" align="center"><h5><strong>` +cantotal1+  `</strong></td><td style="width: 12%" align="center"><h5><strong>` +cantotal2+  `</strong></td><td style="width: 12%" align="center"><h5><strong>` +cantotal3+  `</strong></td><td class='text-right'><a href="#" onclick="eliminar_producto(`+idVenta+','+resul[i].id_venta_detalle +','+resul[i].id_producto +`)" ><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEUAAADnTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDx+VWpeAAAAJ3RSTlMAAQIFCAkPERQYGi40TVRVVlhZaHR8g4WPl5qdtb7Hys7R19rr7e97kMnEAAAAaklEQVQYV7XOSQKCMBQE0UpQwfkrSJwCKmDf/4YuVOIF7F29VQOA897xs50k1aknmnmfPRfvWptdBjOz29Vs46B6aFx/cEBIEAEIamhWc3EcIRKXhQj/hX47nGvt7x8o07ETANP2210OvABwcxH233o1TgAAAABJRU5ErkJggg=="></a></td></tr>`;
+                        <td style="width: 5%"><h5><strong>`+resul[i].cantidad+ `</strong></h5></td><td style="width: 12%"><h5><strong>`+resul[i].codigo+`</strong></td><td style="width: 34%"><h5><strong>`+resul[i].nombre+`</strong></td><td style="width: 12%" align="center"><h5><strong>`+resul[i].precio+ ' ' +resul[i].moneda+ `</strong></td><td style="width: 12%" align="center"><h5><strong>` +cantotal+  `</strong><td class='text-right'><a href="#" onclick="eliminar_producto(`+idVenta+','+resul[i].id_venta_detalle +','+resul[i].id_producto +`)" ><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEUAAADnTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDznTDx+VWpeAAAAJ3RSTlMAAQIFCAkPERQYGi40TVRVVlhZaHR8g4WPl5qdtb7Hys7R19rr7e97kMnEAAAAaklEQVQYV7XOSQKCMBQE0UpQwfkrSJwCKmDf/4YuVOIF7F29VQOA897xs50k1aknmnmfPRfvWptdBjOz29Vs46B6aFx/cEBIEAEIamhWc3EcIRKXhQj/hX47nGvt7x8o07ETANP2210OvABwcxH233o1TgAAAABJRU5ErkJggg=="></a></td></tr>`;
 
                         $("#cuerpo").append(tr2);
 
@@ -397,27 +446,57 @@
                       <th width="12%" id="sumaiva10">`+simbolo_moneda+ ' '+sumaiva10+ `</th></tr>`;
 
                       var datos2= `<tr>
-                      <th align="right"><label  id="total" style="font-size:240%; width:100%; margin-bottom:0;">
-                      `+simbolo_moneda+suma_total+ `
+                      <th align="right"><label  id="total" style="font-size:200%; width:400%; margin-bottom:0;">`+simbolo_moneda+suma_total+ `
+                      </label></th>
+                      </tr>`;
+                     
+                      var datos4= `<tr>
+                      <th align="right"><label  id="ajuste" style="font-size:150%; width:400%; margin-bottom:0; ">`+simbolo_moneda+suma_total+ `
                       </label></th>
                       </tr>`;
 
+                       var datos5= `<tr>
+                      <th align="right"><label  id="subtotal" style="font-size:150%; width:400%; margin-bottom:0; ">`+simbolo_moneda+suma_total+ `
+                      </label></th>
+                      </tr>`;
 
+                      var ivabasico= `<tr>
+                      <th align="right"><label  id="basico" style="font-size:150%; width:400%; margin-bottom:0; ">`+simbolo_moneda+iva10+ `
+                      </label></th>
+                      </tr>`;
+
+                       var ivaminimo= `<tr>
+                      <th align="right"><label  id="minimo" style="font-size:150%; width:400%; margin-bottom:0; ">`+simbolo_moneda+iva5+ `
+                      </label></th>
+                      </tr>`;
 
                       var datos3= `<tr>
                       <th width="5%"></th>
-                      <th align="right"  style="background:#7F8793;color:#fff">IVA 5%<input type="hidden" id="ivainput5" value="`+iva5+ `"></th>
+                      <th align="right"  style="background:#7F8793;color:#fff">IVA Tasa Minima (5%)<input type="hidden" id="ivainput5" value="`+iva5+ `"></th>
                       <th align="left" id="iva5">`+number_format(iva5,2,',','.')+ `</th>
-                      <th align="right"  style="background:#7F8793;color:#fff">IVA 10%<input type="hidden" id="ivainput10" value="<`+iva10+ `"></th>
+                      <th align="right"  style="background:#7F8793;color:#fff">IVA Tasa Básica (10%)<input type="hidden" id="ivainput10" value="<`+iva10+ `"></th>
                       <th align="left" id="iva10">` +simbolo_moneda+ ' ' +number_format(iva10,2,',','.')+ `</th>
-                      </tr>`;
-                     // $("#result").append(datos);
+                      </tr>`;                                    
+                    
+                    var ajusteTotal = Math.ceil(number_format(suma_total+iva5+iva10,2,'.','.'));
+                    var ajusteResta =  number_format(suma_total+iva5+iva10,2,'.','.') ;
+                    var ajTotal= number_format((ajusteTotal - ajusteResta),2,',','.');
 
-                     $("#result").append(datos3);
-                     $("#result").append(datos2);
-                     $("#total_venta").val(suma_total);
-                     $('#total').html(simbolo_moneda+number_format(suma_total,2,',','.'));
-                     document.querySelector('#total_venta_confirmar').innerText = simbolo_moneda+number_format(suma_total,2,',','.');
+                     //$("#result").append(datos3);
+                     var total_sumado= parseFloat(suma_total)+parseFloat(iva5)+parseFloat(iva10);
+                     var total_final= parseInt(total_sumado);
+                     $("#resulttotal").append(datos5);
+                     $("#resulttotal").append(ivabasico);
+                     $("#resulttotal").append(ivaminimo);
+                     $("#resulttotal").append(datos4);
+                     $("#resulttotal").append(datos2);                    
+                     $("#total_venta").val(total_final);
+                     $('#subtotal').html("Sub Total: "+simbolo_moneda+ number_format(suma_total,2,',','.'));  
+                     $('#basico').html("IVA Tasa Básica (10%): "+simbolo_moneda+number_format(iva10,2,',','.'));
+                     $('#minimo').html("IVA Tasa Mínima (5%): "+simbolo_moneda+number_format(iva5,2,',','.'));   
+                     $('#ajuste').html("Ajuste de redondeo: "+simbolo_moneda+ajTotal);  
+                     $('#total').html("TOTAL A PAGAR: "+simbolo_moneda+number_format(suma_total+iva5+iva10,0,',','.'));                  
+                     document.querySelector('#total_venta_confirmar').innerText = parseInt(total_sumado,10);
                    }
 
                  });
@@ -648,16 +727,15 @@ function cargar(evt,t){
       <h5 class="m-0">Items</h5>
     </div>
     <div  class="card-body">
-     <table id="g-table" class="table ">
+     <table id="g-table" class="table">
       <thead>
         <tr>
           <th width="5%" align="center" valign="middle">Cant</th>
           <th width="12%" align="center" valign="middle">&nbsp;Codigo</th>
-          <th width="34%" align="center" valign="middle">Descripcion</th>
+          <th width="34%" align="center" valign="middle">Descripción</th>
           <th width="12%" align="center" valign="middle">Precio&nbsp;U.</th>
-          <th width="12%" align="center" valign="middle">Excenta.</th>
-          <th width="12%" align="center" valign="middle">5%</th>
-          <th width="12%" align="center" valign="middle">10%</th>
+          <th width="12%" align="center" valign="middle">Monto</th>
+          
         </tr>
 
       </thead>
@@ -676,6 +754,41 @@ function cargar(evt,t){
 
       </tfoot>
     </table>
+   
+  </div>
+</div>
+
+</div>
+
+<!-- /.content-wrapper -->
+
+
+<div class="col-lg-5">
+  <div id="div1" class="card">
+    <div class="card-header">
+      <h5 class="m-0">Resumen de Pago</h5>
+    </div>
+    <div  class="card-body">
+     <table id="t-table" class="table2">
+      <thead>
+        
+
+      </thead>
+
+
+      <tbody id= "cuerpo">
+        <tr style="background: #ccffcc">
+
+        </tr>
+      </tbody>
+    </table>
+
+
+    <table width="100%" border="0" cellspacing="3" cellpadding="2" class="display" id="h-table" >
+      <tfoot id="resulttotal">
+
+      </tfoot>
+    </table>
     <?php $titulo_form = "Confirmar Venta"; ?>
    <button type="submit" id="btCancelar" class="btn btn-danger" style="float:center"  href="javascript:;" onclick="cancelarVenta(); return false" >Cancelar Venta</button> 
       <button type="submit" id="btPagar" class="btn btn-info" style="float:right"  href="javascript:;" onclick="abrir(); return false" >Confirmar</button> 
@@ -683,9 +796,7 @@ function cargar(evt,t){
   </div>
 </div>
 
-
-
-<!-- /.content-wrapper -->
+</div>
 
 
 <!--  ventas -->
@@ -897,6 +1008,7 @@ if(parseInt($('#total_venta').val())>suma){
   <td id="de"></td>\
   <td><input type="text" name="cantidad" onkeypress="cargar(event,this)"  class="cantidad" value="'+valor+'" onfocus/> <label style="cursor:pointer" href="javascript:void(0)" onclick="quitar(this)">[ X ]</label></td>\
   </tr>');
+
  $('.cantidad').focus();
  $('#finalizar').hide('fast');
 }else{
@@ -913,6 +1025,7 @@ if(parseInt($('#total_venta').val())>suma){
     alert("Debe seleccionar Un cliente Valido");
     return false;
   }else{
+
     $('#vuelto').html(suma-parseInt($('#total_venta').val()).toString());
     $('#finalizar').show('fast');
   }
@@ -921,7 +1034,7 @@ if(parseInt($('#total_venta').val())>suma){
   $('#finalizar').show('fast');
 }
 
-
+console.log($('#total_venta').val())
 }
 
 $(".pago").each(function(){
@@ -936,7 +1049,7 @@ function guardar(evt){
  var charCode = (evt.which) ? evt.which : evt
  var total=$('#total_venta').val();
  var id_venta = $('#txtVenta').val();
- var nombre_cliente = $('#cliente').val();
+ var nombre_cliente = $('#idCliente').val();
  var forma_pago = '';
  var cantidad = '';
  var vuelto = $('#vuelto').html();
@@ -964,7 +1077,7 @@ function guardar(evt){
  if(parseInt($('#total_venta').val())<=suma){
    $.ajax({
     url: "ajax/ajaxGuardarVenta.php",
-    data: "total="+total+'&id_venta='+id_venta+'&forma_pago='+forma_pago+'&cantidad='+cantidad+'&tipo='+tipo+'&cliente='+nombre_cliente+'&vuelo='+vuelto+'&iva5='+$("#ivainput5").val()+'&iva10='+$("#ivainput10").val()+"&meses="+$("#meses").val()+"&interes_venta="+$("#interes_venta").val(),
+    data: "total="+total+'&id_venta='+id_venta+'&forma_pago='+forma_pago+'&cantidad='+cantidad+'&tipo='+tipo+'&cliente='+nombre_cliente+'&vuelto='+vuelto+'&iva5='+$("#ivainput5").val()+'&iva10='+$("#ivainput10").val()+"&meses="+$("#meses").val()+"&interes_venta="+$("#interes_venta").val(),
     type: "POST",
     dataType: "json",
     success: function(data){
@@ -995,7 +1108,7 @@ function guardar(evt){
 
 
       }else{
-        alert('No se pudo Guardar Ocurrio un error interno:\n:'+data.error);
+        alert('No se pudo Guardar Ocurrio un error interno:\n:'+data.exito);
       }
     }
   });
@@ -1013,7 +1126,7 @@ function quitar(id){
 
 }
 $(function(){
-  $('#total_venta_confirmar').html("Gs. "+number_format($('#total_venta').val(),0,',','.'));
+  $('#total_venta_confirmar').html("Gs. "+$('#total_venta').val());
   $('#cantidad').attr('value',$('#total_venta').val());
   document.getElementById('cantidad').focus();
 })
@@ -1064,7 +1177,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
  <fieldset>
   <h2 id="total_venta_confirmar"></h2>
   <hr />
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="tabla">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="tablita">
     <tr>
       <td width="55%"><select class="pago" onchange="chang1(this)">
         <option value="efectivo" selected="selected">Efectivo</option>
@@ -1098,6 +1211,85 @@ function number_format (number, decimals, dec_point, thousands_sep) {
       <br>
       <h2>El Vuelto es:<label id="vuelto"></label></h2>
       <div style="position:absolute; bottom:1px;">Presione Enter Para confirmar</div>
-      <button id="finalizar"  class="skin_colour round_all" style="float:right; display:none" onclick="guardar(event)"> <img width="24" height="24" > <span>Finalizar</span></button>
+      <button id="finalizar"  class="skin_colour round_all" style="float:right; display:none" onclick="guardar(event)"> <i class="fas fa-money-bill-wave"></i> <span>Finalizar</span></button>
     </fieldset>
   </div>
+
+
+
+<div class="modal" id="ModalNuevoClientes" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+
+      <form role="form" method="POST" enctype="multipart/form-data">
+        <!-- Modal Header -->
+        <div class="modal-header" style="<?php echo $color_header?>">
+          <h4 class="modal-title"><strong>NUEVO CLIENTE</strong></h4>         
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+       
+            <div class="col-md-10" >
+              <label for="txt_nombre_cliente">Nombre y Apellidos:</label>
+              <input type="text" id="txt_nombre_cliente" name="txt_nombre_cliente"  class="form-control" placeholder="Nombre y Apellidos" required>
+            </div>
+
+
+            <div class="col-md-10 ">
+              <label for="txt_ruc">Dcoumento / RUC:</label>
+              <input type="text"  id="txt_ruc" name="txt_ruc" class="form-control"  placeholder="Dcoumento / RUC" required></input>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_fecha_nac">Fecha Nacimiento:</label>
+              <label id="fecha_nac" value=""></label><div class="col-md-10"><input type="text" id="datepicker_cliente" placeholder="YYYY-MM-DD" required></input></div>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_direccion">Dirección:</label>
+              <input type="text"  id="txt_direccion" name="txt_direccion" class="form-control"  placeholder="Dirección" required></input>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_telefono">Teléfono:</label>
+              <input type="text"  id="txt_telefono" name="txt_telefono" class="form-control"  placeholder="Teléfono" required></input>
+            </div> 
+
+             <div class="col-md-10 ">
+              <label for="txt_email">Email:</label>
+              <input type="text"  id="txt_email" name="txt_email" class="form-control"  placeholder="Email" required></input>
+            </div>
+
+
+             <div class="col-md-10 ">
+                    <label for="txt_tipo_cliente">Tipo Cliente</label>
+                    <select id="txt_tipo_cliente" name="txt_tipo_cliente" class="form-control custom-select">
+                      <option  selected disabled>Seleccione</option>
+                      <?php
+                      $db = new BaseDatos();                                                           
+                      if($resultado=$db->buscar("tipos_clientes","1")){
+                        foreach($resultado as $row) { ?>
+                          <option value=<?=$row['id_tipo_cliente'] ?>><?=$row['descripcion'] ?></option> <?php } } ?>                                        
+                        </select>    
+                      </div> 
+           
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              <button type="submit"  class="btn btn-success" href="javascript:;" onclick="agregarCliente(2); return false"  >Guardar</button>
+            </div>
+
+            
+         
+        </div>
+
+
+        <!---OK-->
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

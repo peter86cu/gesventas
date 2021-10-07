@@ -35,14 +35,15 @@ for($i =0; $i<count($forma_pago);$i++){
 if(isset($_POST["cliente"]) && $_POST["cliente"]!=''){
 	$cliente=	$_POST["cliente"];
 }else{
-	$cliente=0;
+	$cliente=1;
 }
+
+error_log($cliente);
 
 $respuesta = array();
 
 	if(@mysqli_query($con,"update ventas set monto_total='".$_POST['total']."',
-	 estado=2,id_cliente='".$cliente."',
-	 fecha_hora_cerrado=NOW(),iva5='".$_POST['iva5']."',iva10='".$_POST['iva10']."'  where id_venta = '".$_POST['id_venta']."'")){
+	 estado=2, fecha_hora_cerrado=NOW(),iva5='".$_POST['iva5']."',iva10='".$_POST['iva10']."'  where id_venta = '".$_POST['id_venta']."'")){
 		 $respuesta['exito']='si';
 	}else{
 		$respuesta['exito']='no';

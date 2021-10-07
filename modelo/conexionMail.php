@@ -23,7 +23,7 @@
     }
     //INSERTAR
     public function insertar($tabla, $datos){
-        
+      error_log("INSERT INTO $tabla VALUES (null,$datos)");
         $resultado =  $this->conexion->query("INSERT INTO $tabla VALUES (null,$datos)");
         if($resultado)
             return true;
@@ -33,7 +33,7 @@
 
      //INSERTAR CAMPOS ESPECIFICOS
     public function insertarCamposEspecificos($tabla,$campos, $datos){
-            
+           error_log("INSERT INTO $tabla ($campos) VALUES (null,$datos)");
         $resultado =  $this->conexion->query("INSERT INTO $tabla ($campos) VALUES (null,$datos)");
         if($resultado)
             return true;
@@ -53,7 +53,7 @@
 
     //BORRAR
     public function borrar($tabla, $condicion){
-        
+        error_log("DELETE FROM $tabla WHERE $condicion");
         $resultado  =   $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die($this->conexion->error);
         if($resultado)
             return true;
@@ -101,7 +101,7 @@ error_log("UPDATE $tabla SET $campos WHERE $condicion");
 
     //BUSCAR
     public function buscarSQL($query){
-
+error_log($query);
         $resultado = $this->conexion->query($query) or die($this->conexion->error);
         if($resultado)
             return $resultado->fetch_all(MYSQLI_ASSOC);

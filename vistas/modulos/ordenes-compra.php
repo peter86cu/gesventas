@@ -34,6 +34,16 @@
            
         }
 
+
+         $db = new BaseDatos();
+      $rol="";
+      $niveles = array();     
+      $resultado=$db->buscarSQL("select DISTINCT r.id_rol,r.id_modulo,r.id_nivel,m.nombre FROM  roles_modulos_niveles r inner join roles_modulos rm on (rm.id_modulo=r.id_modulo) inner join modulos m on (r.id_modulo=m.id_modulo) where estado =1 and r.id_rol=".$_SESSION['rol']." and m.id_modulo=10");
+        foreach($resultado as $row) { 
+        $niveles[] = $row['id_nivel']; 
+        
+      }
+
  ?>
 
 
@@ -62,14 +72,18 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-       <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>
+     <?php if(in_array(2, $niveles)) { ?>  <button class="btn btn-primary" style="<?php echo $botton_principal ?>" href="javascript:;" onclick="agregarOrdenInicial(); return false" ><i class="fas fa-plus"></i>Agregar</button>  <?php } ?>
 
 
      </div>
    </div>
    <div class="card-body">
 
-     <table id="example1" class="table table-bordered table-striped">
+    <div align="right" class="form-group">
+ <input type="text" class="form-control pull-right" style="width:20%;"  id="searchordenes" placeholder="Type to search table...">
+</div>
+
+     <table id="ordenes" class="table table-bordered table-striped">
       <thead>
         <tr style="<?php echo $color_tabla ?>">
           <th><strong>NÚMERO</strong></th>
@@ -80,7 +94,7 @@
           <th><strong>APROBADO POR</strong></th>
           <th><strong>PROVEEDOR</strong></th>
           <th><strong>ESTADO</strong></th>
-          <th style="width: 7.2%"><strong>ACCIÓN</strong></th>
+        <?php if(in_array(3, $niveles) || in_array(4, $niveles) || in_array(5, $niveles) || in_array(6, $niveles)) { ?>   <th style="width: 9%"><strong>ACCIÓN</strong></th> <?php } ?> 
         </tr>
       </thead>
       <tbody>
@@ -141,23 +155,23 @@
             <td style="width: 8%">
               <span class="text_<?php echo $color ?>" ><?php echo $value['estado']?></span>
             </td>
-            <td style="text-align: left;">
+          <?php if(in_array(3, $niveles) || in_array(4, $niveles) || in_array(5, $niveles) || in_array(6, $niveles)) { ?>   <td style="text-align: left;">
               <div class="btn-bt-group"></div>
 
-              <?php if ($value['id_estado']!=1 and $value['items']>0) { ?>
+              <?php if ($value['id_estado']!=1 && $value['items']>0 && in_array(3, $niveles) ) { ?>
                 <button class="btn btn-default ModalEditarOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>" idEstado="<?php echo $value['id_estado'] ?>" data-toggle="modal" data-target="#ModalEditarOrdenes" style="<?php echo $botton_editar ?>" ><i class="far fa-edit"></i></button>
               <?php } else { ?>
-                <button class="btn btn-default ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
-              <?php  } ?>
+               <?php if(in_array(2, $niveles)) { ?>  <button class="btn btn-default ModalADDOrdenes" idOrden="<?php echo $value['id_orden_compra'] ?>"  data-toggle="modal" data-target="#ModalADDOrdenes" style="<?php echo $botton_editar ?>"><i class="far fa-edit"></i></button>
+              <?php } } ?>
               <button class="btn btn-default btnEliminarOrden" idOrden="<?php echo $value['id_orden_compra'] ?>" style="<?php echo $botton_eliminar ?>"><i  class="fas fa-trash"></i></button>
-              <?php if ($value['id_estado']==3 || $value['id_estado']==4 and $value['items']>0) { ?>
+              <?php if ($value['id_estado']==3 || $value['id_estado']==4 && $value['items']>0 && in_array(5, $niveles)) { ?>
                 <button class="btn btn-success" style="color:#001f3f"  href="javascript:;" style="<?php echo $botton_eliminar ?>" onclick="datosImprimir(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="fas fa-print" ></i></button>
              <?php }  ?>
 
-              <?php if ( $value['id_estado']==3 and $value['items']>0) { ?>
+              <?php if ( $value['id_estado']==3 && $value['items']>0  && in_array(6, $niveles)) { ?>
                 <button class="btn btn-default"   href="javascript:;" style="<?php echo $botton_imprimir ?>" onclick="datosEnviarMail(<?php echo $value['id_orden_compra'] ?>); return false" ><i class="far fa-paper-plane"></i></button>
              <?php }  ?>
-           </td>
+           </td>    <?php }  ?>
          </tr>
 
        <?php }  ?>
@@ -209,13 +223,38 @@
   }
 
 
+  a.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+
+div.nav {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.nav.a {display: inline;}
+
+ a.bot  {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+
+
 </style>
 
 
 
 <!-- The Modal Add Ordenes -->
-<div class="modal" id="ModalADDOrdenes" data-backdrop="static" data-keyboard="false" tabindex="-1" >
-  <div class="modal-dialog modal-xl"  tabindex="-1" >
+<div class="modal" id="ModalADDOrdenes" data-backdrop="static" data-keyboard="false" >
+  <div class="modal-dialog modal-xl"   >
     <div class="modal-content">
 
       <form class="form-horizontal" role="form" id="datos_presupuesto" method="post">
@@ -231,34 +270,13 @@
           <div class="box-body">
 
 
-            <div id="print-area">
-              <div class="row pad-top font-big">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <a href="https://obedalvarado.pw/" target="_blank">  <img src="assets/img/logo.png" alt="Logo sistemas web" /></a>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <strong>E-mail : </strong> Prueba
-                  <br />
-                  <strong>Teléfono :</strong> Prueba <br />
-                  <strong>Sitio web :</strong> prueba.com
-
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <strong>comercial</strong>
-                  <br />
-                  Dirección : alguna
-                </div>
-
-              </div>
-
-
+          
               <div class="row ">
                 <hr />
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <h2>Detalles del proveedor :</h2>
-                  <select class="proveedor form-control" name="proveedor" id="proveedor" required>
+                <h2>Detalles del proveedor :</h2>
+                 <select style="width: 50%" class="proveedor form-control" name="proveedor" id="proveedor" >
                     <option value="">Selecciona el proveedor</option>
-                  </select>
                   <h4><strong>Proveedor: </strong><Label id="proveedorN"></Label></h4>
                   <span id="direccion"></span>
                   <input type="hidden"  id="idProveedor" name="idProveedor"  value="" >
@@ -342,7 +360,7 @@
                         </div>
                       </div>
 
-                    </div>
+                    
                     <div class="row"> <hr /></div>
                     <div class="row pad-bottom  pull-right">
 
@@ -367,7 +385,7 @@
 
         <form class="form-horizontal" name="guardar_item" id="guardar_item">
           <!-- Modal -->
-          <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal fade bs-example-modal-lg" id="myModal"  role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -377,7 +395,7 @@
 
                   <div class="row">
                    <div class="col-lg-6 col-md-6 col-sm-6">
-                    <select class="producto form-control" name="producto" id="producto" required>
+                    <select style="width: 100%" class="producto form-control" name="producto" id="producto" required>
                       <option value="">Selecciona el producto</option>
                     </select>
                   </div>

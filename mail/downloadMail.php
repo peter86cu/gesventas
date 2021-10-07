@@ -11,7 +11,7 @@
      
 
 if($_POST['accion']=='descargar'){
-$hostname = '{gesventas.ml/notls}'.$_POST['carpeta'];
+$hostname = '{mail.exfrxedl.lucusvirtual.es/notls}'.$_POST['carpeta'];
 $username = $_SESSION['email'];
 $password = $_SESSION['password'];
 
@@ -37,6 +37,8 @@ if($connection   = imap_open($hostname,$username,$password)){
       imap_delete($connection, $i);
       imap_expunge($connection);
     }
+
+    print_r($inbox);
 
      for ($j=1; $j <count($inbox) ; $j++) {
       $id=uniqid() ;
