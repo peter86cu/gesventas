@@ -12,6 +12,8 @@ class ventasAjax{
   public $cantidad;
   public $user;
   public $pass;
+  public $ci;
+  public $idCliente;
 
 
   public function buscarArqueoParaVentasAjax(){
@@ -85,6 +87,24 @@ class ventasAjax{
     }
 
 
+    public function ventasAnioActualyPasado(){
+     
+      $respuesta = ModeloVentas::ventasAnioActualyPasado();
+      echo json_encode($respuesta);
+    }
+
+     public function buscarCliente(){
+      $ci = $this->ci;
+      $respuesta = ModeloVentas::buscarCliente($ci);
+      echo json_encode($respuesta);
+    }
+
+    public function actualizarClienteVenta(){
+      $idCliente = $this->idCliente;
+      $idVenta = $this->idVenta;
+      $respuesta = ModeloVentas::actualizarClientePorVenta($idCliente,$idVenta);
+      echo json_encode($respuesta);
+    }
 
 
 
@@ -163,4 +183,24 @@ if($_POST["accion"]=="buscarArqueo" ){
   $obj_Modificar -> idVenta = $_POST["idVenta"];  
   $obj_Modificar ->eliminarVentasSalirAjax();
 
+}if($_POST["accion"]=="dasbventas" ){
+
+  $obj_Modificar = new ventasAjax();  
+  $obj_Modificar -> accion = $_POST["accion"];
+  $obj_Modificar ->ventasAnioActualyPasado();
+
+}if($_POST["accion"]=="buscarCliente" ){
+
+  $obj_Modificar = new ventasAjax();  
+  $obj_Modificar -> ci = $_POST["ci"];
+  $obj_Modificar ->buscarCliente();
+
+}if($_POST["accion"]=="actualizarClienteVenta" ){
+
+  $obj_Modificar = new ventasAjax();
+  $obj_Modificar -> idVenta = $_POST["idVenta"];  
+  $obj_Modificar -> idCliente = $_POST["idCliente"];
+  $obj_Modificar ->actualizarClienteVenta();
+
 }
+

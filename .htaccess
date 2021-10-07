@@ -1,5 +1,5 @@
-Options -Indexes 
+Options All -Indexes 
 
 RewriteEngine On
 
-RewriteRule ^([-a-zA-Z0-9]+)$ index.php?enlace=$1
+RewriteRule ^([-a-zA-Z0-9]+)$ index.php?enlace=$1 [QSA]

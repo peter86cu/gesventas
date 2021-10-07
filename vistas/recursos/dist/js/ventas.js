@@ -93,6 +93,77 @@ $(document).keydown(function (tecla) {
 });
 
 
+$(document).keydown(function (tecla) {
+  if (tecla.keyCode == 9 && $("#buscar_cliente").val().length==8) { 
+    
+     var datos = new FormData(); 
+  var accion = "buscarCliente";
+  datos.append("accion",accion);
+  datos.append("ci",$("#buscar_cliente").val()); 
+
+ 
+  $.ajax({
+   url: "ajax/ajaxVentas.php",
+   method : "POST",
+   data: datos,
+   chache: false,
+   contentType: false,
+   processData:false,
+   dataType: "json",
+   success: function(respuesta){
+   console.log(respuesta) 
+   //console.log(Object.keys(respuesta.data).length)
+    if(respuesta){       
+
+      var datos = new FormData(); 
+      var accion = "actualizarClienteVenta";
+      datos.append("accion",accion);
+      datos.append("idCliente",respuesta['id_cliente']); 
+      datos.append("idVenta",$("#txtVenta").val());
+
+
+      $.ajax({
+       url: "ajax/ajaxVentas.php",
+       method : "POST",
+       data: datos,
+       chache: false,
+       contentType: false,
+       processData:false,
+       dataType: "json",
+       success: function(result){  
+
+        if(result){
+          $('#buscar_cliente').val(respuesta['nombres']);
+        }else{
+
+           Swal.fire({
+       icon: "error",
+       title: "Oops...",
+       text: "A ocurrido un error!"       
+          })
+        }
+
+       }  
+     });
+
+    }else{
+       $('#ModalNuevoClientes').modal('show');
+     
+    }
+
+    // document.querySelector('#buscar_cliente').innerText = respuesta;
+   }  
+ });
+   
+
+  }
+});
+
+
+
+
+
+
 //ponleFocus();
 
 /*$(document).ready(function()
@@ -186,6 +257,7 @@ function buscarSimboloMonedaJS(idMoneda){
  });
 
 }
+
 /*
  <tr>
                       <td>1.</td>

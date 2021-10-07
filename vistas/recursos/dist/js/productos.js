@@ -17,7 +17,7 @@ $.ajax({
        dataType: "json",
        success: function(respuesta){
       
-        console.log(respuesta);
+        
            $("#idProducto").val(respuesta["id_producto"]);           
            $("#inputCodigoEdit").val(respuesta["codigo"]);
            $("#inputNombreEdit").val(respuesta["nombre"]);

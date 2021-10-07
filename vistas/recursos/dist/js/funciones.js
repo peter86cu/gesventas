@@ -122,3 +122,64 @@ function VentanaCentrada(theURL,winName,features, myWidth, myHeight, isCenter) {
 
 
 
+
+
+function comprobar_refresco() {
+    var datos = new FormData(); 
+    var accion ="user";    
+    datos.append("accion",accion);
+ 
+
+     $.ajax({
+     url: "procesos/dashboard.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){      
+      if(respuesta){
+       document.querySelector('#login').innerText = respuesta;
+       // $( "#idLogin" ).load(window.location.href + " #idLogin" );
+     }
+
+
+
+   }
+ });
+}
+
+
+
+/*function comprobar_session() {
+    var datos = new FormData();
+     var id_usuario = $('#id_usuario_session').val(); 
+     var ips = $('#ips_session').val();
+    var accion ="session";    
+    datos.append("accion",accion);
+     datos.append("idUsuario",id_usuario);
+     datos.append("iPsession",ips);
+    
+
+     $.ajax({
+     url: "procesos/dashboard.php",
+     method : "POST",
+     data: datos,
+     chache: false,
+     contentType: false,
+     processData:false,
+     dataType: "json",
+     success: function(respuesta){      
+      if(respuesta>1){
+       //document.querySelector('#login').innerText = respuesta;
+       // $( "#idLogin" ).load(window.location.href + " #idLogin" );
+       session_destroy();
+       window.location='login';
+     }
+
+
+
+   }
+ });
+}*/

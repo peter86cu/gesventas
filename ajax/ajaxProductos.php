@@ -25,7 +25,7 @@ class productosAjax{
 
   public function modificarProductoAjax(){
 
-   error_log($this->accion);
+  
     if($this->accion=="update" || $this->accion=="buscar"){
 
     $parametro = "idProducto";  

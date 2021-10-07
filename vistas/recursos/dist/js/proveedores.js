@@ -144,11 +144,21 @@ function agregarProveedor(event){
     $("#txt_webE").val(respuesta["web"]);  
     $("#idProveedor").val(respuesta["id_proveedor"]); 
     
-    if (respuesta["fecha_baja"]==null) {
+    /*if (respuesta["fecha_baja"]==null) {
      $("#customSwitch1").prop('checked', true);
     } else{
      $("#customSwitch1").prop('checked', false);
-    }   
+    }*/
+
+
+     $("#customSwitch1").on( 'change', function() {
+    if( $(this).is(':checked') ) {
+        $("#customSwitch1").prop('checked', true);
+
+    } else {
+       $("#customSwitch1").prop('checked', false);
+    }
+});  
                   
     
   }
@@ -170,15 +180,17 @@ function updateProveedorJS(event){
    var email = $('#txt_emailE').val();
    var web = $('#txt_webE').val();
 
-   var control = document.getElementById("customSwitch1");
+   //var control = document.getElementById("customSwitch1");
      var habilitado;
-   if(control.checked)
+
+     
+   if($('#customSwitch1').is(':checked'))
    {
-       habilitado= true;
+       habilitado= 1;
    }
     else
    {
-        habilitado= false;
+        habilitado= 0;
    }
    
    var datos = new FormData();

@@ -6,13 +6,13 @@
 ob_start();
 
 
-$username = 'soporte@gesventas.ml';
-$password = 'Admin1233*';
+$username = 'pedrocum';
+$password = 'Ayala860809';
 //Array ( [0] => {gesventas.ml/notls}INBOX.Spam [1] => {gesventas.ml/notls}Drafts [2] => {gesventas.ml/notls}Trash [3] => {gesventas.ml/notls}Sent [4] => {gesventas.ml/notls}Spam [5] => {gesventas.ml/notls}INBOX ) 
 $inbox = array();
 
 
-$srv = '{gesventas.ml/notls}';
+$srv = '{mail.exfrxedl.lucusvirtual.es/notls}';
 
 $lista   = imap_open($srv, $username, $password) or die('Ha fallado la conexión: ' . imap_last_error());
 

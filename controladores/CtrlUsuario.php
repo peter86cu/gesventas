@@ -19,15 +19,23 @@
           $result=ModeloUsuario::mdBuscarUsuarioPasword($usuario);
 
           $descr = new encriptaDatos();
-
+          $ips= new ControlUsuario();
           if ($result) {
            foreach($result as $row) {
             $password= $row['password'];
             $pass_descriptado = $descr->desencriptar($password);                           
-            if($pass_descriptado==$passw){                
-                $id=uniqid();                   
+            if($pass_descriptado==$passw){  
+
+                 $conexion=ModeloUsuario::validaSession($usuario);
+                
+                 if($conexion){
+
+                   ModeloUsuario::insertarSession($conexion,$row['id_usuario'],'LOGOUT',$ips->get_client_ip());         
+                  }
+
+               $id=uniqid();                   
                 $_SESSION['id_session']= $id;
-                ModeloUsuario::insertarSession($id,$row['id_usuario'],'LOGIN');
+                ModeloUsuario::insertarSession($id,$row['id_usuario'],'LOGIN', $ips->get_client_ip());
                 
                 $_SESSION['id']=$row['id_usuario'] ;
                 $_SESSION['sucursal']=$row['sucursal'] ;
@@ -39,11 +47,11 @@
                 $_SESSION['password'] = $pass_descriptado;
                 $_SESSION['loginCaja']='no_login';
                 $_SESSION['adjunto_mail']='no_adjunto';
-                $ips= new ControlUsuario();
+                
                 $_SESSION['ip'] = $ips->get_client_ip();
+                
 
                 echo "<script> window.location='inicio'; </script>";
-
 
             }else{
              echo '<div class="alert alert-danger">Login incorrecto</div>';
@@ -78,7 +86,6 @@ static  public function mostrarUsuario($parametro, $datos){
 }
 
 
-
        //Obtiene la IP del cliente
 static  public function get_client_ip() {
     $ipaddress = '';
@@ -101,4 +108,7 @@ return $ipaddress;
 
 
 
+
+
 }
+

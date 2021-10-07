@@ -8,11 +8,13 @@ ob_start();
 
  $encri = new encriptaDatos();
 $hostname = '{gesventas.ml/notls}INBOX';
-$username = 'soporte@gesventas.ml';
-$password = 'Admin123*';
+$username = 'vendedor@gesventas.ml';
+$password = 'Vendedor123*';
 
 
 $inbox = array();
+
+ 
 
 if($connection   = imap_open($hostname,$username,$password)){
   $num_msg = imap_num_msg($connection);
@@ -21,7 +23,7 @@ if($connection   = imap_open($hostname,$username,$password)){
     $bandera=false;
     $cantidad_total=0;
     $cantidad_descargados=$num_msg;
-print_r("cantd ms".$num_msg);
+//print_r("cantd ms".$num_msg);
   for($i = 0; $i <= $num_msg; $i++) {
       $inbox[] = array(
         'index'     => $i,
@@ -29,9 +31,11 @@ print_r("cantd ms".$num_msg);
         'body'      => imap_body($connection, $i),
         'structure' => imap_fetchstructure($connection, $i)
       );
+
+    $body = imap_fetchstructure($connection, 5);
+     // var_dump( $body);
+     for ($j=0; $j <count($inbox) ; $j++) {
     
-     for ($j=1; $j <count($inbox) ; $j++) {
-      
       adjunto($inbox[$j]['structure'],$connection,$i);
       $header =$inbox[$j]['header'];
       $subj =  $encri->encriptar($header->subject); 
@@ -39,9 +43,11 @@ print_r("cantd ms".$num_msg);
       $email = $from[0]->mailbox."@".$from[0]->host; 
       $name = $encri->encriptar($from[0]->personal); 
     
-      $body = (nl2br(htmlspecialchars(imap_fetchbody($connection,$i,1))));
-
+      $body = (nl2br(htmlspecialchars(imap_fetchbody($connection,4,1))));
+ var_dump( $body);
       $filtro= str_replace("=20",'',$body);
+     /* imap_delete($connection, $i);
+      imap_expunge($connection);
 
    /* if(mysqli_query($con,"INSERT INTO mail(datemail,id_usuario,email_origen,nombre, subject, body, estado,accion) VALUES ('".$encri->encriptar($header->udate)."','".$encri->encriptar($_SESSION['id'])."','".$encri->encriptar($email)."','".$name."','".$subj."','". $encri->encriptar(str_replace("<br />",'',$filtro))."',0,1)")){
 
